@@ -1,40 +1,28 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import Works from './pages/Works'
-import About from './pages/About'
-import Contact from './pages/Contact'
-
-function ScrollToTop() {
-  const { pathname } = useLocation()
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
-  return null
-}
-
-function Layout() {
-  return (
-    <>
-      <ScrollToTop />
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/works" element={<Works />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </main>
-    </>
-  )
-}
+import { useScrollProgress } from './hooks/hooks';
+import Nav from './components/Nav';
+import Hero from './components/Hero';
+import Marquee from './components/Marquee';
+import Projects from './components/Projects';
+import Stats from './components/Stats';
+import Services from './components/Services';
+import Process from './components/Process';
+import FaqSection from './components/FaqSection';
+import Footer from './components/Footer';
 
 export default function App() {
+  const progress = useScrollProgress();
   return (
-    <BrowserRouter>
-      <Layout />
-    </BrowserRouter>
-  )
+    <>
+      <div style={{ position: 'fixed', top: 0, left: 0, height: 2, width: `${progress * 100}%`, background: '#141414', zIndex: 9999, transition: 'width 0.1s linear' }} />
+      <Nav />
+      <Hero />
+      <Marquee />
+      <Projects />
+      <Stats />
+      <Services />
+      <Process />
+      <FaqSection />
+      <Footer />
+    </>
+  );
 }
