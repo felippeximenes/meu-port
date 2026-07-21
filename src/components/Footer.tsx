@@ -1,48 +1,24 @@
-import { Link } from 'react-router-dom'
-
-const IconFramer = () => (
-  <svg width="14" height="14" viewBox="0 0 14 21" fill="currentColor">
-    <path d="M0 0h14v7H7L0 0zM0 7h7l7 7H0V7zM0 14h7l-7 7V14z" />
-  </svg>
-)
+import { EMAIL, LINKEDIN, GITHUB } from '../data';
+import { useReveal } from '../hooks/hooks';
 
 export default function Footer() {
+  const { ref, style } = useReveal<HTMLHeadingElement>();
   return (
-    <footer className="footer">
-      <div className="footer__divider" />
-
-      <div className="footer__links">
-        <div className="footer__col">
-          <span className="footer__col-label">Navigation</span>
-          <Link to="/" className="footer__link">Home</Link>
-          <Link to="/works" className="footer__link">Works</Link>
-          <Link to="/about" className="footer__link">About</Link>
-          <Link to="/contact" className="footer__link">Contact</Link>
-        </div>
-
-        <div className="footer__col">
-          <span className="footer__col-label">Connect</span>
-          <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="footer__link">X (Twitter)</a>
-          <a href="https://threads.net" target="_blank" rel="noopener noreferrer" className="footer__link">Threads</a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="footer__link">Instagram</a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="footer__link">Youtube</a>
-        </div>
-
-        <div className="footer__col">
-          <span className="footer__col-label">Project</span>
-          <a href="#" className="footer__link">Framer Templates</a>
-          <a href="#" className="footer__link">Become Affiliate</a>
-          <a href="#" className="footer__link">Hire me on Contra</a>
-        </div>
+    <footer id="contato" style={{ background: '#121110', color: '#faf9f7', borderRadius: '32px 32px 0 0', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '110px 48px 40px', textAlign: 'center' }}>
+      <h2 ref={ref} style={{ ...style, margin: '0 auto', fontFamily: "'Instrument Serif', serif", fontWeight: 400, fontSize: 'clamp(44px, 6.5vw, 110px)', lineHeight: 1.05, maxWidth: 1000 }}>
+        <em style={{ color: '#7a756c' }}>Vamos conversar?</em><br />Eu cuido do resto.
+      </h2>
+      <div style={{ marginTop: 40 }}>
+        <a href={`mailto:${EMAIL}`} style={{ display: 'inline-block', background: '#faf9f7', color: '#141414', padding: '16px 32px', borderRadius: 999, fontSize: 15, fontWeight: 600 }}>{EMAIL}</a>
       </div>
-
-      <div className="footer__bottom">
-        <span className="footer__copyright">©Irise Studio 2026. All rights reserved.</span>
-        <span className="footer__made-with">
-          <IconFramer />
-          &nbsp;Made in Framer · Created by Rosyid Qoim
-        </span>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 28, borderTop: '1px solid #2a2825', fontSize: 13, color: '#7a756c' }}>
+        <span style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic', fontSize: 15 }}>Felippe Ximenes © 2026 — Rio de Janeiro, Brasil</span>
+        <div style={{ display: 'flex', gap: 28 }}>
+          <a href={LINKEDIN} target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href={GITHUB} target="_blank" rel="noreferrer">GitHub</a>
+          <a href="#">↑ Voltar ao topo</a>
+        </div>
       </div>
     </footer>
-  )
+  );
 }
