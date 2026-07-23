@@ -5,6 +5,7 @@ export interface Project {
   href: string;
   desc: string;
   img: string;
+  site: string;
 }
 
 export interface Service {
@@ -23,28 +24,39 @@ export const GITHUB = 'https://github.com/felippeximenes';
 
 export const projects: Project[] = [
   {
-    n: '01', name: 'Certara', tags: ['GenAI · AWS', 'Serverless'],
+    n: '01', name: 'Certara', tags: ['React', 'Amazon Bedrock'],
     href: 'https://github.com/felippeximenes/certara-app',
-    desc: 'Plataforma de preparação para certificação AWS com questões geradas por IA — Amazon Bedrock, Qdrant como vector store, billing com Stripe e infraestrutura como código.',
-    img: '/projects/certara.jpg'
+    desc: 'Plataforma de preparação para certificações AWS: quizzes com questões geradas por IA (Bedrock), simulados, flashcards e plano de estudos personalizado.',
+    img: '/projects/certara2.png',
+    site: 'certara.app'
   },
   {
-    n: '02', name: 'EduTrack', tags: ['Node.js', 'React 19'],
+    n: '02', name: 'Certara Agent', tags: ['LangGraph · RAG', 'AWS Lambda'],
+    href: 'https://github.com/felippeximenes/certara-agent',
+    desc: 'Agente conversacional multi-etapas (LangGraph) para prep de certificação AWS — pipeline RAG com Qdrant, tool calling na AWS Price List API real e deploy serverless via SAM.',
+    img: '/projects/certara.png',
+    site: 'certara-agent'
+  },
+  {
+    n: '03', name: 'EduTrack', tags: ['Node.js', 'React 19'],
     href: 'https://github.com/felippeximenes/edu-track',
     desc: 'LMS completo com controle de acesso por papel para alunos, instrutores e administradores — certificados em PDF verificáveis por QR code.',
-    img: '/projects/edutrack.jpg'
+    img: '/projects/edutrack.png',
+    site: 'edutrack.app'
   },
   {
-    n: '03', name: 'LiberPay Dashboard', tags: ['Next.js', 'Automação'],
-    href: 'https://github.com/felippeximenes/liberpay-dashboard',
-    desc: 'Dashboard de funil de vendas que consolida GA4, Pipedrive e MailPoet em uma visão semanal única, com exportação PDF/CSV para stakeholders.',
-    img: '/projects/liberpay.jpg'
+    n: '04', name: 'Moldz3D', tags: ['E-commerce', 'Full Stack'],
+    href: 'https://moldz3d.com.br',
+    desc: 'Loja de modelos 3D digitais com painel admin construído do zero — gestão de produtos com drag-and-drop, pedidos com etiqueta de rastreio, cupons, newsletter e popups.',
+    img: '/projects/moldz2.png',
+    site: 'moldz3d.com.br'
   },
   {
-    n: '04', name: 'Zosia AI Assistant', tags: ['RAG · LLM', 'FastAPI'],
-    href: 'https://github.com/felippeximenes',
-    desc: 'Assistente de IA open source (pro bono): pipeline RAG em produção com PGVector, respostas por Ollama e Azure OpenAI, e estratégia de fallback com zero downtime.',
-    img: '/projects/zosia.jpg'
+    n: '05', name: 'Caminhos', tags: ['Landing Page', 'GTM · GA4'],
+    href: 'https://quiet-bienenstitch-a8a314.netlify.app/',
+    desc: 'Landing page de viagens responsiva com animações de scroll via IntersectionObserver, formulário de inscrição e tracking profissional com Google Tag Manager + GA4.',
+    img: '/projects/travel2.png',
+    site: 'caminhos.app'
   }
 ];
 

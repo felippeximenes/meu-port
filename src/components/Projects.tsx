@@ -1,49 +1,72 @@
 import { useState } from 'react';
 import { projects } from '../data';
-import { usePinnedProgress } from '../hooks/hooks';
+import { useReveal } from '../hooks/hooks';
+import type { Project } from '../data';
 
-function Cover({ src, name }: { src: string; name: string }) {
+function Cover({ p }: { p: Project }) {
   const [err, setErr] = useState(false);
-  if (err) {
-    return (
-      <div style={{ width: '100%', height: '100%', borderRadius: 18, background: '#eeeae2', border: '1px dashed #cfc9bd', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8a8478', fontSize: 14, textAlign: 'center', padding: 24 }}>
-        Adicione a capa de {name} em public{src}
+  return (
+    <a href={p.href} target="_blank" rel="noreferrer" style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', borderRadius: 20, overflow: 'hidden', border: '1px solid var(--line)', background: '#fff' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', borderBottom: '1px solid var(--line)', flexShrink: 0 }}>
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ec6a5e' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#f5bf4f' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#61c454' }} />
+        <span style={{ marginLeft: 8, fontSize: 12, color: 'var(--muted)', background: 'var(--bg-soft)', borderRadius: 999, padding: '4px 12px' }}>{p.site}</span>
       </div>
-    );
-  }
-  return <img src={src} alt={name} onError={() => setErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 18, display: 'block' }} />;
+      <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
+        {err ? (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: 14, textAlign: 'center', padding: 24 }}>
+            Adicione a capa de {p.name} em public{p.img}
+          </div>
+        ) : (
+          <img
+            src={p.img} alt={p.name} onError={() => setErr(true)}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block', transition: 'transform 0.5s ease' }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+          />
+        )}
+        <div style={{ position: 'absolute', inset: '0 0 0 0', background: 'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.15) 45%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '20px 22px', color: '#fff' }}>
+          <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 22 }}>{p.name}</div>
+          <p style={{ margin: '6px 0 10px', fontSize: 13, lineHeight: 1.5, color: 'rgba(255,255,255,0.82)', maxWidth: 440 }}>{p.desc}</p>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {p.tags.map(t => (
+              <span key={t} style={{ fontSize: 12, color: '#fff', border: '1px solid rgba(255,255,255,0.35)', borderRadius: 999, padding: '5px 12px' }}>{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+function Card({ p, i }: { p: Project; i: number }) {
+  const col = i % 2;
+  const { ref, style } = useReveal<HTMLDivElement>(0.15, col * 0.12, -50);
+  const last = i === projects.length - 1;
+  return (
+    <div ref={ref} style={{ ...style, height: 420, gridColumn: last && projects.length % 2 === 1 ? '1 / -1' : undefined }}>
+      <Cover p={p} />
+    </div>
+  );
 }
 
 export default function Projects() {
-  const [ref, p] = usePinnedProgress<HTMLElement>();
-  const panels = projects.length;
-  const current = Math.min(panels, Math.round(p * (panels - 1)) + 1);
+  const head = useReveal<HTMLDivElement>();
   return (
-    <section id="trabalhos" ref={ref} style={{ position: 'relative', height: '420vh' }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: '34px 48px 0' }}>
-          <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8a8478' }}>01 — Trabalhos selecionados</span>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic', fontSize: 18, color: '#8a8478' }}>{current} / {panels}</span>
+    <section id="trabalhos" style={{ maxWidth: 1280, margin: '0 auto', padding: '120px 48px' }}>
+      <div ref={head.ref} style={{ ...head.style, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 44 }}>
+        <div>
+          <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>01 — Trabalhos selecionados</span>
+          <h2 style={{ margin: '14px 0 0', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 400, fontSize: 'clamp(30px, 3.4vw, 46px)' }}>Trabalhos em destaque</h2>
         </div>
-        <div style={{ display: 'flex', height: '100%', alignItems: 'center', willChange: 'transform', transform: `translateX(${-p * (panels - 1) * 100}vw)` }}>
-          {projects.map(proj => (
-            <div key={proj.name} style={{ flex: '0 0 100vw', height: '100%', display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: 'clamp(24px, 4vw, 64px)', alignItems: 'center', padding: '0 clamp(32px, 5vw, 80px)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 18, position: 'relative' }}>
-                <span style={{ fontFamily: "'Instrument Serif', serif", fontStyle: 'italic', fontSize: 'clamp(80px, 10vw, 150px)', lineHeight: 1, color: '#e8e4dd' }}>{proj.n}</span>
-                <a href={proj.href} target="_blank" rel="noreferrer" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(34px, 3.4vw, 54px)', lineHeight: 1.05 }}>{proj.name} ↗</a>
-                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: '#555', maxWidth: 420, textWrap: 'pretty' }}>{proj.desc}</p>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  {proj.tags.map(t => (
-                    <span key={t} style={{ fontSize: 12, color: '#666', border: '1px solid #dcd7ce', borderRadius: 999, padding: '6px 14px' }}>{t}</span>
-                  ))}
-                </div>
-              </div>
-              <div style={{ height: 'min(66vh, 620px)', position: 'relative' }}>
-                <Cover src={proj.img} name={proj.name} />
-              </div>
-            </div>
-          ))}
-        </div>
+        <a href="https://github.com/felippeximenes" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid var(--line)', borderRadius: 999, padding: '10px 18px', fontSize: 14, fontWeight: 500, flexShrink: 0 }}>
+          Todos os projetos <span>↗</span>
+        </a>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+        {projects.map((p, i) => <Card key={p.name} p={p} i={i} />)}
       </div>
     </section>
   );
