@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
 
-export function useReveal<T extends HTMLElement>(threshold = 0.12, delay = 0) {
+export function useReveal<T extends HTMLElement>(threshold = 0.12, delay = 0, fromX = 0) {
   const ref = useRef<T>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -15,7 +15,7 @@ export function useReveal<T extends HTMLElement>(threshold = 0.12, delay = 0) {
   }, [threshold]);
   const style: CSSProperties = {
     opacity: visible ? 1 : 0,
-    transform: visible ? 'none' : 'translateY(26px)',
+    transform: visible ? 'none' : `translate(${fromX}px, 26px)`,
     transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`
   };
   return { ref, style };

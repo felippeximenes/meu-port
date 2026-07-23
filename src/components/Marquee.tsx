@@ -2,9 +2,9 @@ const items = ['Full Stack', 'IA & LLM', 'RAG', 'AWS Serverless', 'React', 'Node
 
 function Run() {
   return (
-    <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 30, whiteSpace: 'nowrap', paddingRight: 24 }}>
+    <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 30, whiteSpace: 'nowrap', paddingRight: 24 }}>
       {items.map(it => (
-        <span key={it}>{it} <em style={{ color: '#8a8478' }}>·</em> </span>
+        <span key={it}>{it} <em style={{ color: 'var(--purple)' }}>·</em> </span>
       ))}
     </span>
   );
@@ -12,7 +12,7 @@ function Run() {
 
 export default function Marquee() {
   return (
-    <div style={{ borderTop: '1px solid #dcd7ce', borderBottom: '1px solid #dcd7ce', overflow: 'hidden', padding: '18px 0', background: '#faf9f7' }}>
+    <div style={{ borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)', overflow: 'hidden', padding: '18px 0', background: 'var(--bg)' }}>
       <div style={{ display: 'flex', width: 'max-content', animation: 'marquee 28s linear infinite' }}>
         <Run /><Run />
       </div>
