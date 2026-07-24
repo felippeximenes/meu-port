@@ -1,7 +1,7 @@
 import { removeBackground } from '@imgly/background-removal-node'
 import { writeFileSync, mkdirSync } from 'fs'
 
-mkdirSync('public', { recursive: true })
+mkdirSync('public/assets', { recursive: true })
 
 console.log('Removing background (may take ~30s on first run — downloads WASM model)...')
 const blob = await removeBackground('images/image.png')
