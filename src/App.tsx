@@ -1,7 +1,7 @@
 import { useScrollProgress } from './hooks/hooks';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
-import Marquee from './components/Marquee';
+import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Stats from './components/Stats';
 import Services from './components/Services';
@@ -16,7 +16,7 @@ export default function App() {
       <div style={{ position: 'fixed', top: 0, left: 0, height: 2, width: `${progress * 100}%`, background: 'var(--purple)', zIndex: 9999, transition: 'width 0.1s linear' }} />
       <Nav />
       <Hero />
-      <Marquee />
+      <Skills />
       <Projects />
       <Stats />
       <Services />
