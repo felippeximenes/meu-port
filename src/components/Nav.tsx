@@ -1,3 +1,5 @@
+import SpecularButton from './SpecularButton';
+
 export default function Nav() {
   return (
     <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 48px', position: 'sticky', top: 0, zIndex: 20, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)' }}>
@@ -8,7 +10,7 @@ export default function Nav() {
         <a href="#processo">Processo</a>
         <a href="#faq">FAQ</a>
       </div>
-      <a href="#contato" style={{ background: 'var(--fg)', color: '#fff', padding: '11px 22px', borderRadius: 999, fontSize: 14, fontWeight: 500 }}>Fale comigo</a>
+      <SpecularButton href="#contato" size="sm">Fale comigo</SpecularButton>
     </nav>
   );
 }

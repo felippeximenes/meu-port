@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { faqs, EMAIL } from '../data';
 import { useReveal } from '../hooks/hooks';
+import SpecularButton from './SpecularButton';
 
 export default function FaqSection() {
   const [open, setOpen] = useState(0);
@@ -13,7 +14,7 @@ export default function FaqSection() {
         <h2 style={{ margin: '18px 0 28px', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 400, fontSize: 'clamp(30px, 3vw, 44px)', lineHeight: 1.15 }}>
           Respostas para as dúvidas <em style={{ color: 'var(--muted)', fontStyle: 'normal' }}>mais comuns antes de começar.</em>
         </h2>
-        <a href={`mailto:${EMAIL}`} style={{ background: 'var(--fg)', color: '#fff', padding: '14px 26px', borderRadius: 999, fontSize: 14, fontWeight: 500, display: 'inline-block' }}>Me mande um email</a>
+        <SpecularButton href={`mailto:${EMAIL}`} size="md">Me mande um email</SpecularButton>
       </div>
       <div ref={right.ref} style={{ ...right.style, display: 'flex', flexDirection: 'column', gap: 12 }}>
         <span style={{ background: 'var(--fg)', color: '#fff', borderRadius: 999, padding: '9px 18px', fontSize: 13, fontWeight: 500, width: 'fit-content', marginBottom: 4 }}>Estou aqui para ajudar</span>
