@@ -1,20 +1,66 @@
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { EMAIL, LINKEDIN, GITHUB } from '../data';
 import { useReveal } from '../hooks/hooks';
+import SpecularButton from './SpecularButton';
+
+const Globe = lazy(() => import('./Globe'));
 
 export default function Footer() {
   const { ref, style } = useReveal<HTMLHeadingElement>();
+  const footerRef = useRef<HTMLElement>(null);
+  const [showGlobe, setShowGlobe] = useState(false);
+
+  useEffect(() => {
+    const el = footerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setShowGlobe(true); obs.disconnect(); } },
+      { rootMargin: '300px' }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <footer id="contato" className="noise-bg" style={{ color: '#fff', borderRadius: '32px 32px 0 0', padding: '110px 48px 0' }}>
+    <footer ref={footerRef} id="contato" className="noise-bg" style={{ color: '#fff', borderRadius: '32px 32px 0 0', padding: '110px 48px 0' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-        <span style={{
-          width: 64, height: 64, borderRadius: '50%', marginBottom: 28,
-          background: 'radial-gradient(circle at 32% 32%, #b794f6, var(--purple) 60%, #4c1d95 100%)',
-          boxShadow: '0 0 40px rgba(124,58,237,0.45)'
-        }} />
+        <div style={{ width: 260, height: 260, marginBottom: 8 }}>
+          {showGlobe && (
+            <Suspense fallback={null}>
+              <Globe
+                speed={2}
+                smoothing={8}
+                scale={8}
+                fill="dots"
+                dots={{ color: '#ffffff', size: 5, density: 7, allDots: false }}
+                oceanColor="#0b0b0d"
+                outlineColor="rgba(255,255,255,0.25)"
+                showOutline={true}
+                showGrid={false}
+                direction="left"
+                stopOnHover={true}
+                detail={5}
+                dragSpeed={5}
+              />
+            </Suspense>
+          )}
+        </div>
         <h2 ref={ref} style={{ ...style, margin: 0, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 400, fontSize: 'clamp(34px, 4.5vw, 60px)', lineHeight: 1.1, maxWidth: 760 }}>
           <em style={{ color: '#8b8890', fontStyle: 'normal' }}>Vamos conversar,</em> e eu cuido do resto.
         </h2>
-        <a href={`mailto:${EMAIL}`} style={{ marginTop: 32, display: 'inline-block', background: '#fff', color: 'var(--fg)', padding: '16px 32px', borderRadius: 999, fontSize: 15, fontWeight: 600 }}>{EMAIL}</a>
+        <div style={{ marginTop: 32 }}>
+          <SpecularButton
+            href={`mailto:${EMAIL}`}
+            size="lg"
+            tint="#ffffff"
+            tintOpacity={1}
+            textColor="#0a0a0a"
+            lineColor="#aaaaaa"
+            baseColor="#dddddd"
+          >
+            {EMAIL}
+          </SpecularButton>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 64, justifyContent: 'center', marginTop: 96, paddingBottom: 56 }}>
