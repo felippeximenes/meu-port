@@ -1,7 +1,8 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { EMAIL, LINKEDIN, GITHUB } from '../data';
 import { useReveal } from '../hooks/hooks';
-import SpecularButton from './SpecularButton';
+
+const GLOBE_DOTS = { color: '#ffffff', size: 5, density: 7, allDots: false };
 
 const Globe = lazy(() => import('./Globe'));
 
@@ -32,7 +33,7 @@ export default function Footer() {
                 smoothing={8}
                 scale={8}
                 fill="dots"
-                dots={{ color: '#ffffff', size: 5, density: 7, allDots: false }}
+                dots={GLOBE_DOTS}
                 oceanColor="#0b0b0d"
                 outlineColor="rgba(255,255,255,0.25)"
                 showOutline={true}
@@ -49,17 +50,22 @@ export default function Footer() {
           <em style={{ color: '#8b8890', fontStyle: 'normal' }}>Vamos conversar,</em> e eu cuido do resto.
         </h2>
         <div style={{ marginTop: 32 }}>
-          <SpecularButton
+          <a
             href={`mailto:${EMAIL}`}
-            size="lg"
-            tint="#ffffff"
-            tintOpacity={1}
-            textColor="#0a0a0a"
-            lineColor="#aaaaaa"
-            baseColor="#dddddd"
+            style={{
+              display: 'inline-flex', alignItems: 'center',
+              background: '#ffffff', color: '#0a0a0a',
+              borderRadius: 999, padding: '14px 28px',
+              fontSize: 15, fontWeight: 500,
+              fontFamily: "'Space Grotesk', sans-serif",
+              textDecoration: 'none', letterSpacing: '-0.01em',
+              transition: 'opacity 0.18s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
             {EMAIL}
-          </SpecularButton>
+          </a>
         </div>
       </div>
 

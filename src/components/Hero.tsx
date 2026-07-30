@@ -2,7 +2,6 @@ import { motion } from 'motion/react';
 import { useTilt } from '../hooks/hooks';
 import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
-
 export default function Hero() {
   const tiltRef = useTilt<HTMLImageElement>(4);
   return (
