@@ -608,8 +608,8 @@ export default function Globe({
             if (container.contains(canvas)) container.removeChild(canvas);
         };
     }, [
-        speed, smoothing, dots, fill, fillColor, allDots, density, dotSize, dotColor,
-        scale, stopOnHover, markerConfig, direction, initialLatitude, initialLongitude,
+        speed, smoothing, fill, fillColor, allDots, density, dotSize, dotColor,
+        scale, stopOnHover, direction, initialLatitude, initialLongitude,
         oceanColor, outlineColor, showOutline, graticuleColor, showGrid, outlineWidth,
         dragSpeed, detail, rotationSpeed, dotSpacing, dotSizeMultiplier,
         markerRadiusMultiplier, scaleMultiplier,
