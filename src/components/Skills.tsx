@@ -51,34 +51,47 @@ const categories: Category[] = [
   },
 ];
 
+function hexToRgb(hex: string): string {
+  const h = hex.replace('#', '');
+  return `${parseInt(h.slice(0, 2), 16)}, ${parseInt(h.slice(2, 4), 16)}, ${parseInt(h.slice(4, 6), 16)}`;
+}
+
 function SkillIcon({ skill }: { skill: SkillDef }) {
   return (
     <div
       className="skill-item"
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, cursor: 'default', opacity: 0 }}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 11, cursor: 'default', opacity: 0 }}
       onMouseEnter={e => {
         const card = e.currentTarget.querySelector('.skill-card') as HTMLElement;
-        if (card) { card.style.borderColor = 'var(--dark-line)'; card.style.background = '#222027'; }
+        if (!card) return;
+        const rgb = hexToRgb(skill.hex);
+        card.style.borderColor = `rgba(${rgb}, 0.5)`;
+        card.style.boxShadow = `0 0 0 1px rgba(${rgb}, 0.15), 0 4px 24px rgba(${rgb}, 0.2)`;
+        card.style.background = 'rgba(255,255,255,0.09)';
       }}
       onMouseLeave={e => {
         const card = e.currentTarget.querySelector('.skill-card') as HTMLElement;
-        if (card) { card.style.borderColor = 'transparent'; card.style.background = 'var(--dark-card)'; }
+        if (!card) return;
+        card.style.borderColor = 'rgba(255,255,255,0.08)';
+        card.style.boxShadow = 'none';
+        card.style.background = 'rgba(255,255,255,0.05)';
       }}
     >
       <div
         className="skill-card"
         style={{
-          width: 68, height: 68, borderRadius: 18,
-          background: 'var(--dark-card)', border: '1px solid transparent',
+          width: 76, height: 76, borderRadius: 20,
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.08)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'background 0.2s ease, border-color 0.2s ease',
+          transition: 'background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease',
         }}
       >
-        <svg viewBox="0 0 24 24" width={32} height={32} fill={`#${skill.hex}`} aria-label={skill.label}>
+        <svg viewBox="0 0 24 24" width={34} height={34} fill={`#${skill.hex}`} aria-label={skill.label}>
           <path d={skill.path} />
         </svg>
       </div>
-      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.02em', fontWeight: 400 }}>
+      <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.02em', fontWeight: 400 }}>
         {skill.label}
       </span>
     </div>
@@ -91,67 +104,54 @@ function CategoryRow({ category, index }: { category: Category; index: number })
   useEffect(() => {
     const row = rowRef.current;
     if (!row) return;
-
     const label = row.querySelector('.cat-label');
     const items = row.querySelectorAll('.skill-item');
 
-    // label slides in from left
-    gsap.fromTo(
-      label,
-      { opacity: 0, x: -20 },
-      {
-        opacity: 1, x: 0, ease: 'none',
-        scrollTrigger: {
-          trigger: row,
-          start: 'top bottom-=10%',
-          end: 'top center',
-          scrub: true,
-        },
-      }
-    );
+    gsap.fromTo(label, { opacity: 0, x: -20 }, {
+      opacity: 1, x: 0, ease: 'none',
+      scrollTrigger: { trigger: row, start: 'top bottom-=10%', end: 'top center', scrub: true },
+    });
 
-    // icons stagger in with blur
-    gsap.fromTo(
-      items,
-      { opacity: 0, y: 32, filter: 'blur(8px)' },
-      {
-        opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
-        stagger: 0.06,
-        scrollTrigger: {
-          trigger: row,
-          start: 'top bottom-=5%',
-          end: 'bottom center+=10%',
-          scrub: true,
-        },
-      }
-    );
+    gsap.fromTo(items, { opacity: 0, y: 32, filter: 'blur(8px)' }, {
+      opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none', stagger: 0.06,
+      scrollTrigger: { trigger: row, start: 'top bottom-=5%', end: 'bottom center+=10%', scrub: true },
+    });
 
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
 
-  return (
-    <div ref={rowRef} style={{ display: 'grid', gridTemplateColumns: '140px 1fr', alignItems: 'center', gap: '0 32px' }}>
-      {/* category label column */}
-      <div className="cat-label" style={{ opacity: 0 }}>
-        <span style={{
-          fontSize: 11, fontWeight: 600, letterSpacing: '0.14em',
-          textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)',
-          display: 'block',
-        }}>
-          {String(index + 1).padStart(2, '0')}
-        </span>
-        <span style={{
-          fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.6)',
-          display: 'block', marginTop: 4,
-        }}>
-          {category.label}
-        </span>
-      </div>
+  const num = String(index + 1).padStart(2, '0');
 
-      {/* divider + icons */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-        <div style={{ width: 1, height: 72, background: 'var(--dark-line)', flexShrink: 0, marginRight: 32 }} />
-        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+  return (
+    <div ref={rowRef} style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* Separator */}
+      <div style={{
+        height: 1, marginBottom: 36,
+        background: 'linear-gradient(90deg, var(--purple) 0%, rgba(124,58,237,0.2) 30%, transparent 70%)',
+        opacity: 0.45,
+      }} />
+
+      {/* Ghost watermark */}
+      <span aria-hidden style={{
+        position: 'absolute', right: -12, top: 0,
+        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+        fontSize: 'clamp(100px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.05em',
+        color: '#fff', opacity: 0.035, pointerEvents: 'none', userSelect: 'none',
+      }}>{num}</span>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', alignItems: 'center', gap: '0 32px' }}>
+        {/* Left — number + label */}
+        <div className="cat-label" style={{ opacity: 0 }}>
+          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)', opacity: 0.8, display: 'block' }}>
+            {num}
+          </span>
+          <span style={{ fontSize: 16, fontWeight: 500, color: 'rgba(255,255,255,0.6)', letterSpacing: '-0.01em', display: 'block', marginTop: 4 }}>
+            {category.label}
+          </span>
+        </div>
+
+        {/* Right — icons centered */}
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
           {category.skills.map(s => <SkillIcon key={s.label} skill={s} />)}
         </div>
       </div>
@@ -164,25 +164,23 @@ export default function Skills() {
 
   useEffect(() => {
     if (!headRef.current) return;
-    gsap.fromTo(
-      headRef.current,
-      { opacity: 0, y: 24, filter: 'blur(6px)' },
-      {
-        opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
-        scrollTrigger: { trigger: headRef.current, start: 'top bottom-=10%', end: 'bottom center', scrub: true },
-      }
-    );
+    gsap.fromTo(headRef.current, { opacity: 0, y: 24, filter: 'blur(6px)' }, {
+      opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
+      scrollTrigger: { trigger: headRef.current, start: 'top bottom-=10%', end: 'bottom center', scrub: true },
+    });
   }, []);
 
   return (
-    <section style={{ background: 'var(--dark)', padding: '96px 48px' }}>
+    <section style={{ background: 'var(--dark)', padding: '96px 48px 112px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+
         <div ref={headRef} style={{ marginBottom: 72, opacity: 0 }}>
           <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
             02 — Stack
           </span>
-          <h2 style={{ margin: '14px 0 0', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff' }}>
-            Skills & Tools
+          <h2 style={{ margin: '14px 0 0', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+            <strong style={{ fontWeight: 600 }}>Skills</strong> &amp;{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: 'Georgia, "Times New Roman", serif', color: 'var(--purple)', fontWeight: 300 }}>Tools</em>
           </h2>
         </div>
 
@@ -191,6 +189,7 @@ export default function Skills() {
             <CategoryRow key={cat.label} category={cat} index={i} />
           ))}
         </div>
+
       </div>
     </section>
   );
