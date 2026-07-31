@@ -2,6 +2,7 @@ import { useScrollProgress } from './hooks/hooks';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Skills from './components/Skills';
+import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Services from './components/Services';
 import Process from './components/Process';
@@ -16,6 +17,7 @@ export default function App() {
       <Nav />
       <Hero />
       <Skills />
+      <Experience />
       <Projects />
       <Services />
       <Process />

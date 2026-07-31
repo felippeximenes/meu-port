@@ -19,6 +19,68 @@ export interface Service {
 export interface Step { n: string; title: string; desc: string; }
 export interface Faq { q: string; a: string; }
 
+export interface Experience {
+  company: string;
+  role: string;
+  period: string;
+  current?: boolean;
+  year: string;
+  chips: string[];
+  highlights: string[];
+}
+
+export const experiences: Experience[] = [
+  {
+    company: 'Neocoder',
+    role: 'Desenvolvedor Web',
+    period: 'Abr 2026 – presente',
+    current: true,
+    year: '2026',
+    chips: ['n8n', 'Make.com', 'Pipedrive', 'Uptime'],
+    highlights: [
+      'Automações com agentes IA via n8n integradas a fluxos de trabalho internos',
+      'Dashboards automatizados no Notion via Make.com e integração CRM',
+      'Monitoramento de uptime e performance do site',
+    ],
+  },
+  {
+    company: 'Zosia AI',
+    role: 'Desenvolvedor Full Stack Jr',
+    period: 'Out 2025 – presente',
+    current: true,
+    year: '2025',
+    chips: ['FastAPI', 'RAG', 'PGVector', 'NestJS', 'Angular 17', 'Playwright'],
+    highlights: [
+      'Pipeline RAG em produção com embeddings vetoriais e busca semântica via PGVector',
+      'Estratégia de fallback garantindo zero downtime em caso de falha no LLM',
+      'Suítes E2E cobrindo todo o pipeline RAG com Playwright',
+    ],
+  },
+  {
+    company: 'Freelancer',
+    role: 'Desenvolvedor Full Stack',
+    period: 'Jun 2024 – Nov 2025',
+    year: '2024',
+    chips: ['React', 'Netlify Functions', 'Pipedrive', 'GTM · GA4'],
+    highlights: [
+      'Sites e aplicações responsivas ponta a ponta para clientes de pequenas empresas',
+      'Integração CRM Pipedrive via serverless com criação automática de negócios',
+      'Pipelines CI/CD na Netlify com gestão de variáveis e estratégia de branches',
+    ],
+  },
+  {
+    company: 'Trem do Corcovado',
+    role: 'Agente de Bilheteria Bilíngue',
+    period: 'Dez 2022 – Jul 2024',
+    year: '2022',
+    chips: ['Trilíngue', 'Alto volume'],
+    highlights: [
+      'Atendimento em português, inglês e espanhol a visitantes internacionais',
+      'Operação de sistemas de bilheteria e pagamento em ambiente de alto volume',
+    ],
+  },
+];
+
 export const EMAIL = 'felippelpximenes@outlook.com';
 export const LINKEDIN = 'https://www.linkedin.com/in/felippeximenes/';
 export const GITHUB = 'https://github.com/felippeximenes';
