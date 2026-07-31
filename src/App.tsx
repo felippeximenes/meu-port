@@ -3,7 +3,6 @@ import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
-import Stats from './components/Stats';
 import Services from './components/Services';
 import Process from './components/Process';
 import FaqSection from './components/FaqSection';
@@ -18,7 +17,6 @@ export default function App() {
       <Hero />
       <Skills />
       <Projects />
-      <Stats />
       <Services />
       <Process />
       <FaqSection />
