@@ -1,14 +1,32 @@
 import SpecularButton from './SpecularButton';
+import GooeyNav from './GooeyNav';
+
+const NAV_ITEMS = [
+  { label: 'Trabalhos', href: '#trabalhos' },
+  { label: 'Serviços', href: '#servicos' },
+  { label: 'Processo', href: '#processo' },
+  { label: 'FAQ', href: '#faq' },
+];
 
 export default function Nav() {
   return (
     <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 48px', position: 'sticky', top: 0, zIndex: 20, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)' }}>
       <a href="#" style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 20, fontWeight: 500 }}>Felippe Ximenes</a>
-      <div style={{ display: 'flex', gap: 34, fontSize: 14, fontWeight: 500, letterSpacing: '0.02em', color: 'var(--muted)', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-        <a href="#trabalhos">Trabalhos</a>
-        <a href="#servicos">Serviços</a>
-        <a href="#processo">Processo</a>
-        <a href="#faq">FAQ</a>
+      {/* Overlay sem transform — evita stacking context que quebra mix-blend-mode */}
+      {/* overflow:hidden contém o ::before/-75px sem criar stacking context (sem z-index nem transform) */}
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
+        <div style={{ background: '#0E0D0C', borderRadius: 100, padding: '2px 6px', pointerEvents: 'auto', clipPath: 'inset(0 round 100px)' }}>
+          <GooeyNav
+            items={NAV_ITEMS}
+            particleCount={15}
+            particleDistances={[30, 8]}
+            particleR={60}
+            initialActiveIndex={0}
+            animationTime={600}
+            timeVariance={300}
+            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+          />
+        </div>
       </div>
       <SpecularButton href="#contato" size="sm">Fale comigo</SpecularButton>
     </nav>
