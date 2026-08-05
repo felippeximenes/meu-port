@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -134,7 +134,7 @@ function CategoryRow({ category, index }: { category: Category; index: number })
       {/* Ghost watermark */}
       <span aria-hidden style={{
         position: 'absolute', right: -12, top: 0,
-        fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700,
+        fontFamily: "'Manrope', sans-serif", fontWeight: 700,
         fontSize: 'clamp(100px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.05em',
         color: '#fff', opacity: 0.035, pointerEvents: 'none', userSelect: 'none',
       }}>{num}</span>
@@ -178,7 +178,7 @@ export default function Skills() {
           <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
             02 — Stack
           </span>
-          <h2 style={{ margin: '14px 0 0', fontFamily: "'Space Grotesk', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: '14px 0 0', fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Skills</strong> &amp;{' '}
             <em style={{ fontStyle: 'italic', fontFamily: 'Georgia, "Times New Roman", serif', color: 'var(--purple)', fontWeight: 300 }}>Tools</em>
           </h2>

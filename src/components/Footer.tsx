@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+﻿import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { EMAIL, LINKEDIN, GITHUB } from '../data';
 import { useReveal } from '../hooks/hooks';
 
@@ -46,8 +46,8 @@ export default function Footer() {
             </Suspense>
           )}
         </div>
-        <h2 ref={ref} style={{ ...style, margin: 0, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 400, fontSize: 'clamp(34px, 4.5vw, 60px)', lineHeight: 1.1, maxWidth: 760 }}>
-          <em style={{ color: '#8b8890', fontStyle: 'normal' }}>Vamos conversar,</em> e eu cuido do resto.
+        <h2 ref={ref} style={{ ...style, margin: 0, fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 'clamp(34px, 4.5vw, 60px)', lineHeight: 1.1, maxWidth: 760 }}>
+          <em style={{ color: '#8b8890', fontFamily: "'Playfair Display', serif", fontStyle: 'italic', fontWeight: 400 }}>Vamos conversar,</em> e eu cuido do resto.
         </h2>
         <div style={{ marginTop: 32 }}>
           <a
@@ -57,7 +57,7 @@ export default function Footer() {
               background: '#ffffff', color: '#0a0a0a',
               borderRadius: 999, padding: '14px 28px',
               fontSize: 15, fontWeight: 500,
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Manrope', sans-serif",
               textDecoration: 'none', letterSpacing: '-0.01em',
               transition: 'opacity 0.18s ease',
             }}

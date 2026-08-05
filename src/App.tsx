@@ -1,12 +1,14 @@
 import { useScrollProgress } from './hooks/hooks';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
+
 import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Services from './components/Services';
 import Process from './components/Process';
 import FaqSection from './components/FaqSection';
+import LogoTicker from './components/LogoTicker';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -22,6 +24,7 @@ export default function App() {
       <Services />
       <Process />
       <FaqSection />
+      <LogoTicker />
       <Footer />
     </>
   );

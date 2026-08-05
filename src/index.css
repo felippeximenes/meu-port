@@ -16,7 +16,7 @@
 html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Sora', sans-serif;
   background: var(--bg);
   color: var(--fg);
   overflow-x: hidden;
