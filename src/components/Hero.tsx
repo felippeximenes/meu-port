@@ -31,14 +31,16 @@ export default function Hero() {
       >
         {/* Portrait — em fluxo, ocupa o topo */}
         <div style={{ position: 'relative', height: '58vh', flexShrink: 0 }}>
-          <motion.div
-            initial={{ y: 60, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={ENTER}
-            style={{ position: 'absolute', left: '50%', top: 0, transform: 'translateX(-50%)', height: '100%', width: 'min(86vw, 360px)', maskImage: MASK, WebkitMaskImage: MASK }}
-          >
-            <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
-          </motion.div>
+          <div style={{ position: 'absolute', left: '50%', top: 0, transform: 'translateX(-50%)', height: '100%', width: 'min(86vw, 360px)', maskImage: MASK, WebkitMaskImage: MASK }}>
+            <motion.div
+              initial={{ y: 60, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={ENTER}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+            </motion.div>
+          </div>
         </div>
 
         {/* Conteúdo abaixo da imagem */}
