@@ -27,22 +27,22 @@ export default function Hero() {
     return (
       <header
         className="hero-noise"
-        style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
+        style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column' }}
       >
-        {/* Portrait — mobile */}
-        <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '75vh', width: 'min(86vw, 360px)', maskImage: MASK, WebkitMaskImage: MASK }}>
+        {/* Portrait — em fluxo, ocupa o topo */}
+        <div style={{ position: 'relative', height: '58vh', flexShrink: 0 }}>
           <motion.div
             initial={{ y: 60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={ENTER}
-            style={{ width: '100%', height: '100%' }}
+            style={{ position: 'absolute', left: '50%', top: 0, transform: 'translateX(-50%)', height: '100%', width: 'min(86vw, 360px)', maskImage: MASK, WebkitMaskImage: MASK }}
           >
             <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
           </motion.div>
         </div>
 
-        {/* Conteúdo em coluna única */}
-        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 16, padding: '0 24px 40px' }}>
+        {/* Conteúdo abaixo da imagem */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 16, padding: '0 24px 40px' }}>
           <motion.div
             initial={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
