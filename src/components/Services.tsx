@@ -144,7 +144,7 @@ export default function Services() {
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
             02 — Serviços
           </span>
-          <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Soluções completas</strong> que tiram ideias do papel.{' '}
             Do serverless na AWS ao pixel — com{' '}
             <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>IA generativa</em>{' '}

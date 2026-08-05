@@ -178,7 +178,7 @@ export default function Skills() {
           <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
             02 — Stack
           </span>
-          <h2 style={{ margin: '14px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: '14px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Skills</strong> &amp;{' '}
             <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>Tools</em>
           </h2>

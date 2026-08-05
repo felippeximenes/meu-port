@@ -110,7 +110,7 @@ export default function Projects() {
         <div ref={head.ref} style={{ ...head.style, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: '48px 48px 28px', flexShrink: 0 }}>
           <div>
             <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block' }}>01 — Trabalhos selecionados</span>
-            <h2 style={{ margin: '12px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 'clamp(30px, 3.4vw, 46px)' }}>Trabalhos em destaque</h2>
+            <h2 style={{ margin: '12px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(30px, 3.4vw, 46px)' }}>Trabalhos em destaque</h2>
           </div>
           <a href="https://github.com/felippeximenes" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid var(--line)', borderRadius: 999, padding: '10px 18px', fontSize: 14, fontWeight: 500, flexShrink: 0 }}>
             Todos os projetos ↗

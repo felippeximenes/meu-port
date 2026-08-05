@@ -11,7 +11,7 @@ export default function FaqSection() {
     <section id="faq" style={{ maxWidth: 1280, margin: '0 auto', padding: '120px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
       <div ref={left.ref} style={left.style}>
         <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>04 — FAQ</span>
-        <h2 style={{ margin: '18px 0 28px', fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 'clamp(30px, 3vw, 44px)', lineHeight: 1.15 }}>
+        <h2 style={{ margin: '18px 0 28px', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(30px, 3vw, 44px)', lineHeight: 1.15 }}>
           Respostas para as dúvidas <em style={{ color: 'var(--muted)', fontStyle: 'normal' }}>mais comuns antes de começar.</em>
         </h2>
         <SpecularButton href={`mailto:${EMAIL}`} size="md">Me mande um email</SpecularButton>

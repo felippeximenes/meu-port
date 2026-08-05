@@ -46,7 +46,7 @@ export default function Footer() {
             </Suspense>
           )}
         </div>
-        <h2 ref={ref} style={{ ...style, margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 'clamp(34px, 4.5vw, 60px)', lineHeight: 1.1, maxWidth: 760 }}>
+        <h2 ref={ref} style={{ ...style, margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(34px, 4.5vw, 60px)', lineHeight: 1.1, maxWidth: 760 }}>
           <em style={{ color: '#8b8890', fontFamily: "'Inter', sans-serif", fontStyle: 'italic', fontWeight: 400 }}>Vamos conversar,</em> e eu cuido do resto.
         </h2>
         <div style={{ marginTop: 32 }}>

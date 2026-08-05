@@ -129,7 +129,7 @@ export default function Experience() {
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
             Experiência
           </span>
-          <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Onde apliquei</strong> o que sei —{' '}
             do atendimento multilíngue a{' '}
             <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>
