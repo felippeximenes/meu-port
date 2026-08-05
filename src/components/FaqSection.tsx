@@ -8,7 +8,7 @@ export default function FaqSection() {
   const left = useReveal<HTMLDivElement>();
   const right = useReveal<HTMLDivElement>(0.12, 0.1);
   return (
-    <section id="faq" style={{ maxWidth: 1280, margin: '0 auto', padding: '120px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+    <section id="faq" className="faq-sec faq-grid" style={{ maxWidth: 1280, margin: '0 auto', padding: '120px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
       <div ref={left.ref} style={left.style}>
         <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>04 — FAQ</span>
         <h2 style={{ margin: '18px 0 28px', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(30px, 3vw, 44px)', lineHeight: 1.15 }}>

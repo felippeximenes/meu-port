@@ -121,12 +121,12 @@ export default function Experience() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="experiencia" style={{ background: '#fff', padding: '96px 48px 112px' }}>
+    <section ref={sectionRef} id="experiencia" className="exp-sec" style={{ background: '#fff', padding: '96px 48px 112px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
 
         {/* Section heading */}
-        <div className="exp-head" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 72, alignItems: 'start' }}>
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
+        <div className="exp-head exp-head-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 72, alignItems: 'start' }}>
+          <span className="exp-head-spacer" style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
             Experiência
           </span>
           <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
@@ -140,8 +140,8 @@ export default function Experience() {
         </div>
 
         {/* Timeline — alinhado com o grid do heading */}
-        <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48 }}>
-          <div />
+        <div className="exp-tl-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48 }}>
+          <div className="exp-tl-spacer" />
           <div style={{ position: 'relative' }}>
             {/* Dim background track */}
             <div style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: 'rgba(124,58,237,0.1)', borderRadius: 2 }} />

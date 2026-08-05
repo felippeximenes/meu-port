@@ -23,7 +23,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer ref={footerRef} id="contato" className="noise-bg" style={{ color: '#fff', borderRadius: '32px 32px 0 0', padding: '110px 48px 0' }}>
+    <footer ref={footerRef} id="contato" className="noise-bg footer-root" style={{ color: '#fff', borderRadius: '32px 32px 0 0', padding: '110px 48px 0' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <div style={{ width: 260, height: 260, marginBottom: 8 }}>
           {showGlobe && (
@@ -69,7 +69,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 64, justifyContent: 'center', marginTop: 96, paddingBottom: 56 }}>
+      <div className="footer-links" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 64, justifyContent: 'center', marginTop: 96, paddingBottom: 56 }}>
         <div>
           <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>Navegação</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
@@ -95,7 +95,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 0', borderTop: '1px solid var(--dark-line)', fontSize: 13, color: '#7a7780' }}>
+      <div className="footer-bottom" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 0', borderTop: '1px solid var(--dark-line)', fontSize: 13, color: '#7a7780' }}>
         <span>Felippe Ximenes © 2026 — Rio de Janeiro, Brasil</span>
         <span>Feito com React &amp; TypeScript</span>
       </div>

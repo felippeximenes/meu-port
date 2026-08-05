@@ -139,7 +139,7 @@ function CategoryRow({ category, index }: { category: Category; index: number })
         color: '#fff', opacity: 0.035, pointerEvents: 'none', userSelect: 'none',
       }}>{num}</span>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', alignItems: 'center', gap: '0 32px' }}>
+      <div className="skills-row-grid" style={{ display: 'grid', gridTemplateColumns: '160px 1fr', alignItems: 'center', gap: '0 32px' }}>
         {/* Left — number + label */}
         <div className="cat-label" style={{ opacity: 0 }}>
           <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--purple)', opacity: 0.8, display: 'block' }}>
@@ -151,7 +151,7 @@ function CategoryRow({ category, index }: { category: Category; index: number })
         </div>
 
         {/* Right — icons centered */}
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="skills-icons" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
           {category.skills.map(s => <SkillIcon key={s.label} skill={s} />)}
         </div>
       </div>
@@ -171,7 +171,7 @@ export default function Skills() {
   }, []);
 
   return (
-    <section style={{ background: 'var(--dark)', padding: '96px 48px 112px' }}>
+    <section className="skills-sec" style={{ background: 'var(--dark)', padding: '96px 48px 112px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
 
         <div ref={headRef} style={{ marginBottom: 72, opacity: 0 }}>

@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
+export function useIsMobile(breakpoint = 768) {
+  const [mobile, setMobile] = useState(() => window.innerWidth < breakpoint);
+  useEffect(() => {
+    const fn = () => setMobile(window.innerWidth < breakpoint);
+    window.addEventListener('resize', fn, { passive: true });
+    return () => window.removeEventListener('resize', fn);
+  }, [breakpoint]);
+  return mobile;
+}
+
 export function useReveal<T extends HTMLElement>(threshold = 0.12, delay = 0, fromX = 0) {
   const ref = useRef<T>(null);
   const [visible, setVisible] = useState(false);

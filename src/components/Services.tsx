@@ -117,7 +117,7 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
   );
 
   return (
-    <div ref={ref} style={{ ...style, ...pos }}>
+    <div ref={ref} className={`svc-card-item${s.dark ? ' svc-card-feature' : ''}`} style={{ ...style, ...pos }}>
       <TiltedCard
         containerHeight="100%"
         containerWidth="100%"
@@ -138,9 +138,9 @@ export default function Services() {
   const { ref, style } = useReveal<HTMLDivElement>();
   return (
     <section id="servicos" style={{ background: '#F8F7F5', padding: '80px 0 120px' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
+      <div className="svc-sec-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
 
-        <div ref={ref} style={{ ...style, display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 56, alignItems: 'start' }}>
+        <div ref={ref} style={{ ...style, display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 56, alignItems: 'start' }} className="svc-head">
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
             02 — Serviços
           </span>
@@ -152,7 +152,7 @@ export default function Services() {
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gridTemplateRows: 'auto auto', gap: 20 }}>
+        <div className="svc-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gridTemplateRows: 'auto auto', gap: 20 }}>
           {services.map((s, i) => (
             <ServiceCard key={s.title} s={s} num={NUMS[i]} pos={GRID_POS[i]} delay={i * 0.1} />
           ))}

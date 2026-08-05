@@ -55,3 +55,42 @@ button { cursor: pointer; font-family: inherit; }
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* Nav */
+  .nav-root { padding-left: 20px !important; padding-right: 20px !important; }
+  .nav-center { display: none !important; }
+
+  /* Skills */
+  .skills-sec { padding-left: 20px !important; padding-right: 20px !important; padding-top: 64px !important; padding-bottom: 72px !important; }
+  .skills-head-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .skills-row-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .skills-icons { justify-content: flex-start !important; }
+
+  /* Experience */
+  .exp-sec { padding-left: 20px !important; padding-right: 20px !important; padding-top: 64px !important; padding-bottom: 72px !important; }
+  .exp-head-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .exp-head-spacer { display: none !important; }
+  .exp-tl-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+  .exp-tl-spacer { display: none !important; }
+
+  /* Services */
+  .svc-sec-inner { padding-left: 20px !important; padding-right: 20px !important; }
+  .svc-head { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .svc-cards { grid-template-columns: 1fr !important; grid-template-rows: auto !important; }
+  .svc-card-item { grid-column: auto !important; grid-row: auto !important; min-height: 280px; }
+  .svc-card-feature { min-height: 440px !important; }
+
+  /* Process */
+  .proc-sec { padding-left: 20px !important; padding-right: 20px !important; padding-top: 72px !important; padding-bottom: 72px !important; }
+
+  /* FAQ */
+  .faq-sec { padding-left: 20px !important; padding-right: 20px !important; padding-top: 72px !important; padding-bottom: 72px !important; }
+  .faq-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+
+  /* Footer */
+  .footer-root { padding-left: 20px !important; padding-right: 20px !important; padding-top: 72px !important; }
+  .footer-links { grid-template-columns: 1fr 1fr !important; gap: 28px 20px !important; }
+  .footer-bottom { flex-direction: column !important; gap: 8px !important; text-align: center !important; }
+}

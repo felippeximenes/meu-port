@@ -1,29 +1,96 @@
 import { motion } from 'motion/react';
 import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
+import { useIsMobile } from '../hooks/hooks';
+
+const MASK = 'linear-gradient(to bottom, black 88%, transparent 100%)';
+const IMG_SRC = '/upscalemedia-transformed.jpeg';
+const ENTER = { duration: 0.95, ease: [0.22, 1, 0.36, 1] } as const;
+
+const scrollHint = (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 2.8, duration: 1.2, ease: 'easeOut' }}
+    style={{ position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)', zIndex: 2, pointerEvents: 'none' }}
+  >
+    <svg width="20" height="12" viewBox="0 0 20 12" fill="none" style={{ animation: 'scroll-hint 1.8s ease-in-out infinite', display: 'block' }}>
+      <path d="M2 2L10 10L18 2" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </motion.div>
+);
 
 export default function Hero() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return (
+      <header
+        className="hero-noise"
+        style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
+      >
+        {/* Portrait — menor no mobile */}
+        <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '50vh', width: 'min(78vw, 320px)', maskImage: MASK, WebkitMaskImage: MASK }}>
+          <motion.div
+            initial={{ y: 60, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={ENTER}
+            style={{ width: '100%', height: '100%' }}
+          >
+            <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+          </motion.div>
+        </div>
+
+        {/* Conteúdo em coluna única */}
+        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 16, padding: '0 24px 40px' }}>
+          <motion.div
+            initial={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', border: '1px solid var(--line)', borderRadius: 999, padding: '8px 16px', fontSize: 14, color: 'var(--muted)', width: 'fit-content' }}
+          >
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1fae5e', boxShadow: '0 0 0 3px rgba(31,174,94,0.15)', animation: 'pulse-dot 2.5s ease-in-out infinite' }} />
+            Disponível para projetos
+          </motion.div>
+
+          <BlurText
+            text="Felippe constrói produtos com IA de ponta a ponta — do pipeline RAG à interface"
+            delay={120}
+            animateBy="words"
+            direction="top"
+            stepDuration={0.4}
+            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(24px, 7vw, 34px)', lineHeight: 1.18, letterSpacing: '-0.02em', color: 'var(--fg)' }}
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.5, delay: 0.6, ease: 'easeOut' }}
+            style={{ width: 'fit-content' }}
+          >
+            <SpecularButton href="#trabalhos" size="md">Ver projetos</SpecularButton>
+          </motion.div>
+        </div>
+
+        {scrollHint}
+      </header>
+    );
+  }
+
   return (
     <header
       className="hero-noise"
       style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
     >
-      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)' }}>
+      {/* Portrait desktop */}
+      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK, WebkitMaskImage: MASK }}>
         <motion.div
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            width: '100%', height: '100%',
-            maskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)',
-          }}
+          transition={ENTER}
+          style={{ width: '100%', height: '100%' }}
         >
-          <img
-            src="/upscalemedia-transformed.jpeg"
-            alt="Felippe Ximenes"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
-          />
+          <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
         </motion.div>
       </div>
 
@@ -67,16 +134,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.8, duration: 1.2, ease: 'easeOut' }}
-        style={{ position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)', zIndex: 2, pointerEvents: 'none' }}
-      >
-        <svg width="20" height="12" viewBox="0 0 20 12" fill="none" style={{ animation: 'scroll-hint 1.8s ease-in-out infinite', display: 'block' }}>
-          <path d="M2 2L10 10L18 2" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </motion.div>
+      {scrollHint}
     </header>
   );
 }
