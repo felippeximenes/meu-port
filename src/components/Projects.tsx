@@ -104,7 +104,7 @@ export default function Projects() {
 
   return (
     <section id="trabalhos" ref={wrapRef} style={{ background: '#F8F7F5', height: `${NUM * 100}vh`, position: 'relative' }}>
-      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'sticky', top: isMobile ? 68 : 0, height: isMobile ? 'calc(100vh - 68px)' : '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
         <div ref={head.ref} style={{ ...head.style, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: headerPad, flexShrink: 0 }}>
           <div>
