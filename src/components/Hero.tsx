@@ -4,8 +4,8 @@ import SpecularButton from './SpecularButton';
 export default function Hero() {
   return (
     <header className="hero-noise" style={{ position: 'relative', minHeight: '92vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}>
-      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '100vh', width: 'clamp(380px, 52vw, 860px)', maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)' }}>
-        <img src="/upscalemedia-transformed.jpeg" alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 8%' }} />
+      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)' }}>
+        <img src="/upscalemedia-transformed.jpeg" alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'end', padding: '0 48px 46px' }}>
