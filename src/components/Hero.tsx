@@ -1,46 +1,11 @@
-import { motion } from 'motion/react';
-import { useTilt } from '../hooks/hooks';
+﻿import { motion } from 'motion/react';
 import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
-import Orb from './Orb';
 export default function Hero() {
-  const tiltRef = useTilt<HTMLImageElement>(4);
   return (
     <header className="hero-noise" style={{ position: 'relative', minHeight: '92vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}>
-      {/* Orb atrás da foto — zIndex 0, background branco igual ao hero:
-          o anel colorido aparece em volta da pessoa, fundo fora do anel é branco (invisível) */}
-      <div style={{
-        position: 'absolute', left: '50%', top: '50vh',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 0,
-        filter: 'sepia(1) hue-rotate(255deg) saturate(2.2) brightness(1.15)',
-      }}>
-        <div style={{ width: 'min(120vh, 120vw)', height: 'min(120vh, 120vw)' }}>
-          <Orb
-            hue={0}
-            backgroundColor="#ffffff"
-            hoverIntensity={0.4}
-            rotateOnHover={false}
-            forceHoverState={false}
-          />
-        </div>
-      </div>
-
-      {/* felippe3.png tem ~34% de espaço vazio acima da cabeça — recorta esse topo e ancora a foto no alto, como no site de referência */}
-      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', overflow: 'hidden', display: 'flex', justifyContent: 'center', mixBlendMode: 'multiply', pointerEvents: 'none' }}>
-        <img
-          ref={tiltRef}
-          src="/upscalemedia-transformed.jpeg"
-          alt="Felippe Ximenes"
-          style={{
-            height: '130%', width: 'auto', flexShrink: 0, marginTop: '-29vh', display: 'block',
-            filter: 'contrast(1.06) brightness(1.02)',
-            maskImage: 'linear-gradient(to bottom, black 94%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 94%, transparent 100%)',
-            animation: 'fadeUp 1.1s ease both',
-            transition: 'transform 0.25s ease',
-          }}
-        />
+      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)' }}>
+        <img src="/upscalemedia-transformed.jpeg" alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'end', padding: '0 48px 46px' }}>
@@ -60,7 +25,7 @@ export default function Hero() {
             animateBy="words"
             direction="top"
             stepDuration={0.4}
-            style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 600, fontSize: 'clamp(26px, 2.6vw, 42px)', lineHeight: 1.15, letterSpacing: '-0.02em', color: 'var(--fg)' }}
+            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 600, fontSize: 'clamp(26px, 2.6vw, 42px)', lineHeight: 1.15, letterSpacing: '-0.02em', color: 'var(--fg)' }}
           />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 260, justifySelf: 'end', paddingRight: 'clamp(8px, 2vw, 32px)' }}>
