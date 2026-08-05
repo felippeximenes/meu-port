@@ -134,15 +134,15 @@ function CategoryRow({ category, index }: { category: Category; index: number })
       {/* Ghost watermark */}
       <span aria-hidden style={{
         position: 'absolute', right: -12, top: 0,
-        fontFamily: "'Manrope', sans-serif", fontWeight: 700,
-        fontSize: 'clamp(100px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.05em',
+        fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
+        fontSize: 'clamp(100px, 10vw, 150px)', lineHeight: 1, letterSpacing: '-0.03em',
         color: '#fff', opacity: 0.035, pointerEvents: 'none', userSelect: 'none',
       }}>{num}</span>
 
       <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr', alignItems: 'center', gap: '0 32px' }}>
         {/* Left — number + label */}
         <div className="cat-label" style={{ opacity: 0 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)', opacity: 0.8, display: 'block' }}>
+          <span style={{ fontFamily: "'Orbitron', sans-serif", fontSize: 10, fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--purple)', opacity: 0.8, display: 'block' }}>
             {num}
           </span>
           <span style={{ fontSize: 16, fontWeight: 500, color: 'rgba(255,255,255,0.6)', letterSpacing: '-0.01em', display: 'block', marginTop: 4 }}>
@@ -178,9 +178,9 @@ export default function Skills() {
           <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
             02 — Stack
           </span>
-          <h2 style={{ margin: '14px 0 0', fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: '14px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Skills</strong> &amp;{' '}
-            <em style={{ fontStyle: 'italic', fontFamily: 'Georgia, "Times New Roman", serif', color: 'var(--purple)', fontWeight: 300 }}>Tools</em>
+            <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 300 }}>Tools</em>
           </h2>
         </div>
 

@@ -13,9 +13,9 @@ function ProjectCard({ p }: { p: Project }) {
 
       <span aria-hidden style={{
         position: 'absolute', left: '-10px', bottom: '-24px',
-        fontFamily: "'Manrope', sans-serif", fontWeight: 700,
+        fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
         fontSize: 'clamp(160px, 18vw, 240px)', lineHeight: 1,
-        letterSpacing: '-0.04em', color: 'var(--fg)', opacity: 0.045,
+        letterSpacing: '-0.02em', color: 'var(--fg)', opacity: 0.045,
         pointerEvents: 'none', userSelect: 'none', zIndex: 0,
       }}>
         {p.n}
@@ -26,7 +26,7 @@ function ProjectCard({ p }: { p: Project }) {
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)' }}>
             {p.n} — {NUM.toString().padStart(2, '0')}
           </span>
-          <h3 style={{ margin: 0, fontFamily: "'Manrope', sans-serif", fontSize: 'clamp(26px, 3vw, 44px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>{p.name}</h3>
+          <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(26px, 3vw, 44px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>{p.name}</h3>
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: 'var(--muted)', maxWidth: 320 }}>{p.desc}</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 4 }}>
             {p.tags.map((t, i) => (
@@ -110,7 +110,7 @@ export default function Projects() {
         <div ref={head.ref} style={{ ...head.style, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: '48px 48px 28px', flexShrink: 0 }}>
           <div>
             <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block' }}>01 — Trabalhos selecionados</span>
-            <h2 style={{ margin: '12px 0 0', fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 'clamp(30px, 3.4vw, 46px)' }}>Trabalhos em destaque</h2>
+            <h2 style={{ margin: '12px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 'clamp(30px, 3.4vw, 46px)' }}>Trabalhos em destaque</h2>
           </div>
           <a href="https://github.com/felippeximenes" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid var(--line)', borderRadius: 999, padding: '10px 18px', fontSize: 14, fontWeight: 500, flexShrink: 0 }}>
             Todos os projetos ↗

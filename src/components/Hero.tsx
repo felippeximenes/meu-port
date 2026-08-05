@@ -25,7 +25,7 @@ export default function Hero() {
             animateBy="words"
             direction="top"
             stepDuration={0.4}
-            style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 600, fontSize: 'clamp(26px, 2.6vw, 42px)', lineHeight: 1.15, letterSpacing: '-0.02em', color: 'var(--fg)' }}
+            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(26px, 2.6vw, 42px)', lineHeight: 1.15, letterSpacing: '-0.02em', color: 'var(--fg)' }}
           />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 260, justifySelf: 'end', paddingRight: 'clamp(8px, 2vw, 32px)' }}>

@@ -22,8 +22,8 @@ function Entry({ exp, isLast }: { exp: Exp; isLast: boolean }) {
       {/* Ghost year watermark */}
       <span aria-hidden style={{
         position: 'absolute', right: -12, top: -8,
-        fontFamily: "'Manrope', sans-serif", fontWeight: 700,
-        fontSize: 'clamp(80px, 8vw, 120px)', lineHeight: 1, letterSpacing: '-0.05em',
+        fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
+        fontSize: 'clamp(80px, 8vw, 120px)', lineHeight: 1, letterSpacing: '-0.02em',
         color: 'var(--fg)', opacity: 0.04, pointerEvents: 'none', userSelect: 'none',
       }}>{exp.year}</span>
 
@@ -45,7 +45,7 @@ function Entry({ exp, isLast }: { exp: Exp; isLast: boolean }) {
       {/* Company name */}
       <h3 style={{
         margin: '0 0 4px',
-        fontFamily: "'Manrope', sans-serif",
+        fontFamily: "'Inter', sans-serif",
         fontWeight: 600,
         fontSize: 'clamp(22px, 2.8vw, 34px)',
         letterSpacing: '-0.02em',
@@ -129,10 +129,10 @@ export default function Experience() {
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
             Experiência
           </span>
-          <h2 style={{ margin: 0, fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Onde apliquei</strong> o que sei —{' '}
             do atendimento multilíngue a{' '}
-            <em style={{ fontStyle: 'italic', fontFamily: 'Georgia, "Times New Roman", serif', color: 'var(--purple)', fontWeight: 400 }}>
+            <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>
               pipelines de IA
             </em>{' '}
             em produção.

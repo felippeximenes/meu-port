@@ -37,15 +37,15 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
       {/* Ghost number */}
       <span aria-hidden style={{
         position: 'absolute', right: -10, bottom: -20,
-        fontFamily: "'Manrope', sans-serif", fontWeight: 700,
-        fontSize: 160, lineHeight: 1, letterSpacing: '-0.04em',
+        fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
+        fontSize: 160, lineHeight: 1, letterSpacing: '-0.02em',
         color: '#fff', opacity: 0.08, pointerEvents: 'none', userSelect: 'none',
       }}>{num}</span>
 
       <span style={{ position: 'relative', fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: 20 }}>
         {num} — Destaque
       </span>
-      <h3 style={{ position: 'relative', margin: 0, fontFamily: "'Manrope', sans-serif", fontSize: 'clamp(20px, 1.8vw, 28px)', fontWeight: 600, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 16 }}>
+      <h3 style={{ position: 'relative', margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(20px, 1.8vw, 28px)', fontWeight: 600, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 16 }}>
         {s.title}
       </h3>
       <p style={{ position: 'relative', margin: 0, fontSize: 14, lineHeight: 1.7, color: 'rgba(255,255,255,0.72)', flex: 1, marginBottom: 28 }}>
@@ -62,7 +62,7 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
       <a href="#trabalhos" style={{
         position: 'relative',
         display: 'inline-flex', alignItems: 'center', gap: 8,
-        fontFamily: "'Manrope', sans-serif", fontSize: 13, fontWeight: 500,
+        fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 500,
         color: '#fff', border: '1.5px solid rgba(255,255,255,0.35)', borderRadius: 999,
         padding: '10px 20px', width: 'fit-content', textDecoration: 'none',
       }}>
@@ -91,15 +91,15 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
       {/* Ghost number */}
       <span aria-hidden style={{
         position: 'absolute', right: -10, bottom: -20,
-        fontFamily: "'Manrope', sans-serif", fontWeight: 700,
-        fontSize: 140, lineHeight: 1, letterSpacing: '-0.04em',
+        fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
+        fontSize: 140, lineHeight: 1, letterSpacing: '-0.02em',
         color: 'var(--fg)', opacity: 0.04, pointerEvents: 'none', userSelect: 'none',
       }}>{num}</span>
 
       <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)', marginBottom: 20 }}>
         {num}
       </span>
-      <h3 style={{ margin: 0, fontFamily: "'Manrope', sans-serif", fontSize: 'clamp(20px, 1.8vw, 26px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 16 }}>
+      <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(20px, 1.8vw, 26px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 16 }}>
         {s.title}
       </h3>
       <p style={{ margin: 0, fontSize: 14, lineHeight: 1.7, color: 'var(--muted)', flex: 1, marginBottom: 24 }}>
@@ -144,10 +144,10 @@ export default function Services() {
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
             02 — Serviços
           </span>
-          <h2 style={{ margin: 0, fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Soluções completas</strong> que tiram ideias do papel.{' '}
             Do serverless na AWS ao pixel — com{' '}
-            <em style={{ fontStyle: 'italic', fontFamily: 'Georgia, "Times New Roman", serif', color: 'var(--purple)', fontWeight: 400 }}>IA generativa</em>{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>IA generativa</em>{' '}
             onde ela gera valor real.
           </h2>
         </div>
