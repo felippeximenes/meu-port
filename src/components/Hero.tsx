@@ -1,29 +1,9 @@
 ﻿import { motion } from 'motion/react';
 import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
-import Antigravity from './Antigravity';
 export default function Hero() {
   return (
     <header className="hero-noise" style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}>
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-        <Antigravity
-          count={250}
-          magnetRadius={6}
-          ringRadius={7}
-          waveSpeed={0.4}
-          waveAmplitude={1}
-          particleSize={1.5}
-          lerpSpeed={0.05}
-          color="#C4B5FD"
-          autoAnimate
-          particleVariance={1}
-          rotationSpeed={0}
-          depthFactor={1}
-          pulseSpeed={3}
-          particleShape="capsule"
-          fieldStrength={10}
-        />
-      </div>
       <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)' }}>
         <img src="/upscalemedia-transformed.jpeg" alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
       </div>
