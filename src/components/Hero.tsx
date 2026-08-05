@@ -3,8 +3,8 @@ import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
 export default function Hero() {
   return (
-    <header className="hero-noise" style={{ position: 'relative', minHeight: '92vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}>
-      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '96vh', width: 'clamp(360px, 54vw, 860px)', maskImage: 'linear-gradient(to bottom, black 86%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 86%, transparent 100%)' }}>
+    <header className="hero-noise" style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}>
+      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)' }}>
         <img src="/upscalemedia-transformed.jpeg" alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
       </div>
 
