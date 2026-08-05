@@ -29,8 +29,8 @@ export default function Hero() {
         className="hero-noise"
         style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
       >
-        {/* Portrait — menor no mobile */}
-        <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '50vh', width: 'min(78vw, 320px)', maskImage: MASK, WebkitMaskImage: MASK }}>
+        {/* Portrait — mobile */}
+        <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '75vh', width: 'min(86vw, 360px)', maskImage: MASK, WebkitMaskImage: MASK }}>
           <motion.div
             initial={{ y: 60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
