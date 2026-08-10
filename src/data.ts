@@ -141,18 +141,18 @@ export const projects: Project[] = [
 export const services: Service[] = [
   {
     title: 'Back-end & Cloud',
-    desc: 'APIs REST robustas e arquitetura serverless na AWS — Lambda, API Gateway, DynamoDB e infraestrutura declarada como código com SAM. Do endpoint à IAM Role, tudo versionado e reproduzível com um único deploy.',
+    desc: 'Construo a espinha dorsal do seu produto: APIs que aguentam pressão, arquitetura serverless na AWS (Lambda, DynamoDB, API Gateway) e infraestrutura declarada como código com SAM. Do endpoint à IAM Role, tudo versionado e reproduzível com um único deploy.',
     chips: ['Node.js · NestJS', 'FastAPI · Python', 'AWS SAM · DynamoDB'],
   },
   {
     title: 'Engenharia de IA & LLM',
-    desc: 'Pipelines RAG com embeddings vetoriais (Qdrant, PGVector) e LLMs em produção via Amazon Bedrock — agentes com LangGraph, saída estruturada com Pydantic e degradação graciosa quando o modelo falha.',
+    desc: 'Coloco IA para trabalhar de verdade no seu produto. Pipelines RAG com busca vetorial (Qdrant, PGVector), agentes com LangGraph e integração ao Bedrock com fallback garantido para quando o modelo falha.',
     chips: ['LangGraph · Agentic', 'Amazon Bedrock', 'Qdrant · PGVector'],
     dark: true,
   },
   {
     title: 'Produtos completos',
-    desc: 'Produtos web de ponta a ponta — SaaS com billing (Stripe, MercadoPago), e-commerce com checkout nativo, painéis admin com analytics reais, autenticação OAuth e conformidade LGPD. Entrega com repositório, infraestrutura e documentação.',
+    desc: 'Da conversa inicial ao produto no ar: front-end moderno, back-end sólido, pagamentos reais (Stripe, MercadoPago), painel admin com analytics e conformidade com a LGPD. Você recebe o repositório, a infraestrutura e tudo que precisa para tocar o projeto com autonomia.',
     chips: ['React · TypeScript', 'Stripe · MercadoPago', 'Angular · Next.js'],
   },
 ];

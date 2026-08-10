@@ -43,7 +43,7 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
       }}>{num}</span>
 
       <span style={{ position: 'relative', fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: 20 }}>
-        {num} — Destaque
+        {num} · Em destaque
       </span>
       <h3 style={{ position: 'relative', margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(20px, 1.8vw, 28px)', fontWeight: 600, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 16 }}>
         {s.title}
@@ -142,13 +142,13 @@ export default function Services() {
 
         <div ref={ref} style={{ ...style, display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 56, alignItems: 'start' }} className="svc-head">
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
-            02 — Serviços
+            O que faço
           </span>
           <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
-            <strong style={{ fontWeight: 600 }}>Soluções completas</strong> que tiram ideias do papel.{' '}
-            Do serverless na AWS ao pixel — com{' '}
+            <strong style={{ fontWeight: 600 }}>Construo o produto inteiro.</strong>{' '}
+            Do back-end ao pixel, com{' '}
             <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>IA generativa</em>{' '}
-            onde ela gera valor real.
+            onde ela faz diferença de verdade.
           </h2>
         </div>
 
