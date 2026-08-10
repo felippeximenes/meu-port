@@ -38,7 +38,7 @@ export default function Hero() {
               transition={ENTER}
               style={{ width: '100%', height: '100%' }}
             >
-              <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+              <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }} />
             </motion.div>
           </div>
         </div>
@@ -56,7 +56,7 @@ export default function Hero() {
           </motion.div>
 
           <BlurText
-            text="Felippe constrói produtos com IA de ponta a ponta — do pipeline RAG à interface"
+            text="Produto completo, do backend ao pixel. Com IA que funciona em produção."
             delay={120}
             animateBy="words"
             direction="top"
@@ -92,7 +92,7 @@ export default function Hero() {
           transition={ENTER}
           style={{ width: '100%', height: '100%' }}
         >
-          <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+          <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }} />
         </motion.div>
       </div>
 
@@ -108,7 +108,7 @@ export default function Hero() {
             Disponível para projetos
           </motion.div>
           <BlurText
-            text="Felippe constrói produtos com IA de ponta a ponta — do pipeline RAG à interface"
+            text="Produto completo, do backend ao pixel. Com IA que funciona em produção."
             delay={120}
             animateBy="words"
             direction="top"
@@ -118,7 +118,7 @@ export default function Hero() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 260, justifySelf: 'end', paddingRight: 'clamp(8px, 2vw, 32px)' }}>
           <BlurText
-            text="Desenvolvedor Full-Stack com LLMs em produção: RAG, automações e aplicações web escaláveis — da arquitetura ao deploy."
+            text="Full-Stack Developer com LLMs em produção. RAG, automações e aplicações web escaláveis, da arquitetura ao deploy."
             delay={60}
             animateBy="words"
             direction="top"
