@@ -39,8 +39,8 @@ export const experiences: Experience[] = [
     chips: ['n8n', 'Make.com', 'Pipedrive', 'Uptime'],
     highlights: [
       'Automações com agentes IA via n8n integradas a fluxos de trabalho internos',
-      'Dashboards automatizados no Notion via Make.com e integração CRM',
-      'Monitoramento de uptime e performance do site',
+      'Dashboards automatizados no Notion via Make.com e integração CRM Pipedrive',
+      'Monitoramento de uptime e performance de aplicações em produção',
     ],
   },
   {
@@ -87,43 +87,53 @@ export const GITHUB = 'https://github.com/felippeximenes';
 
 export const projects: Project[] = [
   {
-    n: '01', name: 'Certara', tags: ['React', 'Amazon Bedrock'],
+    n: '01',
+    name: 'Certara',
+    tags: ['React · TypeScript', 'AWS Lambda · SAM', 'Stripe · RAG'],
     href: 'https://github.com/felippeximenes/certara-app',
-    desc: 'Plataforma de preparação para certificações AWS: quizzes com questões geradas por IA (Bedrock), simulados, flashcards e plano de estudos personalizado.',
+    desc: 'SaaS freemium de preparação para certificações AWS (CLF-C02, SAA-C03, DVA-C02): questões geradas em tempo real via pipeline RAG — Amazon Titan Embed + Qdrant Cloud — com o modelo Nova no Bedrock, garantindo conteúdo sempre alinhado à documentação oficial. Inclui simulado de 65 questões com detecção de troca de aba, flashcards adaptativos ao histórico real do usuário, plano de estudos por IA e compartilhamento de resultado como imagem. Backend em 13 Lambdas Python (AWS SAM), autenticação Cognito + Google OAuth, assinaturas via Stripe, quotas anti-abuso com FingerprintJS e TTL automático no DynamoDB.',
     img: '/projects/certara2.png',
     site: 'certara.app',
     video: '/video/certara.mp4',
   },
   {
-    n: '02', name: 'Certara Agent', tags: ['LangGraph · RAG', 'AWS Lambda'],
+    n: '02',
+    name: 'Certara Agent',
+    tags: ['LangGraph · Agentic', 'AWS Lambda · SAM', 'RAG · Qdrant'],
     href: 'https://github.com/felippeximenes/certara-agent',
-    desc: 'Agente conversacional multi-etapas (LangGraph) para prep de certificação AWS — pipeline RAG com Qdrant, tool calling na AWS Price List API real e deploy serverless via SAM.',
+    desc: 'Assistente conversacional agentic construído com LangGraph: decompõe cada pergunta de certificação AWS em um plano de até 4 passos (RAG ou tool) e os executa em sequência — buscando teoria no Qdrant via RAG e consultando preços reais na AWS Price List API. Um segundo LLM com saída estruturada (Pydantic) resolve referências indiretas apenas quando o caminho determinístico falha, economizando custo. Estado persistido por thread via checkpointing Postgres (Neon), deploy serverless via AWS SAM com rate limiting no API Gateway e testes E2E contra o ambiente real com Playwright.',
     img: '/projects/certara.png',
     site: 'certara-agent',
     video: '/video/agent.webm',
   },
   {
-    n: '03', name: 'EduTrack', tags: ['Node.js', 'React 19'],
+    n: '03',
+    name: 'EduTrack',
+    tags: ['Node.js · Prisma · MySQL', 'React 19 · TypeScript', 'Playwright · PDF'],
     href: 'https://github.com/felippeximenes/edu-track',
-    desc: 'LMS completo com controle de acesso por papel para alunos, instrutores e administradores — certificados em PDF verificáveis por QR code.',
+    desc: 'LMS full-stack com autenticação JWT e RBAC em três papéis (aluno, instrutor, admin) — autorização aplicada em duas camadas: middleware de rota e checagem de posse diretamente na query do Prisma. Emite certificados em PDF com QR code de verificação pública ao concluir 100% do curso: valida conclusão por aulas distintas (groupBy), renderiza HTML com Playwright headless e disponibiliza rota pública para terceiros verificarem sem login. Validação de contrato de API com Zod, deploy multi-plataforma (frontend Vercel + backend e MySQL no Railway) com proxy reverso configurado para eliminar CORS.',
     img: '/projects/edutrack.png',
-    site: 'edutrack.app',
+    site: 'edu-track-blond-eta.vercel.app',
     video: '/video/edutrack1.webm',
   },
   {
-    n: '04', name: 'Moldz3D', tags: ['E-commerce', 'Full Stack'],
+    n: '04',
+    name: 'Moldz3D',
+    tags: ['FastAPI · MongoDB', 'MercadoPago · Pix', 'React · WebGL2'],
     href: 'https://moldz3d.com.br',
-    desc: 'Loja de modelos 3D digitais com painel admin construído do zero — gestão de produtos com drag-and-drop, pedidos com etiqueta de rastreio, cupons, newsletter e popups.',
+    desc: 'E-commerce completo para venda de peças de impressão 3D com checkout 100% nativo via MercadoPago — Pix com QR code + polling, boleto e cartão com tokenização PCI-compliant, tudo sem redirecionar o cliente. Cálculo de frete real por CEP (Melhor Envio), e-mails transacionais (Resend), devoluções com estorno automático, newsletter via Mailchimp e painel admin com analytics reais via 8 queries HogQL paralelas ao PostHog. Proteção antibot Cloudflare Turnstile verificada no servidor, conformidade LGPD, shader GLSL no hero via WebGL2 puro. Stack: FastAPI assíncrono + MongoDB Atlas no Railway, React no Vercel.',
     img: '/projects/moldz2.png',
     site: 'moldz3d.com.br',
     video: '/video/moldz3d.webm',
   },
   {
-    n: '05', name: 'Caminhos', tags: ['Landing Page', 'GTM · GA4'],
+    n: '05',
+    name: 'Caminhos',
+    tags: ['React · TypeScript', 'Framer Motion', 'Tailwind CSS v4'],
     href: 'https://quiet-bienenstitch-a8a314.netlify.app/',
-    desc: 'Landing page de viagens responsiva com animações de scroll via IntersectionObserver, formulário de inscrição e tracking profissional com Google Tag Manager + GA4.',
+    desc: 'Landing page de agência de viagens migrada de HTML/CSS vanilla para React + TypeScript + Tailwind CSS v4, com foco em motion design de alta qualidade: carrossel 3D com perspectiva CSS real e springs do Framer Motion, navbar com spotlight radial que segue o cursor, tilt 3D no hero por posição do mouse e micro-interações de toque/hover. Acessibilidade sistêmica — prefers-reduced-motion em todos os hooks, ARIA completo e navegação por teclado no carrossel — e rastreamento de leads via Google Tag Manager. Publicado no Netlify com deploy contínuo.',
     img: '/projects/travel2.png',
-    site: 'caminhos.app',
+    site: 'netlify.app',
     video: '/video/caminhos.webm',
   }
 ];
@@ -131,20 +141,20 @@ export const projects: Project[] = [
 export const services: Service[] = [
   {
     title: 'Back-end & Cloud',
-    desc: 'APIs REST e arquitetura serverless na AWS: Lambda, API Gateway, DynamoDB e infraestrutura como código com SAM.',
-    chips: ['Node.js / NestJS', 'FastAPI', 'AWS']
+    desc: 'APIs REST robustas e arquitetura serverless na AWS — Lambda, API Gateway, DynamoDB e infraestrutura declarada como código com SAM. Do endpoint à IAM Role, tudo versionado e reproduzível com um único deploy.',
+    chips: ['Node.js · NestJS', 'FastAPI · Python', 'AWS SAM · DynamoDB'],
   },
   {
     title: 'Engenharia de IA & LLM',
-    desc: 'Pipelines RAG, busca vetorial e deploy de LLMs em produção — com estratégias de confiabilidade e fallback.',
-    chips: ['RAG', 'Amazon Bedrock', 'PGVector / Qdrant'],
-    dark: true
+    desc: 'Pipelines RAG com embeddings vetoriais (Qdrant, PGVector) e LLMs em produção via Amazon Bedrock — agentes com LangGraph, saída estruturada com Pydantic e degradação graciosa quando o modelo falha.',
+    chips: ['LangGraph · Agentic', 'Amazon Bedrock', 'Qdrant · PGVector'],
+    dark: true,
   },
   {
     title: 'Produtos completos',
-    desc: 'MVPs e SaaS de ponta a ponta, da arquitetura à implantação — incluindo billing, automações e dashboards.',
-    chips: ['React / Next.js', 'Angular', 'Stripe']
-  }
+    desc: 'Produtos web de ponta a ponta — SaaS com billing (Stripe, MercadoPago), e-commerce com checkout nativo, painéis admin com analytics reais, autenticação OAuth e conformidade LGPD. Entrega com repositório, infraestrutura e documentação.',
+    chips: ['React · TypeScript', 'Stripe · MercadoPago', 'Angular · Next.js'],
+  },
 ];
 
 export const steps: Step[] = [
@@ -152,13 +162,13 @@ export const steps: Step[] = [
   { n: '02', title: 'Escopo & proposta', desc: 'Defino entregas, prazos e valores em uma proposta clara, sem surpresas no meio do caminho.' },
   { n: '03', title: 'Desenvolvimento', desc: 'Construo em ciclos curtos, com entregas parciais para você acompanhar e ajustar a rota cedo.' },
   { n: '04', title: 'Entrega', desc: 'Produto publicado, testado e documentado — com repositório, credenciais e tudo que é seu.' },
-  { n: '05', title: 'Suporte', desc: 'Período de ajustes incluso após a entrega, e manutenção contínua se o projeto pedir.' }
+  { n: '05', title: 'Suporte', desc: 'Período de ajustes incluso após a entrega, e manutenção contínua se o projeto pedir.' },
 ];
 
 export const faqs: Faq[] = [
-  { q: 'Qual é o prazo típico de um projeto?', a: 'Depende do escopo: uma landing page leva de 1 a 2 semanas; aplicações completas com back-end costumam levar de 4 a 8 semanas. Depois da primeira conversa envio um cronograma detalhado.' },
-  { q: 'Você trabalha com quais tecnologias?', a: 'Python e TypeScript/JavaScript: React, Angular e Next.js no front; Node.js/NestJS e FastAPI no back; AWS (Lambda, Bedrock, DynamoDB), PostgreSQL e bancos vetoriais. Em IA: pipelines RAG, embeddings e deploy de LLMs em produção.' },
+  { q: 'Qual é o prazo típico de um projeto?', a: 'Depende do escopo: uma landing page leva de 1 a 2 semanas; aplicações completas com back-end e integrações costumam levar de 4 a 8 semanas. Depois da primeira conversa envio um cronograma detalhado.' },
+  { q: 'Você trabalha com quais tecnologias?', a: 'Python e TypeScript/JavaScript: React, Angular e Next.js no front; Node.js/NestJS e FastAPI no back; AWS (Lambda, Bedrock, DynamoDB, SAM), MongoDB, PostgreSQL e bancos vetoriais (Qdrant, PGVector). Em IA: pipelines RAG, agentes com LangGraph, embeddings e LLMs em produção via Amazon Bedrock.' },
   { q: 'O que você precisa para começar?', a: 'Uma conversa sobre o objetivo do projeto, referências que você gosta e o que já existe (marca, conteúdo, sistemas). A partir daí eu monto escopo e proposta.' },
   { q: 'Você oferece suporte após a entrega?', a: 'Sim. Todo projeto inclui um período de suporte para ajustes e correções, e podemos combinar manutenção contínua se fizer sentido.' },
-  { q: 'Qual a melhor forma de falar com você?', a: 'Email: felippelpximenes@outlook.com. Também estou no LinkedIn e no GitHub — os links estão no rodapé.' }
+  { q: 'Qual a melhor forma de falar com você?', a: 'Email: felippelpximenes@outlook.com. Também estou no LinkedIn e no GitHub — os links estão no rodapé.' },
 ];
