@@ -12,9 +12,10 @@ export interface Experience {
   current?: boolean; year: string; chips: string[]; highlights: string[];
 }
 
-export const EMAIL    = 'felippelpximenes@outlook.com';
-export const LINKEDIN = 'https://www.linkedin.com/in/felippeximenes/';
-export const GITHUB   = 'https://github.com/felippeximenes';
+export const EMAIL     = 'felippelpximenes@outlook.com';
+export const LINKEDIN  = 'https://www.linkedin.com/in/felippeximenes/';
+export const GITHUB    = 'https://github.com/felippeximenes';
+export const INSTAGRAM = 'https://www.instagram.com/felippidios/';
 
 export const RESUME: Record<Lang, string> = {
   pt: '/cv/felippe-ximenes-cv-pt.pdf',

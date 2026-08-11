@@ -1,5 +1,5 @@
 ﻿import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { EMAIL, LINKEDIN, GITHUB } from '../data';
+import { EMAIL, LINKEDIN, GITHUB, INSTAGRAM } from '../data';
 import { useReveal } from '../hooks/hooks';
 import { useT } from '../i18n';
 
@@ -85,6 +85,7 @@ export default function Footer() {
           <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>{t.connect}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
             <a href={LINKEDIN} target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href={INSTAGRAM} target="_blank" rel="noreferrer">Instagram</a>
             <a href={GITHUB} target="_blank" rel="noreferrer">GitHub</a>
             <a href={`mailto:${EMAIL}`}>Email</a>
           </div>
