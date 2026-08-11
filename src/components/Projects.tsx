@@ -15,7 +15,7 @@ const mediaBox = {
 
 function Media({ p }: { p: Project }) {
   const [imgErr, setImgErr] = useState(false);
-  if (p.video) return <video src={p.video} autoPlay={!window.matchMedia('(prefers-reduced-motion: reduce)').matches} muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }} />;
+  if (p.video) return <video src={p.video} muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }} />;
   if (imgErr) return <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: 13 }}>{p.name}</div>;
   return <img src={p.img} alt={p.name} onError={() => setImgErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }} />;
 }
@@ -75,6 +75,8 @@ export default function Projects() {
   const head = useReveal<HTMLDivElement>();
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const activeVideo = useRef(-1);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const wrapRef = usePinProgress<HTMLElement>((p) => {
     const seg = 1 / NUM;
@@ -95,6 +97,13 @@ export default function Projects() {
       el.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
       const fill = fillRefs.current[i];
       if (fill) fill.style.transform = `scaleX(${Math.min(1, Math.max(0, local))})`;
+
+      // Só o card ativo (>50% visível) reproduz vídeo — evita 5 vídeos tocando ao mesmo tempo
+      if (!reduceMotion && o > 0.5 && activeVideo.current !== i) {
+        if (activeVideo.current >= 0) stepRefs.current[activeVideo.current]?.querySelector('video')?.pause();
+        activeVideo.current = i;
+        el.querySelector('video')?.play().catch(() => {});
+      }
     });
   });
 
