@@ -13,7 +13,7 @@ const MASK_DESKTOP = [
   'linear-gradient(to bottom, black 85%, transparent 100%)',
   'linear-gradient(to right, black 93%, transparent 100%)',
 ].join(', ');
-const IMG_SRC = '/upscalemedia-transformed.jpeg';
+const IMG_SRC = '/upscalemedia-transformed.webp';
 const ENTER = { duration: 0.95, ease: [0.22, 1, 0.36, 1] } as const;
 
 const scrollHint = (
