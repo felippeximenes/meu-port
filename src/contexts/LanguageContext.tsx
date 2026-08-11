@@ -7,8 +7,10 @@ interface LangCtx { lang: Lang; toggle: () => void; }
 const Ctx = createContext<LangCtx>({ lang: 'pt', toggle: () => {} });
 const HTML_LANG: Record<Lang, string> = { pt: 'pt-BR', en: 'en' };
 
+const detectLang = (): Lang => navigator.language.toLowerCase().startsWith('pt') ? 'pt' : 'en';
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>('pt');
+  const [lang, setLang] = useState<Lang>(detectLang);
   useEffect(() => {
     document.documentElement.lang = HTML_LANG[lang];
   }, [lang]);
