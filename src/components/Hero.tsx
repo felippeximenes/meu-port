@@ -62,6 +62,7 @@ export default function Hero() {
           </motion.div>
 
           <BlurText
+            as="h1"
             text={t.heading}
             delay={120}
             animateBy="words"
@@ -114,6 +115,7 @@ export default function Hero() {
             {t.badge}
           </motion.div>
           <BlurText
+            as="h1"
             text={t.heading}
             delay={120}
             animateBy="words"

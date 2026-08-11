@@ -26,6 +26,7 @@ interface BlurTextProps {
   onAnimationComplete?: () => void;
   stepDuration?: number;
   style?: React.CSSProperties;
+  as?: 'p' | 'h1' | 'h2';
 }
 
 const BlurText = ({
@@ -38,6 +39,7 @@ const BlurText = ({
   rootMargin = '0px',
   animationFrom,
   animationTo,
+  as: Tag = 'p',
   easing = t => t,
   onAnimationComplete,
   stepDuration = 0.35,
@@ -45,7 +47,7 @@ const BlurText = ({
 }: BlurTextProps) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLParagraphElement>(null);
+  const ref = useRef<HTMLHeadingElement & HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -82,7 +84,7 @@ const BlurText = ({
   const times = Array.from({ length: stepCount }, (_, i) => (stepCount === 1 ? 0 : i / (stepCount - 1)));
 
   return (
-    <p ref={ref} className={className} style={{ display: 'flex', flexWrap: 'wrap', margin: 0, ...style }}>
+    <Tag ref={ref} className={className} style={{ display: 'flex', flexWrap: 'wrap', margin: 0, ...style }}>
       {elements.map((segment, index) => {
         const animateKeyframes = buildKeyframes(fromSnapshot, toSnapshots);
         const spanTransition = { duration: totalDuration, times, delay: (index * delay) / 1000, ease: easing };
@@ -100,7 +102,7 @@ const BlurText = ({
           </motion.span>
         );
       })}
-    </p>
+    </Tag>
   );
 };
 
