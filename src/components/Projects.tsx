@@ -86,7 +86,7 @@ export default function Projects() {
       const local = (p - i * seg) / seg;
       let o = 0, ty = 40;
       if (local >= 0 && local < 1) {
-        const fadeIn = Math.min(1, local / 0.25);
+        const fadeIn = i === 0 ? 1 : Math.min(1, local / 0.25);
         const fadeOut = i === NUM - 1 ? 1 : Math.min(1, (1 - local) / 0.25);
         o = Math.min(fadeIn, fadeOut);
         ty = (1 - fadeIn) * 40 - (1 - fadeOut) * 40;

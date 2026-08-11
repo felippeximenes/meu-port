@@ -110,7 +110,7 @@ export default function Hero() {
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'end', padding: '0 48px 46px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, paddingLeft: 'clamp(0px, 8vw, 120px)', maxWidth: 'clamp(240px, 32vw, 480px)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, paddingLeft: 'clamp(0px, 3vw, 80px)', maxWidth: 'clamp(120px, 18vw, 380px)' }}>
           <motion.div
             initial={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -130,7 +130,7 @@ export default function Hero() {
             style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(26px, 2.6vw, 42px)', lineHeight: 1.15, letterSpacing: '-0.02em', color: 'var(--fg)' }}
           />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 260, justifySelf: 'end', paddingRight: 'clamp(8px, 2vw, 32px)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 'clamp(120px, 18vw, 260px)', justifySelf: 'end', paddingRight: 'clamp(8px, 2vw, 32px)' }}>
           <BlurText
             text={t.sub}
             delay={60}

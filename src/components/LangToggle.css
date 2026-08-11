@@ -18,6 +18,13 @@
   background-color: #0E0D0C;
 }
 
+/* Area de toque expandida (>=44px) sem alterar o tamanho visual do switch */
+.lang-switch::before {
+  content: '';
+  position: absolute;
+  inset: -14px -10px;
+}
+
 .lang-switch svg {
   height: 100%;
 }

@@ -57,6 +57,13 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 /* ===== RESPONSIVE ===== */
+/* Entre o breakpoint mobile e ~1200px o GooeyNav central nao cabe entre
+   o nome e as acoes (fica coberto por elas) - some so ele, mantendo
+   nome e acoes em tamanho normal. */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .nav-center { display: none !important; }
+}
+
 @media (max-width: 768px) {
   /* Nav */
   .nav-root { padding-left: 16px !important; padding-right: 16px !important; }
