@@ -27,13 +27,15 @@ export default function FaqSection() {
           <div key={f.q} style={{ background: open === i ? '#fff' : 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 14, overflow: 'hidden', transition: 'background 0.2s ease' }}>
             <button
               onClick={() => setOpen(open === i ? -1 : i)}
+              aria-expanded={open === i}
+              aria-controls={`faq-answer-${i}`}
               style={{ all: 'unset', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '18px 22px', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontSize: 15, fontWeight: 600 }}
             >
               {f.q}
-              <span style={{ fontSize: 22, color: 'var(--muted)' }}>{open === i ? '×' : '+'}</span>
+              <span aria-hidden="true" style={{ fontSize: 22, color: 'var(--muted)' }}>{open === i ? '×' : '+'}</span>
             </button>
             {open === i && (
-              <p style={{ margin: 0, padding: '0 22px 20px', fontSize: 14, lineHeight: 1.6, color: 'var(--muted)' }}>{f.a}</p>
+              <p id={`faq-answer-${i}`} style={{ margin: 0, padding: '0 22px 20px', fontSize: 14, lineHeight: 1.6, color: 'var(--muted)' }}>{f.a}</p>
             )}
           </div>
         ))}
