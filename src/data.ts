@@ -16,6 +16,11 @@ export const EMAIL    = 'felippelpximenes@outlook.com';
 export const LINKEDIN = 'https://www.linkedin.com/in/felippeximenes/';
 export const GITHUB   = 'https://github.com/felippeximenes';
 
+export const RESUME: Record<Lang, string> = {
+  pt: '/cv/felippe-ximenes-cv-pt.pdf',
+  en: '/cv/felippe-ximenes-resume-en.pdf',
+};
+
 /* ─── Projects ─────────────────────────────────────────────────────────── */
 export const projects: Record<Lang, Project[]> = {
   pt: [

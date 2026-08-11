@@ -2,7 +2,11 @@ import { motion } from 'motion/react';
 import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
 import { useIsMobile } from '../hooks/hooks';
+import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
+import { RESUME } from '../data';
+
+const resumeLinkStyle = { display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 500, color: 'var(--fg)', textDecoration: 'none', border: '1px solid var(--line)', borderRadius: 999, padding: '13px 22px', whiteSpace: 'nowrap' } as const;
 
 const MASK = 'linear-gradient(to bottom, black 88%, transparent 100%)';
 const MASK_DESKTOP = [
@@ -27,6 +31,7 @@ const scrollHint = (
 
 export default function Hero() {
   const isMobile = useIsMobile();
+  const { lang } = useLang();
   const t = useT().hero;
 
   if (isMobile) {
@@ -36,7 +41,7 @@ export default function Hero() {
         style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column' }}
       >
         {/* Portrait — em fluxo, ocupa o topo */}
-        <div style={{ position: 'relative', height: '58vh', flexShrink: 0 }}>
+        <div style={{ position: 'relative', height: '46vh', flexShrink: 0 }}>
           <div style={{ position: 'absolute', left: '50%', top: 0, transform: 'translateX(-50%)', height: '100%', width: 'min(86vw, 360px)', maskImage: MASK, WebkitMaskImage: MASK }}>
             <motion.div
               initial={{ y: 60, opacity: 0 }}
@@ -44,13 +49,13 @@ export default function Hero() {
               transition={ENTER}
               style={{ width: '100%', height: '100%' }}
             >
-              <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center center', display: 'block' }} />
+              <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 90%', display: 'block' }} />
             </motion.div>
           </div>
         </div>
 
         {/* Conteúdo abaixo da imagem */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 16, padding: '0 24px 40px' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 16, padding: '0 24px 40px' }}>
           <motion.div
             initial={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -75,9 +80,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.5, delay: 0.6, ease: 'easeOut' }}
-            style={{ width: 'fit-content' }}
+            style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, width: '100%' }}
           >
             <SpecularButton href="#trabalhos" size="md">{t.cta}</SpecularButton>
+            <a href={RESUME[lang]} download style={resumeLinkStyle}>↓ {t.resume}</a>
           </motion.div>
         </div>
 
@@ -137,9 +143,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.5, delay: 0.6, ease: 'easeOut' }}
-            style={{ width: 'fit-content' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 14, width: 'fit-content' }}
           >
             <SpecularButton href="#trabalhos" size="md">{t.cta}</SpecularButton>
+            <a href={RESUME[lang]} download style={resumeLinkStyle}>↓ {t.resume}</a>
           </motion.div>
         </div>
       </div>

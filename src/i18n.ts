@@ -19,6 +19,7 @@ const T = {
       en: 'Full-Stack Developer with LLMs in production. RAG, automations, and scalable web apps — from architecture to deploy.',
     },
     cta: { pt: 'Ver projetos', en: 'See projects' },
+    resume: { pt: 'Baixar currículo', en: 'Download resume' },
   },
   projects: {
     label:         { pt: 'O que já construí',      en: "What I've built" },
@@ -84,7 +85,7 @@ export function useT() {
   const p = <V,>(o: { pt: V; en: V }): V => o[lang];
   return {
     nav:        { items: T.nav.items[lang],             cta: p(T.nav.cta) },
-    hero:       { badge: p(T.hero.badge), heading: p(T.hero.heading), sub: p(T.hero.sub), cta: p(T.hero.cta) },
+    hero:       { badge: p(T.hero.badge), heading: p(T.hero.heading), sub: p(T.hero.sub), cta: p(T.hero.cta), resume: p(T.hero.resume) },
     projects:   { label: p(T.projects.label), heading: p(T.projects.heading), viewProject: p(T.projects.viewProject), viewAll: p(T.projects.viewAll), viewAllMobile: p(T.projects.viewAllMobile) },
     services:   { label: p(T.services.label), headingNormal: p(T.services.headingNormal), headingEm: p(T.services.headingEm), headingEnd: p(T.services.headingEnd), viewAiProjects: p(T.services.viewAiProjects), featureLabel: p(T.services.featureLabel) },
     process:    { label: p(T.process.label), headingStart: p(T.process.headingStart), headingEnd: p(T.process.headingEnd) },
