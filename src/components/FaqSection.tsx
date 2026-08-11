@@ -2,23 +2,28 @@
 import { faqs, EMAIL } from '../data';
 import { useReveal } from '../hooks/hooks';
 import SpecularButton from './SpecularButton';
+import { useLang } from '../contexts/LanguageContext';
+import { useT } from '../i18n';
 
 export default function FaqSection() {
   const [open, setOpen] = useState(0);
   const left = useReveal<HTMLDivElement>();
   const right = useReveal<HTMLDivElement>(0.12, 0.1);
+  const { lang } = useLang();
+  const t = useT().faq;
+  const fs = faqs[lang];
   return (
     <section id="faq" className="faq-sec faq-grid" style={{ maxWidth: 1280, margin: '0 auto', padding: '120px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
       <div ref={left.ref} style={left.style}>
-        <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>04 — FAQ</span>
+        <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>{t.label}</span>
         <h2 style={{ margin: '18px 0 28px', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(30px, 3vw, 44px)', lineHeight: 1.15 }}>
-          Respostas para as dúvidas <em style={{ color: 'var(--muted)', fontStyle: 'normal' }}>mais comuns antes de começar.</em>
+          {t.heading} <em style={{ color: 'var(--muted)', fontStyle: 'normal' }}>{t.headingEm}</em>
         </h2>
-        <SpecularButton href={`mailto:${EMAIL}`} size="md">Me mande um email</SpecularButton>
+        <SpecularButton href={`mailto:${EMAIL}`} size="md">{t.cta}</SpecularButton>
       </div>
       <div ref={right.ref} style={{ ...right.style, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <span style={{ background: 'var(--fg)', color: '#fff', borderRadius: 999, padding: '9px 18px', fontSize: 13, fontWeight: 500, width: 'fit-content', marginBottom: 4 }}>Estou aqui para ajudar</span>
-        {faqs.map((f, i) => (
+        <span style={{ background: 'var(--fg)', color: '#fff', borderRadius: 999, padding: '9px 18px', fontSize: 13, fontWeight: 500, width: 'fit-content', marginBottom: 4 }}>{t.badge}</span>
+        {fs.map((f, i) => (
           <div key={f.q} style={{ background: open === i ? '#fff' : 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 14, overflow: 'hidden', transition: 'background 0.2s ease' }}>
             <button
               onClick={() => setOpen(open === i ? -1 : i)}

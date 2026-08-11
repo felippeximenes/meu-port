@@ -99,7 +99,14 @@ export default function GooeyNav({
   };
 
   const handleClick = (e: React.MouseEvent<HTMLLIElement>, index: number) => {
+    e.preventDefault();
     const liEl = e.currentTarget;
+
+    const href = items[index]?.href;
+    if (href?.startsWith('#')) {
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    }
+
     if (activeIndex === index) return;
     setActiveIndex(index);
     updateEffectPosition(liEl);
@@ -129,7 +136,7 @@ export default function GooeyNav({
     });
     resizeObserver.observe(containerRef.current);
     return () => resizeObserver.disconnect();
-  }, [activeIndex]);
+  }, [activeIndex, items]);
 
   return (
     <div className="gooey-nav-container" ref={containerRef}>
@@ -141,7 +148,7 @@ export default function GooeyNav({
               className={activeIndex === index ? 'active' : ''}
               onClick={e => handleClick(e, index)}
             >
-              <a href={item.href}>{item.label}</a>
+              <a href={item.href} onClick={e => e.preventDefault()}>{item.label}</a>
             </li>
           ))}
         </ul>

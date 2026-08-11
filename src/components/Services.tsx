@@ -2,6 +2,8 @@
 import { useReveal } from '../hooks/hooks';
 import type { Service } from '../data';
 import TiltedCard from './TiltedCard';
+import { useLang } from '../contexts/LanguageContext';
+import { useT } from '../i18n';
 
 const NUMS = ['01', '02', '03'];
 
@@ -11,7 +13,7 @@ const GRID_POS = [
   { gridColumn: 1, gridRow: 2 },
 ] as const;
 
-function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typeof GRID_POS[number]; delay: number }) {
+function ServiceCard({ s, num, pos, delay, featureLabel, aiProjectsLabel }: { s: Service; num: string; pos: typeof GRID_POS[number]; delay: number; featureLabel: string; aiProjectsLabel: string }) {
   const { ref, style } = useReveal<HTMLDivElement>(0.15, delay, -24);
 
   const cardContent = s.dark ? (
@@ -43,7 +45,7 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
       }}>{num}</span>
 
       <span style={{ position: 'relative', fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: 20 }}>
-        {num} · Em destaque
+        {num} · {featureLabel}
       </span>
       <h3 style={{ position: 'relative', margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(20px, 1.8vw, 28px)', fontWeight: 600, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 16 }}>
         {s.title}
@@ -66,7 +68,7 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
         color: '#fff', border: '1.5px solid rgba(255,255,255,0.35)', borderRadius: 999,
         padding: '10px 20px', width: 'fit-content', textDecoration: 'none',
       }}>
-        Ver projetos com IA ↗
+        {aiProjectsLabel}
       </a>
     </div>
   ) : (
@@ -136,25 +138,27 @@ function ServiceCard({ s, num, pos, delay }: { s: Service; num: string; pos: typ
 
 export default function Services() {
   const { ref, style } = useReveal<HTMLDivElement>();
+  const { lang } = useLang();
+  const t = useT().services;
+  const ss = services[lang];
   return (
     <section id="servicos" style={{ background: '#F8F7F5', padding: '80px 0 120px' }}>
       <div className="svc-sec-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
 
         <div ref={ref} style={{ ...style, display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 56, alignItems: 'start' }} className="svc-head">
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
-            O que faço
+            {t.label}
           </span>
           <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
-            <strong style={{ fontWeight: 600 }}>Construo o produto inteiro.</strong>{' '}
-            Do back-end ao pixel, com{' '}
-            <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>IA generativa</em>{' '}
-            onde ela faz diferença de verdade.
+            {t.headingNormal}{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>{t.headingEm}</em>{' '}
+            {t.headingEnd}
           </h2>
         </div>
 
         <div className="svc-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gridTemplateRows: 'auto auto', gap: 20 }}>
-          {services.map((s, i) => (
-            <ServiceCard key={s.title} s={s} num={NUMS[i]} pos={GRID_POS[i]} delay={i * 0.1} />
+          {ss.map((s, i) => (
+            <ServiceCard key={s.title} s={s} num={NUMS[i]} pos={GRID_POS[i]} delay={i * 0.1} featureLabel={t.featureLabel} aiProjectsLabel={t.viewAiProjects} />
           ))}
         </div>
 

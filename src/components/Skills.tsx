@@ -1,6 +1,7 @@
 ﻿import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useT } from '../i18n';
 import {
   siReact, siNextdotjs, siTypescript, siNodedotjs, siPython,
   siFastapi, siNestjs, siDocker, siPostgresql, siAngular,
@@ -161,6 +162,8 @@ function CategoryRow({ category, index }: { category: Category; index: number })
 
 export default function Skills() {
   const headRef = useRef<HTMLDivElement>(null);
+  const t = useT().skills;
+  const translatedCategories = categories.map((cat, i) => ({ ...cat, label: t.categories[i] }));
 
   useEffect(() => {
     if (!headRef.current) return;
@@ -176,7 +179,7 @@ export default function Skills() {
 
         <div ref={headRef} style={{ marginBottom: 72, opacity: 0 }}>
           <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
-            02 — Stack
+            {t.label}
           </span>
           <h2 style={{ margin: '14px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3vw, 42px)', color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
             <strong style={{ fontWeight: 600 }}>Skills</strong> &amp;{' '}
@@ -185,8 +188,8 @@ export default function Skills() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 52 }}>
-          {categories.map((cat, i) => (
-            <CategoryRow key={cat.label} category={cat} index={i} />
+          {translatedCategories.map((cat, i) => (
+            <CategoryRow key={i} category={cat} index={i} />
           ))}
         </div>
 

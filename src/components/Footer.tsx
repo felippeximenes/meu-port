@@ -1,6 +1,7 @@
 ﻿import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { EMAIL, LINKEDIN, GITHUB } from '../data';
 import { useReveal } from '../hooks/hooks';
+import { useT } from '../i18n';
 
 const GLOBE_DOTS = { color: '#ffffff', size: 5, density: 7, allDots: false };
 
@@ -10,6 +11,7 @@ export default function Footer() {
   const { ref, style } = useReveal<HTMLHeadingElement>();
   const footerRef = useRef<HTMLElement>(null);
   const [showGlobe, setShowGlobe] = useState(false);
+  const t = useT().footer;
 
   useEffect(() => {
     const el = footerRef.current;
@@ -47,7 +49,7 @@ export default function Footer() {
           )}
         </div>
         <h2 ref={ref} style={{ ...style, margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(34px, 4.5vw, 60px)', lineHeight: 1.1, maxWidth: 760 }}>
-          <em style={{ color: '#8b8890', fontFamily: "'Inter', sans-serif", fontStyle: 'italic', fontWeight: 400 }}>Vamos conversar,</em> e eu cuido do resto.
+          <em style={{ color: '#8b8890', fontFamily: "'Inter', sans-serif", fontStyle: 'italic', fontWeight: 400 }}>{t.headingEm}</em> {t.headingEnd}
         </h2>
         <div style={{ marginTop: 32 }}>
           <a
@@ -71,16 +73,16 @@ export default function Footer() {
 
       <div className="footer-links" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 64, justifyContent: 'center', marginTop: 96, paddingBottom: 56 }}>
         <div>
-          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>Navegação</div>
+          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>{t.navLabel}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
-            <a href="#trabalhos">Trabalhos</a>
-            <a href="#servicos">Serviços</a>
-            <a href="#processo">Processo</a>
-            <a href="#faq">FAQ</a>
+            <a href="#trabalhos">{t.navItems[0]}</a>
+            <a href="#servicos">{t.navItems[1]}</a>
+            <a href="#processo">{t.navItems[2]}</a>
+            <a href="#faq">{t.navItems[3]}</a>
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>Conecte-se</div>
+          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>{t.connect}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
             <a href={LINKEDIN} target="_blank" rel="noreferrer">LinkedIn</a>
             <a href={GITHUB} target="_blank" rel="noreferrer">GitHub</a>
@@ -88,16 +90,16 @@ export default function Footer() {
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>Voltar</div>
+          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>{t.back}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
-            <a href="#">↑ Topo da página</a>
+            <a href="#">{t.backToTop}</a>
           </div>
         </div>
       </div>
 
       <div className="footer-bottom" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 0', borderTop: '1px solid var(--dark-line)', fontSize: 13, color: '#7a7780' }}>
-        <span>Felippe Ximenes © 2026 — Rio de Janeiro, Brasil</span>
-        <span>Feito com React &amp; TypeScript</span>
+        <span>Felippe Ximenes © 2026 · {t.copyright}</span>
+        <span>{t.madeWith}</span>
       </div>
     </footer>
   );

@@ -3,8 +3,10 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type { Experience as Exp } from '../data';
 import { experiences } from '../data';
+import { useLang } from '../contexts/LanguageContext';
+import { useT } from '../i18n';
 
-function Entry({ exp, isLast }: { exp: Exp; isLast: boolean }) {
+function Entry({ exp, isLast, currentLabel }: { exp: Exp; isLast: boolean; currentLabel: string }) {
   return (
     <div
       className="exp-entry"
@@ -37,7 +39,7 @@ function Entry({ exp, isLast }: { exp: Exp; isLast: boolean }) {
             background: 'var(--purple)', color: '#fff', borderRadius: 999,
             padding: '2px 9px', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em',
           }}>
-            atual
+            {currentLabel}
           </span>
         )}
       </div>
@@ -87,6 +89,9 @@ function Entry({ exp, isLast }: { exp: Exp; isLast: boolean }) {
 
 export default function Experience() {
   const sectionRef = useRef<HTMLElement>(null);
+  const { lang } = useLang();
+  const t = useT().experience;
+  const exps = experiences[lang];
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -127,15 +132,15 @@ export default function Experience() {
         {/* Section heading */}
         <div className="exp-head exp-head-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 72, alignItems: 'start' }}>
           <span className="exp-head-spacer" style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
-            Experiência
+            {t.label}
           </span>
           <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
-            <strong style={{ fontWeight: 600 }}>Onde apliquei</strong> o que sei —{' '}
-            do atendimento multilíngue a{' '}
+            <strong style={{ fontWeight: 600 }}>{t.headingBold}</strong> {t.headingMid}{' '}
+            {t.headingPre}{' '}
             <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>
-              pipelines de IA
+              {t.headingEm}
             </em>{' '}
-            em produção.
+            {t.headingEnd}
           </h2>
         </div>
 
@@ -148,8 +153,8 @@ export default function Experience() {
             {/* Animated purple fill — scaleY driven by scroll */}
             <div className="exp-line" style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: 'var(--purple)', transformOrigin: 'top center', transform: 'scaleY(0)', borderRadius: 2 }} />
 
-            {experiences.map((exp, i) => (
-              <Entry key={exp.company} exp={exp} isLast={i === experiences.length - 1} />
+            {exps.map((exp, i) => (
+              <Entry key={exp.company} exp={exp} isLast={i === exps.length - 1} currentLabel={t.current} />
             ))}
           </div>
         </div>

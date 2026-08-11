@@ -2,8 +2,13 @@ import { motion } from 'motion/react';
 import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
 import { useIsMobile } from '../hooks/hooks';
+import { useT } from '../i18n';
 
 const MASK = 'linear-gradient(to bottom, black 88%, transparent 100%)';
+const MASK_DESKTOP = [
+  'linear-gradient(to bottom, black 85%, transparent 100%)',
+  'linear-gradient(to right, black 93%, transparent 100%)',
+].join(', ');
 const IMG_SRC = '/upscalemedia-transformed.jpeg';
 const ENTER = { duration: 0.95, ease: [0.22, 1, 0.36, 1] } as const;
 
@@ -22,6 +27,7 @@ const scrollHint = (
 
 export default function Hero() {
   const isMobile = useIsMobile();
+  const t = useT().hero;
 
   if (isMobile) {
     return (
@@ -52,11 +58,11 @@ export default function Hero() {
             style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', border: '1px solid var(--line)', borderRadius: 999, padding: '8px 16px', fontSize: 14, color: 'var(--muted)', width: 'fit-content' }}
           >
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1fae5e', boxShadow: '0 0 0 3px rgba(31,174,94,0.15)', animation: 'pulse-dot 2.5s ease-in-out infinite' }} />
-            Disponível para projetos
+            {t.badge}
           </motion.div>
 
           <BlurText
-            text="Produto completo, do backend ao pixel. Com IA que funciona em produção."
+            text={t.heading}
             delay={120}
             animateBy="words"
             direction="top"
@@ -70,7 +76,7 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.6, ease: 'easeOut' }}
             style={{ width: 'fit-content' }}
           >
-            <SpecularButton href="#trabalhos" size="md">Ver projetos</SpecularButton>
+            <SpecularButton href="#trabalhos" size="md">{t.cta}</SpecularButton>
           </motion.div>
         </div>
 
@@ -85,7 +91,7 @@ export default function Hero() {
       style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
     >
       {/* Portrait desktop */}
-      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK, WebkitMaskImage: MASK }}>
+      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK_DESKTOP, WebkitMaskImage: MASK_DESKTOP, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }}>
         <motion.div
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -105,10 +111,10 @@ export default function Hero() {
             style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', border: '1px solid var(--line)', borderRadius: 999, padding: '8px 16px', fontSize: 14, color: 'var(--muted)', width: 'fit-content' }}
           >
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1fae5e', boxShadow: '0 0 0 3px rgba(31,174,94,0.15)', animation: 'pulse-dot 2.5s ease-in-out infinite' }} />
-            Disponível para projetos
+            {t.badge}
           </motion.div>
           <BlurText
-            text="Produto completo, do backend ao pixel. Com IA que funciona em produção."
+            text={t.heading}
             delay={120}
             animateBy="words"
             direction="top"
@@ -118,7 +124,7 @@ export default function Hero() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 260, justifySelf: 'end', paddingRight: 'clamp(8px, 2vw, 32px)' }}>
           <BlurText
-            text="Full-Stack Developer com LLMs em produção. RAG, automações e aplicações web escaláveis, da arquitetura ao deploy."
+            text={t.sub}
             delay={60}
             animateBy="words"
             direction="top"
@@ -131,7 +137,7 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.6, ease: 'easeOut' }}
             style={{ width: 'fit-content' }}
           >
-            <SpecularButton href="#trabalhos" size="md">Ver projetos</SpecularButton>
+            <SpecularButton href="#trabalhos" size="md">{t.cta}</SpecularButton>
           </motion.div>
         </div>
       </div>

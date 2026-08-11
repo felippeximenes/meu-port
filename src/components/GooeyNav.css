@@ -35,6 +35,7 @@
 .gooey-nav-container nav ul li {
   border-radius: 100vw;
   position: relative;
+  z-index: 0;
   cursor: pointer;
   transition: color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 0 0.5px 1.5px transparent;
