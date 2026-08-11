@@ -9,8 +9,8 @@ const HREFS = ['#trabalhos', '#servicos', '#processo', '#faq'];
 function LangToggle() {
   const { lang, toggle } = useLang();
   return (
-    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-      <span style={{ fontSize: 13, lineHeight: 1 }}>🇧🇷</span>
+    <div className="lang-toggle-wrap" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
+      <img className="lang-flag" src="/flag-br.png" alt="PT" style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover' }} />
       <input
         id="lang-toggle"
         type="checkbox"
@@ -28,7 +28,7 @@ function LangToggle() {
           />
         </svg>
       </label>
-      <span style={{ fontSize: 13, lineHeight: 1 }}>🇺🇸</span>
+      <img className="lang-flag" src="/flag-us.png" alt="EN" style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover' }} />
     </div>
   );
 }
@@ -39,7 +39,7 @@ export default function Nav() {
 
   return (
     <nav className="nav-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 48px', position: 'sticky', top: 0, zIndex: 20, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)' }}>
-      <a href="#" style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 500 }}>Felippe Ximenes</a>
+      <a href="#" className="nav-logo" style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>Felippe Ximenes</a>
       <div className="nav-center" style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
         <div style={{ background: '#0E0D0C', borderRadius: 100, padding: '2px 6px', pointerEvents: 'auto', clipPath: 'inset(0 round 100px)' }}>
           <GooeyNav
@@ -54,7 +54,7 @@ export default function Nav() {
           />
         </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <LangToggle />
         <SpecularButton href="#contato" size="sm">{t.nav.cta}</SpecularButton>
       </div>

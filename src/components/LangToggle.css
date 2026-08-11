@@ -11,9 +11,9 @@
   cursor: pointer;
   position: relative;
   display: inline-flex;
-  height: 18px;
+  height: 19px;
   border-radius: 999px;
-  box-shadow: 0 0 0 5px #0E0D0C;
+  box-shadow: 0 0 0 6px #0E0D0C;
   aspect-ratio: 212.4992 / 84.4688;
   background-color: #0E0D0C;
 }

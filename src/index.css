@@ -59,8 +59,14 @@ button { cursor: pointer; font-family: inherit; }
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   /* Nav */
-  .nav-root { padding-left: 20px !important; padding-right: 20px !important; }
+  .nav-root { padding-left: 16px !important; padding-right: 16px !important; }
   .nav-center { display: none !important; }
+  .nav-logo { font-size: 16px !important; }
+  .nav-actions { gap: 8px !important; }
+  .nav-actions .specular-button--sm { padding: 9px 15px !important; font-size: 13px !important; }
+  .lang-toggle-wrap { gap: 7px !important; }
+  .lang-flag { width: 18px !important; height: 18px !important; }
+  .lang-switch { height: 16px !important; box-shadow: 0 0 0 4px #0E0D0C !important; }
 
   /* Skills */
   .skills-sec { padding-left: 20px !important; padding-right: 20px !important; padding-top: 64px !important; padding-bottom: 72px !important; }
