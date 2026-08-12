@@ -47,7 +47,7 @@ export default function Hero() {
               transition={ENTER}
               style={{ width: '100%', height: '100%' }}
             >
-              <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 82%', display: 'block' }} />
+              <img src={IMG_SRC} alt="Felippe Ximenes" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
             </motion.div>
           </div>
         </div>
