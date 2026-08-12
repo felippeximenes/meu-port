@@ -1,6 +1,7 @@
 ﻿import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { FaAws } from 'react-icons/fa';
 import { useT } from '../i18n';
 import {
   siReact, siNextdotjs, siTypescript, siNodedotjs, siPython,
@@ -10,9 +11,7 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-const AWS_PATH = 'M8.087 11.551l-.022-.03-1.56 1.55.025.032c.348.452.728.878 1.13 1.272l1.595-1.585a8.115 8.115 0 0 1-1.168-1.24zm-1.81-3.705l-.036-.014-1.94.792.017.044A9.995 9.995 0 0 0 5.3 11.07l2.05-.506a7.794 7.794 0 0 1-.074-2.718zm2.086-3.416l-.04.008.806 1.927.04-.017a7.79 7.79 0 0 1 2.597-.746l.175-2.073a9.987 9.987 0 0 0-3.578.9zm5.703-.936l.173 2.073a7.793 7.793 0 0 1 2.597.746l.04.017.806-1.927-.04-.008a9.98 9.98 0 0 0-3.576-.9zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.984 13.585a7.79 7.79 0 0 1-1.951 1.425l-.909-1.854a5.735 5.735 0 0 1-2.124.404c-.738 0-1.454-.14-2.124-.404l-.909 1.854a7.79 7.79 0 0 1-1.951-1.425l1.379-1.56a5.765 5.765 0 0 1-1.191-1.98l-1.98.5a7.825 7.825 0 0 1-.224-1.848c0-.597.068-1.179.198-1.738l1.992.442a5.776 5.776 0 0 1 1.084-2.045L9.17 7.386A7.793 7.793 0 0 1 12 6.22a7.793 7.793 0 0 1 2.83.166l-1.083 1.57a5.776 5.776 0 0 1 1.084 2.045l1.992-.442c.13.559.198 1.14.198 1.738 0 .628-.077 1.238-.224 1.848l-1.98-.5a5.765 5.765 0 0 1-1.191 1.98l1.379 1.56z';
-
-interface SkillDef { label: string; path: string; hex: string; }
+interface SkillDef { label: string; path?: string; Icon?: typeof FaAws; hex: string; }
 interface Category { label: string; skills: SkillDef[]; }
 
 const categories: Category[] = [
@@ -37,7 +36,7 @@ const categories: Category[] = [
   {
     label: 'Cloud & IA',
     skills: [
-      { label: 'AWS',       path: AWS_PATH,           hex: 'FF9900' },
+      { label: 'AWS',       Icon: FaAws,              hex: 'FF9900' },
       { label: 'LangChain', path: siLangchain.path,   hex: siLangchain.hex },
       { label: 'LangGraph', path: siLanggraph.path,   hex: siLanggraph.hex },
       { label: 'Qdrant',    path: siQdrant.path,      hex: siQdrant.hex },
@@ -88,9 +87,13 @@ function SkillIcon({ skill }: { skill: SkillDef }) {
           transition: 'background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease',
         }}
       >
-        <svg viewBox="0 0 24 24" width={34} height={34} fill={`#${skill.hex}`} aria-label={skill.label}>
-          <path d={skill.path} />
-        </svg>
+        {skill.Icon
+          ? <skill.Icon size={34} color={`#${skill.hex}`} aria-label={skill.label} />
+          : (
+            <svg viewBox="0 0 24 24" width={34} height={34} fill={`#${skill.hex}`} aria-label={skill.label}>
+              <path d={skill.path} />
+            </svg>
+          )}
       </div>
       <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.02em', fontWeight: 400 }}>
         {skill.label}
