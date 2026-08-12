@@ -58,6 +58,7 @@ function hexToRgb(hex: string): string {
 }
 
 function SkillIcon({ skill }: { skill: SkillDef }) {
+  const rgb = hexToRgb(skill.hex);
   return (
     <div
       className="skill-item"
@@ -65,25 +66,24 @@ function SkillIcon({ skill }: { skill: SkillDef }) {
       onMouseEnter={e => {
         const card = e.currentTarget.querySelector('.skill-card') as HTMLElement;
         if (!card) return;
-        const rgb = hexToRgb(skill.hex);
-        card.style.borderColor = `rgba(${rgb}, 0.5)`;
-        card.style.boxShadow = `0 0 0 1px rgba(${rgb}, 0.15), 0 4px 24px rgba(${rgb}, 0.2)`;
-        card.style.background = 'rgba(255,255,255,0.09)';
+        card.style.borderColor = `rgba(${rgb}, 0.65)`;
+        card.style.boxShadow = `0 0 0 1px rgba(${rgb}, 0.2), 0 8px 28px rgba(${rgb}, 0.35)`;
+        card.style.background = `rgba(${rgb}, 0.22)`;
       }}
       onMouseLeave={e => {
         const card = e.currentTarget.querySelector('.skill-card') as HTMLElement;
         if (!card) return;
-        card.style.borderColor = 'rgba(255,255,255,0.08)';
+        card.style.borderColor = `rgba(${rgb}, 0.35)`;
         card.style.boxShadow = 'none';
-        card.style.background = 'rgba(255,255,255,0.05)';
+        card.style.background = `rgba(${rgb}, 0.12)`;
       }}
     >
       <div
         className="skill-card"
         style={{
           width: 76, height: 76, borderRadius: 20,
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: `rgba(${rgb}, 0.12)`,
+          border: `1px solid rgba(${rgb}, 0.35)`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease',
         }}
