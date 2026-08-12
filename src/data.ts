@@ -42,7 +42,7 @@ export const projects: Record<Lang, Project[]> = {
     {
       n: '03', name: 'EduTrack',
       tags: ['Node.js · Prisma · MySQL', 'React 19 · TypeScript', 'Playwright · PDF'],
-      href: 'https://github.com/felippeximenes/edu-track',
+      href: 'https://edu-track-blond-eta.vercel.app',
       desc: 'LMS full-stack com autenticação JWT e RBAC em três papéis (aluno, instrutor, admin), com autorização aplicada em duas camadas: middleware de rota e checagem de posse diretamente na query do Prisma. Emite certificados em PDF com QR code de verificação pública ao concluir 100% do curso: valida conclusão por aulas distintas (groupBy), renderiza HTML com Playwright headless e disponibiliza rota pública para terceiros verificarem sem login. Validação de contrato de API com Zod, deploy multi-plataforma (frontend Vercel + backend e MySQL no Railway) com proxy reverso configurado para eliminar CORS.',
       img: '/projects/edutrack.png', site: 'edu-track-blond-eta.vercel.app', video: '/video/edutrack1.webm',
     },
@@ -79,7 +79,7 @@ export const projects: Record<Lang, Project[]> = {
     {
       n: '03', name: 'EduTrack',
       tags: ['Node.js · Prisma · MySQL', 'React 19 · TypeScript', 'Playwright · PDF'],
-      href: 'https://github.com/felippeximenes/edu-track',
+      href: 'https://edu-track-blond-eta.vercel.app',
       desc: 'Full-stack LMS with JWT auth and RBAC across three roles (student, instructor, admin), with authorization enforced in two layers: route middleware and ownership checks directly in Prisma queries. Issues PDF certificates with a public QR verification link upon 100% course completion: validates completion by distinct lessons (groupBy), renders HTML with headless Playwright, and exposes a public route for third-party verification without login. API contract validation with Zod, multi-platform deploy (frontend on Vercel + backend and MySQL on Railway) with reverse proxy configured to eliminate CORS.',
       img: '/projects/edutrack.png', site: 'edu-track-blond-eta.vercel.app', video: '/video/edutrack1.webm',
     },
