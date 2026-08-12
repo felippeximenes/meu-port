@@ -1,3 +1,5 @@
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useScrollProgress } from './hooks/hooks';
 import { LanguageProvider } from './contexts/LanguageContext';
 import Nav from './components/Nav';
@@ -27,6 +29,8 @@ export default function App() {
       <FaqSection />
       <LogoTicker />
       <Footer />
+      <Analytics />
+      <SpeedInsights />
     </LanguageProvider>
   );
 }
