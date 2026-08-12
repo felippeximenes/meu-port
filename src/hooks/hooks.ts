@@ -45,6 +45,25 @@ export function useScrollProgress() {
   return p;
 }
 
+// Barra de endereco do Safari mobile some/aparece e o 100vh (e o 100dvh, em
+// versoes mais antigas) nao acompanha isso de forma confiavel. Medindo a
+// altura real via JS evita a faixa da proxima secao aparecendo por baixo.
+export function useRealVh() {
+  useEffect(() => {
+    const setVh = () => {
+      const h = window.visualViewport?.height ?? window.innerHeight;
+      document.documentElement.style.setProperty('--vh', `${h * 0.01}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.visualViewport?.addEventListener('resize', setVh);
+    return () => {
+      window.removeEventListener('resize', setVh);
+      window.visualViewport?.removeEventListener('resize', setVh);
+    };
+  }, []);
+}
+
 export function usePinProgress<T extends HTMLElement = HTMLElement>(
   onProgress: (p: number) => void
 ) {

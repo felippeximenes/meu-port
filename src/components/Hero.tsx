@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import BlurText from './BlurText';
 import SpecularButton from './SpecularButton';
-import { useIsMobile } from '../hooks/hooks';
+import { useIsMobile, useRealVh } from '../hooks/hooks';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { RESUME } from '../data';
@@ -30,15 +30,16 @@ export default function Hero() {
   const isMobile = useIsMobile();
   const { lang } = useLang();
   const t = useT().hero;
+  useRealVh();
 
   if (isMobile) {
     return (
       <header
         className="hero-noise"
-        style={{ position: 'relative', minHeight: 'calc(100dvh - 68px)', display: 'flex', flexDirection: 'column' }}
+        style={{ position: 'relative', minHeight: 'calc(var(--vh, 1vh) * 100 - 68px)', display: 'flex', flexDirection: 'column' }}
       >
         {/* Portrait — em fluxo, ocupa o topo */}
-        <div style={{ position: 'relative', height: '46dvh', flexShrink: 0 }}>
+        <div style={{ position: 'relative', height: 'calc(var(--vh, 1vh) * 46)', flexShrink: 0 }}>
           <div style={{ position: 'absolute', left: '50%', top: 0, transform: 'translateX(-50%)', height: '100%', width: 'min(86vw, 360px)', maskImage: MASK, WebkitMaskImage: MASK }}>
             <motion.div
               initial={{ y: 60, opacity: 0 }}
