@@ -96,7 +96,7 @@ export default function Hero() {
       style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
     >
       {/* Portrait desktop */}
-      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK_DESKTOP, WebkitMaskImage: MASK_DESKTOP }}>
+      <div style={{ position: 'absolute', zIndex: 1, left: '50%', bottom: 0, transform: 'translateX(-50%)', aspectRatio: '1400 / 1476', maxHeight: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK_DESKTOP, WebkitMaskImage: MASK_DESKTOP }}>
         <motion.div
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
