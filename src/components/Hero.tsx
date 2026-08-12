@@ -9,10 +9,7 @@ import { RESUME } from '../data';
 const resumeLinkStyle = { display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 500, color: 'var(--fg)', textDecoration: 'none', border: '1px solid var(--line)', borderRadius: 999, padding: '13px 22px', whiteSpace: 'nowrap' } as const;
 
 const MASK = 'linear-gradient(to bottom, black 88%, transparent 100%)';
-const MASK_DESKTOP = [
-  'linear-gradient(to bottom, black 85%, transparent 100%)',
-  'linear-gradient(to right, black 93%, transparent 100%)',
-].join(', ');
+const MASK_DESKTOP = 'linear-gradient(to bottom, black 85%, transparent 100%)';
 const IMG_SRC = '/upscalemedia-transformed.webp';
 const ENTER = { duration: 0.95, ease: [0.22, 1, 0.36, 1] } as const;
 
@@ -98,7 +95,7 @@ export default function Hero() {
       style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
     >
       {/* Portrait desktop */}
-      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK_DESKTOP, WebkitMaskImage: MASK_DESKTOP, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' }}>
+      <div style={{ position: 'absolute', zIndex: 1, left: '50%', top: 0, transform: 'translateX(-50%)', height: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK_DESKTOP, WebkitMaskImage: MASK_DESKTOP }}>
         <motion.div
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
