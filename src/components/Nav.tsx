@@ -38,7 +38,7 @@ export default function Nav() {
   const navItems = t.nav.items.map((label, i) => ({ label, href: HREFS[i] }));
 
   return (
-    <nav className="nav-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 48px', position: 'sticky', top: 0, zIndex: 20, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)' }}>
+    <nav className="nav-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 48px', position: 'sticky', top: 0, zIndex: 20, background: 'rgba(248,248,248,0.92)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--line)' }}>
       <a href="#" className="nav-logo" style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>Felippe Ximenes</a>
       <div className="nav-center" style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
         <div style={{ background: '#0E0D0C', borderRadius: 100, padding: '2px 6px', pointerEvents: 'auto', clipPath: 'inset(0 round 100px)' }}>

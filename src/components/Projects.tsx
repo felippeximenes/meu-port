@@ -7,9 +7,8 @@ import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 
 const mediaBox = {
-  borderRadius: 16, overflow: 'hidden',
-  border: '1px solid rgba(0,0,0,0.06)',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05)',
+  borderRadius: 0, overflow: 'hidden',
+  border: '1px solid var(--line)',
   background: '#EEECEA',
 } as const;
 
@@ -24,15 +23,15 @@ function ProjectCard({ p, isMobile, total, viewLabel }: { p: Project; isMobile: 
   const counter = `${p.n} · ${String(total).padStart(2, '0')}`;
   if (isMobile) {
     return (
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: '#F8F7F5', overflow: 'hidden' }}>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--bg)', overflow: 'hidden' }}>
         <div style={{ padding: '16px 20px 0', flexShrink: 0 }}>
           <div style={{ ...mediaBox, aspectRatio: '16/9' }}><Media p={p} /></div>
         </div>
         <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '14px 20px 20px', gap: 10, overflow: 'hidden' }}>
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)' }}>{counter}</span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)' }}>{counter}</span>
           <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(22px, 6vw, 32px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.08, letterSpacing: '-0.02em' }}>{p.name}</h3>
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: 'var(--muted)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{p.desc}</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)' }}>
             {p.tags.map((t, i) => <span key={t}>{i > 0 && <span style={{ margin: '0 7px', opacity: 0.4 }}>·</span>}{t}</span>)}
           </div>
           <div style={{ marginTop: 'auto' }}><SpecularButton href={p.href} target="_blank" rel="noreferrer" size="sm">{viewLabel}</SpecularButton></div>
@@ -42,13 +41,13 @@ function ProjectCard({ p, isMobile, total, viewLabel }: { p: Project; isMobile: 
   }
 
   return (
-    <div style={{ height: '100%', display: 'grid', gridTemplateColumns: '1fr 1.2fr', background: '#F8F7F5', position: 'relative', overflow: 'hidden' }}>
-      <span aria-hidden style={{ position: 'absolute', left: '-10px', bottom: '-24px', fontFamily: "'Orbitron', sans-serif", fontWeight: 700, fontSize: 'clamp(160px, 18vw, 240px)', lineHeight: 1, letterSpacing: '-0.02em', color: 'var(--fg)', opacity: 0.045, pointerEvents: 'none', userSelect: 'none', zIndex: 0 }}>
+    <div style={{ height: '100%', display: 'grid', gridTemplateColumns: '1fr 1.2fr', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}>
+      <span aria-hidden style={{ position: 'absolute', left: '-10px', bottom: '-24px', fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(160px, 18vw, 240px)', lineHeight: 1, letterSpacing: '-0.02em', color: 'var(--fg)', opacity: 0.045, pointerEvents: 'none', userSelect: 'none', zIndex: 0 }}>
         {p.n}
       </span>
       <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 3vw 0 5vw' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)' }}>{counter}</span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)' }}>{counter}</span>
           <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(26px, 3vw, 44px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>{p.name}</h3>
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: 'var(--muted)', maxWidth: 320 }}>{p.desc}</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 4 }}>
@@ -111,12 +110,12 @@ export default function Projects() {
   const barPad    = isMobile ? '12px 20px 16px' : '16px 48px 24px';
 
   return (
-    <section id="trabalhos" ref={wrapRef} style={{ background: '#F8F7F5', height: `${NUM * 100}vh`, position: 'relative' }}>
+    <section id="trabalhos" ref={wrapRef} style={{ background: 'var(--bg)', height: `${NUM * 100}vh`, position: 'relative' }}>
       <div style={{ position: 'sticky', top: isMobile ? 68 : 0, height: isMobile ? 'calc(100vh - 68px)' : '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
         <div ref={head.ref} style={{ ...head.style, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: headerPad, flexShrink: 0 }}>
           <div>
-            <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block' }}>{t.label}</span>
+            <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block' }}>{t.label}</span>
             <h2 style={{ margin: '12px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(24px, 3.4vw, 46px)' }}>{t.heading}</h2>
           </div>
           <a href="https://github.com/felippeximenes" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid var(--line)', borderRadius: 999, padding: isMobile ? '8px 14px' : '10px 18px', fontSize: isMobile ? 13 : 14, fontWeight: 500, flexShrink: 0 }}>

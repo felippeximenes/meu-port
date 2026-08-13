@@ -6,7 +6,7 @@ import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { RESUME } from '../data';
 
-const resumeLinkStyle = { display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 500, color: 'var(--fg)', textDecoration: 'none', border: '1px solid var(--line)', borderRadius: 999, padding: '13px 22px', whiteSpace: 'nowrap' } as const;
+const resumeLinkStyle = { display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.85)', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 999, padding: '13px 22px', whiteSpace: 'nowrap' } as const;
 
 const MASK = 'linear-gradient(to bottom, black 88%, transparent 100%)';
 const MASK_DESKTOP = 'linear-gradient(to bottom, black 85%, transparent 100%)';
@@ -21,7 +21,7 @@ const scrollHint = (
     style={{ position: 'absolute', bottom: 28, left: '50%', transform: 'translateX(-50%)', zIndex: 2, pointerEvents: 'none' }}
   >
     <svg width="20" height="12" viewBox="0 0 20 12" fill="none" style={{ animation: 'scroll-hint 1.8s ease-in-out infinite', display: 'block' }}>
-      <path d="M2 2L10 10L18 2" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M2 2L10 10L18 2" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   </motion.div>
 );
@@ -36,7 +36,7 @@ export default function Hero() {
     return (
       <header
         className="hero-noise"
-        style={{ position: 'relative', minHeight: 'calc(var(--vh, 1vh) * 100 - 68px)', display: 'flex', flexDirection: 'column' }}
+        style={{ position: 'relative', minHeight: 'calc(var(--vh, 1vh) * 100 - 68px)', display: 'flex', flexDirection: 'column', background: '#161616' }}
       >
         {/* Portrait — em fluxo, ocupa o topo */}
         <div style={{ position: 'relative', height: 'calc(var(--vh, 1vh) * 46)', flexShrink: 0 }}>
@@ -58,9 +58,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', border: '1px solid var(--line)', borderRadius: 999, padding: '8px 16px', fontSize: 14, color: 'var(--muted)', width: 'fit-content' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 999, padding: '8px 16px', fontSize: 14, color: 'rgba(255,255,255,0.7)', width: 'fit-content' }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1fae5e', boxShadow: '0 0 0 3px rgba(31,174,94,0.15)', animation: 'pulse-dot 2.5s ease-in-out infinite' }} />
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff6436', boxShadow: '0 0 0 3px rgba(255,100,54,0.2)', animation: 'pulse-dot 2.5s ease-in-out infinite' }} />
             {t.badge}
           </motion.div>
 
@@ -71,7 +71,7 @@ export default function Hero() {
             animateBy="words"
             direction="top"
             stepDuration={0.4}
-            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(24px, 7vw, 34px)', lineHeight: 1.18, letterSpacing: '-0.02em', color: 'var(--fg)' }}
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(38px, 8vw, 58px)', lineHeight: 0.95, letterSpacing: '-0.01em', color: '#fff' }}
           />
 
           <motion.div
@@ -93,7 +93,7 @@ export default function Hero() {
   return (
     <header
       className="hero-noise"
-      style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40 }}
+      style={{ position: 'relative', minHeight: 'calc(100vh - 68px)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', overflow: 'hidden', paddingTop: 40, background: '#161616' }}
     >
       {/* Portrait desktop */}
       <div style={{ position: 'absolute', zIndex: 1, left: '50%', bottom: 0, transform: 'translateX(-50%)', aspectRatio: '1400 / 1476', maxHeight: '90vh', width: 'clamp(320px, 42vw, 680px)', maskImage: MASK_DESKTOP, WebkitMaskImage: MASK_DESKTOP }}>
@@ -113,9 +113,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: -12, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#fff', border: '1px solid var(--line)', borderRadius: 999, padding: '8px 16px', fontSize: 14, color: 'var(--muted)', width: 'fit-content' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 999, padding: '8px 16px', fontSize: 14, color: 'rgba(255,255,255,0.7)', width: 'fit-content' }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1fae5e', boxShadow: '0 0 0 3px rgba(31,174,94,0.15)', animation: 'pulse-dot 2.5s ease-in-out infinite' }} />
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff6436', boxShadow: '0 0 0 3px rgba(255,100,54,0.2)', animation: 'pulse-dot 2.5s ease-in-out infinite' }} />
             {t.badge}
           </motion.div>
           <BlurText
@@ -125,7 +125,7 @@ export default function Hero() {
             animateBy="words"
             direction="top"
             stepDuration={0.4}
-            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(26px, 2.6vw, 42px)', lineHeight: 1.15, letterSpacing: '-0.02em', color: 'var(--fg)' }}
+            style={{ fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(44px, 3.8vw, 64px)', lineHeight: 0.95, letterSpacing: '-0.01em', color: '#fff' }}
           />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 'clamp(120px, 18vw, 260px)', justifySelf: 'end', paddingRight: 'clamp(8px, 2vw, 32px)' }}>
@@ -135,7 +135,7 @@ export default function Hero() {
             animateBy="words"
             direction="top"
             stepDuration={0.3}
-            style={{ fontSize: 15, lineHeight: 1.55, color: 'var(--muted)' }}
+            style={{ fontSize: 15, lineHeight: 1.55, color: 'rgba(255,255,255,0.55)' }}
           />
           <motion.div
             initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}

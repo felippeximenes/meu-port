@@ -25,7 +25,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer ref={footerRef} id="contato" className="noise-bg footer-root" style={{ color: '#fff', borderRadius: '32px 32px 0 0', padding: '110px 48px 0' }}>
+    <footer ref={footerRef} id="contato" className="noise-bg footer-root" style={{ color: '#fff', borderRadius: 0, padding: '110px 48px 0' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <div style={{ width: 260, height: 260, marginBottom: 8 }}>
           {showGlobe && (

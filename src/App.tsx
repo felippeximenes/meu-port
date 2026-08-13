@@ -18,7 +18,7 @@ export default function App() {
   const progress = useScrollProgress();
   return (
     <LanguageProvider>
-      <div style={{ position: 'fixed', top: 0, left: 0, height: 2, width: `${progress * 100}%`, background: 'var(--purple)', zIndex: 9998, transition: 'width 0.1s linear' }} />
+      <div style={{ position: 'fixed', top: 0, left: 0, height: 2, width: `${progress * 100}%`, background: 'var(--accent)', zIndex: 9998, transition: 'width 0.1s linear' }} />
       <Nav />
       <Hero />
       <Skills />

@@ -20,26 +20,18 @@ function ServiceCard({ s, num, pos, delay, featureLabel, aiProjectsLabel }: { s:
     // Feature card — purple
     <div style={{
       width: '100%', height: '100%',
-      background: 'var(--purple)',
-      borderRadius: 24,
+      background: '#161616',
+      borderRadius: 0,
       padding: 48,
       position: 'relative',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: '0 4px 8px rgba(124,58,237,0.2), 0 16px 48px rgba(124,58,237,0.25)',
     }}>
-      {/* Glow orb */}
-      <div style={{
-        position: 'absolute', top: -80, right: -80,
-        width: 280, height: 280, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)',
-        pointerEvents: 'none',
-      }} />
       {/* Ghost number */}
       <span aria-hidden style={{
         position: 'absolute', right: -10, bottom: -20,
-        fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
+        fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400,
         fontSize: 160, lineHeight: 1, letterSpacing: '-0.02em',
         color: '#fff', opacity: 0.08, pointerEvents: 'none', userSelect: 'none',
       }}>{num}</span>
@@ -76,29 +68,28 @@ function ServiceCard({ s, num, pos, delay, featureLabel, aiProjectsLabel }: { s:
     <div style={{
       width: '100%', height: '100%',
       background: '#fff',
-      borderRadius: 24,
+      borderRadius: 0,
       padding: 40,
       position: 'relative',
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 6px 20px rgba(0,0,0,0.05), 0 20px 60px rgba(0,0,0,0.05)',
     }}>
       {/* Accent line */}
       <div style={{
         position: 'absolute', top: 0, left: 40, right: 40, height: 1,
-        background: 'linear-gradient(90deg, var(--purple) 0%, transparent 60%)',
-        opacity: 0.35,
+        background: 'linear-gradient(90deg, var(--accent) 0%, transparent 60%)',
+        opacity: 0.4,
       }} />
       {/* Ghost number */}
       <span aria-hidden style={{
         position: 'absolute', right: -10, bottom: -20,
-        fontFamily: "'Orbitron', sans-serif", fontWeight: 700,
+        fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400,
         fontSize: 140, lineHeight: 1, letterSpacing: '-0.02em',
         color: 'var(--fg)', opacity: 0.04, pointerEvents: 'none', userSelect: 'none',
       }}>{num}</span>
 
-      <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)', marginBottom: 20 }}>
+      <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 20 }}>
         {num}
       </span>
       <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(20px, 1.8vw, 26px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 16 }}>
@@ -142,16 +133,16 @@ export default function Services() {
   const t = useT().services;
   const ss = services[lang];
   return (
-    <section id="servicos" style={{ background: '#F8F7F5', padding: '80px 0 120px' }}>
+    <section id="servicos" style={{ background: 'var(--bg)', padding: '80px 0 120px' }}>
       <div className="svc-sec-inner" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 48px' }}>
 
         <div ref={ref} style={{ ...style, display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48, marginBottom: 56, alignItems: 'start' }} className="svc-head">
-          <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 12 }}>
             {t.label}
           </span>
           <h2 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(28px, 3.4vw, 48px)', lineHeight: 1.12, letterSpacing: '-0.02em' }}>
             {t.headingNormal}{' '}
-            <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--purple)', fontWeight: 400 }}>{t.headingEm}</em>{' '}
+            <em style={{ fontStyle: 'italic', fontFamily: "'Inter', sans-serif", color: 'var(--accent)', fontWeight: 400 }}>{t.headingEm}</em>{' '}
             {t.headingEnd}
           </h2>
         </div>

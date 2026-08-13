@@ -1,14 +1,13 @@
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f6f6f7;
-  --fg: #0a0a0a;
-  --muted: #68666e;
-  --line: #e7e6ea;
-  --purple: #7c3aed;
-  --purple-soft: #efe8fd;
-  --dark: #0b0b0d;
-  --dark-card: #18171b;
-  --dark-line: #29282d;
+  --bg: #f8f8f8;
+  --bg-soft: #f1f1f1;
+  --fg: #3c3a3e;
+  --muted: #7b7a7c;
+  --line: #c9c7cc;
+  --accent: #ff6436;
+  --dark: #161616;
+  --dark-card: #1c1c1c;
+  --dark-line: rgba(255,255,255,0.08);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,7 +16,7 @@ html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
+  font-weight: 500;
   background: var(--bg);
   color: var(--fg);
   overflow-x: hidden;
@@ -38,8 +37,8 @@ button { cursor: pointer; font-family: inherit; }
 }
 
 @keyframes pulse-dot {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(31,174,94,0.15); }
-  50%       { box-shadow: 0 0 0 7px rgba(31,174,94,0.05); }
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255,100,54,0.2); }
+  50%       { box-shadow: 0 0 0 7px rgba(255,100,54,0.08); }
 }
 
 @keyframes scroll-hint {
