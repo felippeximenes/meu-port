@@ -28,14 +28,14 @@ function ProjectCard({ p, isMobile, total, viewLabel }: { p: Project; isMobile: 
         <div style={{ padding: '16px 20px 0', flexShrink: 0 }}>
           <div style={{ ...mediaBox, aspectRatio: '16/9' }}><Media p={p} /></div>
         </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '20px', gap: 12, overflow: 'hidden' }}>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '14px 20px 20px', gap: 10, overflow: 'hidden' }}>
           <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--purple)' }}>{counter}</span>
           <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(22px, 6vw, 32px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.08, letterSpacing: '-0.02em' }}>{p.name}</h3>
-          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: 'var(--muted)' }}>{p.desc}</p>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: 'var(--muted)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{p.desc}</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)' }}>
             {p.tags.map((t, i) => <span key={t}>{i > 0 && <span style={{ margin: '0 7px', opacity: 0.4 }}>·</span>}{t}</span>)}
           </div>
-          <div><SpecularButton href={p.href} target="_blank" rel="noreferrer" size="sm">{viewLabel}</SpecularButton></div>
+          <div style={{ marginTop: 'auto' }}><SpecularButton href={p.href} target="_blank" rel="noreferrer" size="sm">{viewLabel}</SpecularButton></div>
         </div>
       </div>
     );
