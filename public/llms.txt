@@ -1,0 +1,28 @@
+# Felippe Ximenes — Full-Stack Developer & AI Engineer
+
+Portfolio profissional de Felippe Ximenes, desenvolvedor full-stack com foco em engenharia de IA, baseado no Rio de Janeiro, Brasil.
+
+## Sobre
+
+Especializado em desenvolvimento full-stack e IA generativa — de APIs serverless na AWS a pipelines RAG rodando em produção real. Atua com TypeScript, Python, React e infraestrutura AWS, entregando produtos completos do back-end ao pixel.
+
+## Projetos principais
+
+- **Certara** (certara.app) — Plataforma SaaS de preparação para certificações AWS com pipeline RAG, 13 Lambdas Python, Stripe e Cognito.
+- **Certara Agent** — Assistente de estudos agentic com LangGraph, RAG via Qdrant e AWS SAM.
+- **EduTrack** — LMS com três perfis de acesso, emissão automática de certificados em PDF com QR code e deploy Vercel + Railway.
+- **Moldz3D** (moldz3d.com.br) — E-commerce de impressão 3D com checkout nativo Pix/boleto/cartão, MercadoPago e shader GLSL via WebGL2.
+- **Caminhos** — Landing page com motion design avançado: carrossel 3D, tilt com springs do Framer Motion e acessibilidade completa.
+
+## Stack
+
+- **Frontend:** React 18, TypeScript, Vite, Framer Motion, Tailwind CSS
+- **Backend:** Node.js, FastAPI, Python, Prisma, PostgreSQL, MongoDB
+- **Cloud & IA:** AWS Lambda, SAM, Cognito, LangGraph, LangChain, RAG, Qdrant, OpenAI API
+- **Infra:** Docker, Railway, Vercel, Netlify, Stripe, MercadoPago
+
+## Contato
+
+- Email: felippelpximenes@outlook.com
+- LinkedIn: https://www.linkedin.com/in/felippeximenes/
+- GitHub: https://github.com/felippeximenes
