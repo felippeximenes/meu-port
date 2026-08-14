@@ -15,8 +15,8 @@ const T = {
       en: 'Full product, from backend to pixel. With AI that works in production.',
     },
     sub: {
-      pt: 'Desenvolvimento full-stack e engenharia de IA — de APIs na AWS a pipelines RAG rodando em produção real.',
-      en: 'Full-stack development and AI engineering — from AWS APIs to RAG pipelines running in real production.',
+      pt: 'Desenvolvimento full-stack e engenharia de IA: de APIs na AWS a pipelines RAG rodando em produção real.',
+      en: 'Full-stack development and AI engineering: from AWS APIs to RAG pipelines running in real production.',
     },
     cta: { pt: 'Ver projetos', en: 'See projects' },
     resume: { pt: 'Baixar currículo', en: 'Download resume' },

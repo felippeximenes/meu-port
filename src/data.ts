@@ -29,28 +29,28 @@ export const projects: Record<Lang, Project[]> = {
       n: '01', name: 'Certara',
       tags: ['React · TypeScript', 'AWS Lambda · SAM', 'Stripe · RAG'],
       href: 'https://github.com/felippeximenes/certara-app',
-      desc: 'Plataforma SaaS para quem prepara as certificações AWS (CLF-C02, SAA-C03 e DVA-C02). As questões são geradas em tempo real por um pipeline RAG — a resposta sempre vem da documentação oficial mais recente, nunca de dados estáticos. Inclui simulado de 65 questões, flashcards que se adaptam ao histórico do usuário, plano de estudos por IA e compartilhamento de resultado. Back-end em 13 Lambdas Python (AWS SAM), Cognito + Google OAuth, assinaturas via Stripe e proteção anti-abuso com FingerprintJS.',
+      desc: 'Plataforma SaaS para quem prepara as certificações AWS (CLF-C02, SAA-C03 e DVA-C02). As questões são geradas em tempo real por um pipeline RAG: a resposta sempre vem da documentação oficial mais recente, nunca de dados estáticos. Inclui simulado de 65 questões, flashcards que se adaptam ao histórico do usuário, plano de estudos por IA e compartilhamento de resultado. Back-end em 13 Lambdas Python (AWS SAM), Cognito + Google OAuth, assinaturas via Stripe e proteção anti-abuso com FingerprintJS.',
       img: '/projects/certara2.png', site: 'certara.app', video: '/video/certara.mp4',
     },
     {
       n: '02', name: 'Certara Agent',
       tags: ['LangGraph · Agentic', 'AWS Lambda · SAM', 'RAG · Qdrant'],
       href: 'https://github.com/felippeximenes/certara-agent',
-      desc: 'Assistente de estudos conversacional com arquitetura agentic via LangGraph. Para cada pergunta sobre certificação AWS, ele planeja os passos necessários — busca de teoria no Qdrant via RAG e consulta de preços reais na AWS Price List API — e os executa em sequência. Um segundo modelo com saída estruturada só entra quando a rota determinística falha, mantendo o custo baixo. Estado por sessão com Postgres (Neon), deploy serverless no AWS SAM e cobertura E2E com Playwright.',
+      desc: 'Assistente de estudos conversacional com arquitetura agentic via LangGraph. Para cada pergunta sobre certificação AWS, ele planeja os passos necessários (busca de teoria no Qdrant via RAG e consulta de preços reais na AWS Price List API) e os executa em sequência. Um segundo modelo com saída estruturada só entra quando a rota determinística falha, mantendo o custo baixo. Estado por sessão com Postgres (Neon), deploy serverless no AWS SAM e cobertura E2E com Playwright.',
       img: '/projects/certara.png', site: 'certara-agent', video: '/video/agent.webm',
     },
     {
       n: '03', name: 'EduTrack',
       tags: ['Node.js · Prisma · MySQL', 'React 19 · TypeScript', 'Playwright · PDF'],
       href: 'https://edu-track-blond-eta.vercel.app',
-      desc: 'Plataforma de ensino online com três perfis de acesso — aluno, instrutor e admin — com permissões verificadas em duas camadas: middleware de rota e checagem direta nas queries do Prisma. Ao concluir 100% do curso, o sistema emite automaticamente um certificado em PDF com QR code para verificação pública sem precisar de login. Deploy multi-plataforma (Vercel + Railway) com proxy reverso, contratos de API com Zod e autenticação JWT.',
+      desc: 'Plataforma de ensino online com três perfis de acesso (aluno, instrutor e admin), com permissões verificadas em duas camadas: middleware de rota e checagem direta nas queries do Prisma. Ao concluir 100% do curso, o sistema emite automaticamente um certificado em PDF com QR code para verificação pública sem precisar de login. Deploy multi-plataforma (Vercel + Railway) com proxy reverso, contratos de API com Zod e autenticação JWT.',
       img: '/projects/edutrack.png', site: 'edu-track-blond-eta.vercel.app', video: '/video/edutrack1.webm',
     },
     {
       n: '04', name: 'Moldz3D',
       tags: ['FastAPI · MongoDB', 'MercadoPago · Pix', 'React · WebGL2'],
       href: 'https://moldz3d.com.br',
-      desc: 'E-commerce para peças de impressão 3D com checkout 100% nativo — Pix, boleto e cartão com tokenização PCI — sem redirecionar o cliente para outra página. Calcula frete real por CEP (Melhor Envio), envia e-mails transacionais, processa estornos automaticamente e tem painel admin com analytics via PostHog. Proteção antibot com Cloudflare Turnstile, conformidade LGPD e shader GLSL renderizado com WebGL2 puro no hero. Stack: FastAPI + MongoDB Atlas no Railway, React no Vercel.',
+      desc: 'E-commerce para peças de impressão 3D com checkout 100% nativo (Pix, boleto e cartão com tokenização PCI) sem redirecionar o cliente para outra página. Calcula frete real por CEP (Melhor Envio), envia e-mails transacionais, processa estornos automaticamente e tem painel admin com analytics via PostHog. Proteção antibot com Cloudflare Turnstile, conformidade LGPD e shader GLSL renderizado com WebGL2 puro no hero. Stack: FastAPI + MongoDB Atlas no Railway, React no Vercel.',
       img: '/projects/moldz2.png', site: 'moldz3d.com.br', video: '/video/moldz3d.webm',
     },
     {
@@ -66,28 +66,28 @@ export const projects: Record<Lang, Project[]> = {
       n: '01', name: 'Certara',
       tags: ['React · TypeScript', 'AWS Lambda · SAM', 'Stripe · RAG'],
       href: 'https://github.com/felippeximenes/certara-app',
-      desc: 'SaaS platform for engineers preparing for AWS certifications (CLF-C02, SAA-C03, DVA-C02). Questions are generated in real time through a RAG pipeline — answers always come from the latest official documentation, never from static data. Features a full 65-question exam, user-history-adaptive flashcards, an AI-generated study plan, and shareable results. Back-end on 13 Python Lambdas (AWS SAM), Cognito + Google OAuth auth, Stripe subscriptions, and FingerprintJS anti-abuse protection.',
+      desc: 'SaaS platform for engineers preparing for AWS certifications (CLF-C02, SAA-C03, DVA-C02). Questions are generated in real time through a RAG pipeline: answers always come from the latest official documentation, never from static data. Features a full 65-question exam, user-history-adaptive flashcards, an AI-generated study plan, and shareable results. Back-end on 13 Python Lambdas (AWS SAM), Cognito + Google OAuth auth, Stripe subscriptions, and FingerprintJS anti-abuse protection.',
       img: '/projects/certara2.png', site: 'certara.app', video: '/video/certara.mp4',
     },
     {
       n: '02', name: 'Certara Agent',
       tags: ['LangGraph · Agentic', 'AWS Lambda · SAM', 'RAG · Qdrant'],
       href: 'https://github.com/felippeximenes/certara-agent',
-      desc: 'Conversational study assistant with agentic architecture built on LangGraph. For each AWS certification question, it plans the necessary steps — searching theory in Qdrant via RAG and querying real prices from the AWS Price List API — then executes them in sequence. A second structured-output model only activates when the deterministic path fails, keeping costs low. Per-session state via Postgres (Neon), serverless deploy on AWS SAM, and E2E coverage with Playwright.',
+      desc: 'Conversational study assistant with agentic architecture built on LangGraph. For each AWS certification question, it plans the necessary steps (searching theory in Qdrant via RAG and querying real prices from the AWS Price List API) and executes them in sequence. A second structured-output model only activates when the deterministic path fails, keeping costs low. Per-session state via Postgres (Neon), serverless deploy on AWS SAM, and E2E coverage with Playwright.',
       img: '/projects/certara.png', site: 'certara-agent', video: '/video/agent.webm',
     },
     {
       n: '03', name: 'EduTrack',
       tags: ['Node.js · Prisma · MySQL', 'React 19 · TypeScript', 'Playwright · PDF'],
       href: 'https://edu-track-blond-eta.vercel.app',
-      desc: 'Online learning platform with three access profiles — student, instructor, and admin — with permissions enforced in two layers: route middleware and direct Prisma query checks. Upon 100% course completion, the system automatically issues a PDF certificate with a QR code for public third-party verification without login. Multi-platform deploy (Vercel + Railway) with reverse proxy, Zod-validated API contracts, and JWT auth.',
+      desc: 'Online learning platform with three access profiles (student, instructor, and admin) with permissions enforced in two layers: route middleware and direct Prisma query checks. Upon 100% course completion, the system automatically issues a PDF certificate with a QR code for public third-party verification without login. Multi-platform deploy (Vercel + Railway) with reverse proxy, Zod-validated API contracts, and JWT auth.',
       img: '/projects/edutrack.png', site: 'edu-track-blond-eta.vercel.app', video: '/video/edutrack1.webm',
     },
     {
       n: '04', name: 'Moldz3D',
       tags: ['FastAPI · MongoDB', 'MercadoPago · Pix', 'React · WebGL2'],
       href: 'https://moldz3d.com.br',
-      desc: 'E-commerce for 3D printing parts with a fully native checkout — Pix, boleto, and PCI-compliant card tokenization — no external redirect. Real shipping rates by ZIP code (Melhor Envio), transactional emails, automatic refund processing, and an admin panel with PostHog analytics. Cloudflare Turnstile antibot protection, data compliance, and a GLSL shader rendered with pure WebGL2 in the hero. Stack: FastAPI + MongoDB Atlas on Railway, React on Vercel.',
+      desc: 'E-commerce for 3D printing parts with a fully native checkout (Pix, boleto, and PCI-compliant card tokenization) and no external redirect. Real shipping rates by ZIP code (Melhor Envio), transactional emails, automatic refund processing, and an admin panel with PostHog analytics. Cloudflare Turnstile antibot protection, data compliance, and a GLSL shader rendered with pure WebGL2 in the hero. Stack: FastAPI + MongoDB Atlas on Railway, React on Vercel.',
       img: '/projects/moldz2.png', site: 'moldz3d.com.br', video: '/video/moldz3d.webm',
     },
     {
@@ -110,7 +110,7 @@ export const services: Record<Lang, Service[]> = {
     },
     {
       title: 'Engenharia de IA & LLM',
-      desc: 'IA que vai além do chatbot. Pipelines RAG com busca vetorial (Qdrant, PGVector), agentes que tomam decisões com LangGraph e integração ao Amazon Bedrock com fallback para quando o modelo falha. O objetivo é que o produto funcione — não que pareça usar IA.',
+      desc: 'IA que vai além do chatbot. Pipelines RAG com busca vetorial (Qdrant, PGVector), agentes que tomam decisões com LangGraph e integração ao Amazon Bedrock com fallback para quando o modelo falha. O objetivo é que o produto funcione, não que pareça usar IA.',
       chips: ['LangGraph · Agentic', 'Amazon Bedrock', 'Qdrant · PGVector'],
       dark: true,
     },
@@ -128,7 +128,7 @@ export const services: Record<Lang, Service[]> = {
     },
     {
       title: 'AI & LLM Engineering',
-      desc: "AI that goes beyond the chatbot. RAG pipelines with vector search (Qdrant, PGVector), decision-making agents with LangGraph, and Amazon Bedrock integration with a fallback for when the model fails. The goal is for the product to work — not just to look like it uses AI.",
+      desc: "AI that goes beyond the chatbot. RAG pipelines with vector search (Qdrant, PGVector), decision-making agents with LangGraph, and Amazon Bedrock integration with a fallback for when the model fails. The goal is for the product to work, not just to look like it uses AI.",
       chips: ['LangGraph · Agentic', 'Amazon Bedrock', 'Qdrant · PGVector'],
       dark: true,
     },
@@ -143,14 +143,14 @@ export const services: Record<Lang, Service[]> = {
 /* ─── Process steps ─────────────────────────────────────────────────────── */
 export const steps: Record<Lang, Step[]> = {
   pt: [
-    { n: '01', title: 'Conversa inicial',  desc: 'Entendo o objetivo, o público e o que já existe. Sem compromisso — é onde alinhamos expectativas antes de qualquer proposta.' },
+    { n: '01', title: 'Conversa inicial',  desc: 'Entendo o objetivo, o público e o que já existe. Sem compromisso: é onde alinhamos expectativas antes de qualquer proposta.' },
     { n: '02', title: 'Escopo & proposta', desc: 'Defino entregas, prazos e valores numa proposta clara. Sem surpresas no meio do caminho.' },
     { n: '03', title: 'Desenvolvimento',   desc: 'Desenvolvo em ciclos curtos, com entregas parciais para você acompanhar e ajustar antes que vire problema.' },
     { n: '04', title: 'Entrega',           desc: 'Produto publicado, testado e documentado. Você fica com o repositório, as credenciais e tudo que é seu.' },
     { n: '05', title: 'Suporte',           desc: 'Um período de ajustes está incluso na entrega. Podemos combinar manutenção contínua se o projeto pedir.' },
   ],
   en: [
-    { n: '01', title: 'Initial conversation', desc: "I understand the goal, the audience, and what already exists. No commitment — it's where we align expectations before any proposal." },
+    { n: '01', title: 'Initial conversation', desc: "I understand the goal, the audience, and what already exists. No commitment: it's where we align expectations before any proposal." },
     { n: '02', title: 'Scope & proposal',     desc: 'I define deliverables, timelines, and pricing in a clear proposal. No surprise items midway.' },
     { n: '03', title: 'Development',          desc: 'I develop in short cycles with partial deliveries so you can track progress and adjust before it becomes a problem.' },
     { n: '04', title: 'Delivery',             desc: "Product published, tested, and documented. You walk away with the repository, credentials, and everything that's yours." },
@@ -165,14 +165,14 @@ export const faqs: Record<Lang, Faq[]> = {
     { q: 'Com quais tecnologias você trabalha?', a: 'No front, com React, Angular e Next.js. No back, com Node.js/NestJS e FastAPI em Python. Na infra, com AWS (Lambda, Bedrock, DynamoDB, SAM), MongoDB, PostgreSQL e bancos vetoriais (Qdrant, PGVector). Em IA, com pipelines RAG, agentes com LangGraph e LLMs via Amazon Bedrock.' },
     { q: 'O que você precisa para começar?', a: 'Uma conversa sobre o objetivo do projeto, referências que você gosta e o que já existe (marca, conteúdo, sistemas). A partir daí eu monto escopo e proposta.' },
     { q: 'Você oferece suporte após a entrega?', a: 'Sim. Todo projeto inclui um período de suporte para ajustes e correções. Podemos combinar manutenção contínua se fizer sentido.' },
-    { q: 'Qual a melhor forma de falar com você?', a: 'Email: felippelpximenes@outlook.com. Também estou no LinkedIn e no GitHub — os links estão no rodapé.' },
+    { q: 'Qual a melhor forma de falar com você?', a: 'Email: felippelpximenes@outlook.com. Também estou no LinkedIn e no GitHub; os links estão no rodapé.' },
   ],
   en: [
     { q: 'What is the typical timeline for a project?', a: 'It depends on the scope: a landing page takes 1 to 2 weeks; complete applications with back-end and integrations usually take 4 to 8 weeks. After our first conversation I send a detailed timeline.' },
     { q: 'What technologies do you work with?', a: 'On the front, React, Angular, and Next.js. On the back, Node.js/NestJS and FastAPI in Python. On infrastructure, AWS (Lambda, Bedrock, DynamoDB, SAM), MongoDB, PostgreSQL, and vector databases (Qdrant, PGVector). In AI, RAG pipelines, agents with LangGraph, and LLMs via Amazon Bedrock.' },
     { q: 'What do you need to get started?', a: 'A conversation about the project goal, references you like, and what already exists (brand, content, systems). From there I put together the scope and proposal.' },
     { q: 'Do you offer support after delivery?', a: 'Yes. Every project includes a support period for adjustments and fixes. We can arrange ongoing maintenance if it makes sense.' },
-    { q: "What's the best way to reach you?", a: 'Email: felippelpximenes@outlook.com. Also on LinkedIn and GitHub — links are in the footer.' },
+    { q: "What's the best way to reach you?", a: 'Email: felippelpximenes@outlook.com. Also on LinkedIn and GitHub; links are in the footer.' },
   ],
 };
 

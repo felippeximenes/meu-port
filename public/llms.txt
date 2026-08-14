@@ -4,7 +4,7 @@ Portfolio profissional de Felippe Ximenes, desenvolvedor full-stack com foco em 
 
 ## Sobre
 
-Especializado em desenvolvimento full-stack e IA generativa — de APIs serverless na AWS a pipelines RAG rodando em produção real. Atua com TypeScript, Python, React e infraestrutura AWS, entregando produtos completos do back-end ao pixel.
+Especializado em desenvolvimento full-stack e IA generativa: de APIs serverless na AWS a pipelines RAG rodando em produção real. Atua com TypeScript, Python, React e infraestrutura AWS, entregando produtos completos do back-end ao pixel.
 
 ## Projetos principais
 
