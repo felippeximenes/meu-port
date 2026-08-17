@@ -1,6 +1,6 @@
 # Felippe Ximenes — Portfolio
 
-Portfolio pessoal desenvolvido com React + TypeScript, focado em performance e animações fluidas.
+Portfolio pessoal desenvolvido com React + TypeScript, focado em performance e animações fluidas!
 
 ## Stack
 
