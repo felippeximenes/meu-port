@@ -213,14 +213,16 @@ export default function Hero() {
 
       if (plate) {
         const rise = easeInOutCubic(Math.min(progress / RISE_END, 1));
-        const offset = (RISE_FROM + (RISE_TO - RISE_FROM) * rise) * window.innerHeight;
+        const riseFrom = window.innerWidth <= 768 ? 0.22 : RISE_FROM;
+        const offset = (riseFrom + (RISE_TO - riseFrom) * rise) * window.innerHeight;
         plate.style.transform = 'translate3d(0,' + offset.toFixed(1) + 'px,0)';
       }
 
       const fade = 1 - Math.min(Math.max((progress - FADE_START) / (FADE_END - FADE_START), 0), 1);
       if (headline) {
         headline.style.opacity = String(fade);
-        headline.style.transform = 'translateY(-' + (progress * window.innerHeight * 0.42).toFixed(1) + 'px)';
+        const headlineSpeed = window.innerWidth <= 768 ? 0.28 : 0.42;
+        headline.style.transform = 'translateY(-' + (progress * window.innerHeight * headlineSpeed).toFixed(1) + 'px)';
       }
       if (hud) hud.style.opacity = String(fade);
       if (tagline) tagline.style.opacity = String(fade);
@@ -284,7 +286,7 @@ export default function Hero() {
       </div>
 
       {/* Layer 3: canvas stage + HUD + tagline + bar */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 30, height: '100vh', width: '100%', overflow: 'hidden' }}>
+      <div className="hero-stage" style={{ position: 'sticky', top: 0, zIndex: 30, height: '100vh', width: '100%', overflow: 'hidden' }}>
         <div ref={stageRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden', transform: 'translateZ(0)' }}>
           <div
             ref={plateRef}
@@ -316,7 +318,7 @@ export default function Hero() {
         </div>
 
         {/* HUD: bottom-left */}
-        <div ref={hudRef} style={{
+        <div ref={hudRef} className="hero-hud" style={{
           position: 'absolute', bottom: 30, left: 30, zIndex: 30,
           display: 'flex', flexDirection: 'column', gap: 4,
           fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500,

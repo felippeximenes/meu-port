@@ -202,8 +202,16 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero-stage { height: 100svh !important; }
+  .hero-hud { bottom: 20px !important; left: 16px !important; font-size: 11px !important; }
+}
 @media (max-width: 640px) {
   .hero-tagline { display: none !important; }
+  #hero-track { height: 220vh !important; }
+}
+@media (max-width: 380px) {
+  #hero-track h1 { font-size: 42px !important; letter-spacing: -0.01em !important; }
 }
 
 /* ── Sobre ───────────────────────────────────────────────────────────────── */
