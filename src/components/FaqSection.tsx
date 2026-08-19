@@ -11,7 +11,7 @@ export default function FaqSection() {
     <section id="faq" style={{ background: '#f8f8f8', padding: '112px 24px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Header */}
-        <div style={{
+        <div className="faq-header" style={{
           display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
           gap: 24, paddingBottom: 28, borderBottom: '1px solid #c9c7cc',
         }}>
@@ -33,7 +33,7 @@ export default function FaqSection() {
             <details key={i} style={{ borderBottom: '1px solid #c9c7cc', padding: '20px 0' }}>
               <summary style={{
                 display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
-                gap: 28, cursor: 'pointer', fontSize: 23, letterSpacing: '-0.03em', color: '#3c3a3e',
+                gap: 28, cursor: 'pointer', fontSize: 'clamp(18px,3.5vw,23px)', letterSpacing: '-0.03em', color: '#3c3a3e',
               }}>
                 <span>{item.q}</span>
                 {/* @ts-ignore */}

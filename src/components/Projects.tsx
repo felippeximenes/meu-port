@@ -155,11 +155,11 @@ export default function Projects() {
                 cursorLabel={t.projects.viewCase}
               />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr minmax(280px,0.9fr)', gap: 24, alignItems: 'start' }}>
+            <div className="proj-first-meta" style={{ display: 'grid', gridTemplateColumns: '1fr minmax(280px,0.9fr)', gap: 24, alignItems: 'start' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, color: '#a2a2a2' }}>{first.n}</span>
-                  <h3 style={{ margin: 0, fontSize: 36, letterSpacing: '-0.03em', color: '#3c3a3e' }}>{first.name}</h3>
+                  <h3 style={{ margin: 0, fontSize: 'clamp(22px,4vw,36px)', letterSpacing: '-0.03em', color: '#3c3a3e' }}>{first.name}</h3>
                   <span style={{ background: '#161616', color: '#f1f1f1', padding: '2px 7px', fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>{first.site}</span>
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -171,7 +171,7 @@ export default function Projects() {
           </a>
 
           {/* Cards 2â€“5: 2Ã—2 grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 36 }}>
+          <div className="proj-secondary-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 36 }}>
             {rest.map(p => (
               <a
                 key={p.n}

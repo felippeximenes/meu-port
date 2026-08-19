@@ -193,3 +193,97 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
 @keyframes preloadOut { 0%, 62% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
 @keyframes preloadIn { 0% { opacity: 0; transform: translateY(26px); } 100% { opacity: 1; transform: translateY(0); } }
 @keyframes preloadBar { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Nav ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  nav { padding: 18px 16px !important; }
+  .nav-pills { display: none !important; }
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero-tagline { display: none !important; }
+}
+
+/* ── Sobre ───────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #sobre { padding-top: 80px !important; }
+  .sobre-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 32px !important;
+  }
+  .sobre-grid > div {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+  .sobre-card-col { max-width: 280px; }
+}
+
+/* ── Projects ────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .proj-first-meta { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 640px) {
+  #trabalho { padding-top: 72px !important; }
+  .proj-secondary-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Services ────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  article[data-service] { grid-template-columns: 48px 1fr !important; }
+  .svc-desc { grid-column: 1 / -1 !important; }
+}
+@media (max-width: 640px) {
+  #servicos { padding-top: 80px !important; }
+  article[data-service] { grid-template-columns: 1fr !important; gap: 10px !important; }
+  article[data-service] > span:first-child { display: none !important; }
+}
+
+/* ── Process ─────────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .process-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  #processo { padding-top: 72px !important; padding-bottom: 72px !important; }
+  .process-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 400px) {
+  .process-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Experience ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  article[data-entry] { grid-template-columns: 80px 1fr !important; }
+  .exp-highlights { grid-column: 1 / -1 !important; padding-left: 80px !important; }
+}
+@media (max-width: 640px) {
+  #experiencia { padding-top: 72px !important; padding-bottom: 72px !important; }
+  article[data-entry] { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .exp-highlights { padding-left: 14px !important; }
+}
+
+/* ── FAQ ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  #faq { padding-top: 72px !important; padding-bottom: 72px !important; }
+  .faq-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  #contato { padding-top: 72px !important; }
+  .footer-bottom { flex-direction: column !important; align-items: flex-start !important; }
+  .footer-last-col { align-items: flex-start !important; }
+}
+
+/* ── Global side padding em telas muito pequenas ─────────────────────────── */
+@media (max-width: 480px) {
+  #sobre, #trabalho, #servicos, #processo, #experiencia, #faq, #contato {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}

@@ -76,7 +76,7 @@ export default function Services() {
                   {svc.chips.map(chip => <span key={chip} style={chipStyle}>{chip}</span>)}
                 </div>
               </div>
-              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.015em', color: 'rgba(255,255,255,0.55)' }}>{svc.desc}</p>
+              <p className="svc-desc" style={{ margin: 0, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.015em', color: 'rgba(255,255,255,0.55)' }}>{svc.desc}</p>
             </article>
           ))}
         </div>

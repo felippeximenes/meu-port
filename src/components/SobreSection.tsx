@@ -182,7 +182,7 @@ export default function SobreSection() {
 
   return (
     <section id="sobre" style={{ position: 'relative', overflow: 'hidden', background: '#f8f8f8', padding: '130px 24px 0' }}>
-      <div style={{
+      <div className="sobre-grid" style={{
         maxWidth: 1200, margin: '0 auto',
         display: 'grid', gap: '22px 56px',
         gridTemplateColumns: '1fr 0.85fr', gridTemplateRows: 'auto auto', alignItems: 'stretch',
@@ -197,7 +197,7 @@ export default function SobreSection() {
         </div>
 
         {/* Col 2 / Row 1: profile card */}
-        <div style={{ gridColumn: 2, gridRow: 1 }}>
+        <div className="sobre-card-col" style={{ gridColumn: 2, gridRow: 1 }}>
           <ProfileCard />
         </div>
 
@@ -227,7 +227,7 @@ export default function SobreSection() {
       <p aria-hidden="true" style={{
         margin: '34px 0 -14px', textAlign: 'center', color: '#fff',
         WebkitTextStroke: '1.5px #dedce1', fontFamily: 'var(--disp)',
-        fontSize: 'clamp(108px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',
+        fontSize: 'clamp(72px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',
         whiteSpace: 'nowrap', textTransform: 'uppercase', userSelect: 'none',
       }}>Sobre</p>
     </section>

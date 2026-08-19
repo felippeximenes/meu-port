@@ -26,7 +26,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom columns */}
-      <div style={{
+      <div className="footer-bottom" style={{
         maxWidth: 1200, margin: '96px auto 0',
         display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start',
         justifyContent: 'space-between', gap: 32,
@@ -55,7 +55,7 @@ export default function Footer() {
         </div>
 
         {/* Location + availability */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
+        <div className="footer-last-col" style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
           <span>{t.footer.copyright}</span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#3c3a3e' }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)' }} />

@@ -86,7 +86,7 @@ export default function Experience() {
               {/* Company + role */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  <h3 style={{ margin: 0, fontSize: 36, letterSpacing: '-0.03em', color: '#3c3a3e' }}>{exp.company}</h3>
+                  <h3 style={{ margin: 0, fontSize: 'clamp(22px,4vw,36px)', letterSpacing: '-0.03em', color: '#3c3a3e' }}>{exp.company}</h3>
                   {exp.current && (
                     <span style={{ background: '#161616', color: '#f1f1f1', padding: '2px 7px', fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
                       {t.experience.current}
@@ -102,7 +102,7 @@ export default function Experience() {
               </div>
 
               {/* Highlights */}
-              <ul style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.02em', color: '#7b7a7c' }}>
+              <ul className="exp-highlights" style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.02em', color: '#7b7a7c' }}>
                 {exp.highlights.map(h => <li key={h}>{h}</li>)}
               </ul>
             </article>

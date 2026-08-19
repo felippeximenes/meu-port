@@ -27,7 +27,7 @@ export default function Nav() {
         color: '#fff', letterSpacing: '0.01em',
       }}>FX</a>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div className="nav-pills" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         {t.nav.items.map((label, i) => (
           <a key={label} href={HREFS[i]} data-pill="" style={pillStyle}>{label}</a>
         ))}

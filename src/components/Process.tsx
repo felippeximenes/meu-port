@@ -19,7 +19,7 @@ export default function Process() {
         </div>
 
         {/* Grid 5 columns */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginTop: 48 }}>
+        <div className="process-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginTop: 48 }}>
           {stps.map((step) => (
             <div
               key={step.n}

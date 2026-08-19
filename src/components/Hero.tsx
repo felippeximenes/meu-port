@@ -331,7 +331,7 @@ export default function Hero() {
         </div>
 
         {/* Tagline: bottom-right */}
-        <p ref={taglineRef} style={{
+        <p ref={taglineRef} className="hero-tagline" style={{
           position: 'absolute', right: 24, bottom: 24, zIndex: 30, margin: 0,
           maxWidth: 342, padding: '14px 16px',
           background: 'rgba(12,12,13,0.52)', backdropFilter: 'blur(8px)',
