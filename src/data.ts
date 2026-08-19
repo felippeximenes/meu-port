@@ -1,13 +1,13 @@
-export type Lang = 'pt' | 'en';
+type Lang = 'pt' | 'en';
 
-export interface Project {
+interface Project {
   n: string; name: string; tags: string[]; href: string;
   desc: string; img: string; site: string; video?: string;
 }
-export interface Service  { title: string; desc: string; chips: string[]; dark?: boolean; }
-export interface Step     { n: string; title: string; desc: string; }
-export interface Faq      { q: string; a: string; }
-export interface Experience {
+interface Service  { title: string; desc: string; chips: string[]; }
+interface Step     { n: string; title: string; desc: string; }
+interface Faq      { q: string; a: string; }
+interface Experience {
   company: string; role: string; period: string;
   current?: boolean; year: string; chips: string[]; highlights: string[];
 }
@@ -112,7 +112,6 @@ export const services: Record<Lang, Service[]> = {
       title: 'Engenharia de IA & LLM',
       desc: 'IA que vai além do chatbot. Pipelines RAG com busca vetorial (Qdrant, PGVector), agentes que tomam decisões com LangGraph e integração ao Amazon Bedrock com fallback para quando o modelo falha. O objetivo é que o produto funcione, não que pareça usar IA.',
       chips: ['LangGraph · Agentic', 'Amazon Bedrock', 'Qdrant · PGVector'],
-      dark: true,
     },
     {
       title: 'Produtos completos',
@@ -130,7 +129,6 @@ export const services: Record<Lang, Service[]> = {
       title: 'AI & LLM Engineering',
       desc: "AI that goes beyond the chatbot. RAG pipelines with vector search (Qdrant, PGVector), decision-making agents with LangGraph, and Amazon Bedrock integration with a fallback for when the model fails. The goal is for the product to work, not just to look like it uses AI.",
       chips: ['LangGraph · Agentic', 'Amazon Bedrock', 'Qdrant · PGVector'],
-      dark: true,
     },
     {
       title: 'Full products',
