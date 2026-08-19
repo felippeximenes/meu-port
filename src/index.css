@@ -27,7 +27,7 @@
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-html { background: #f8f8f8; scroll-behavior: smooth; }
+html { background: #f8f8f8; scroll-behavior: smooth; overflow-x: hidden; }
 body { margin: 0; color: var(--graphite); font-family: var(--grot); font-weight: 500; -webkit-font-smoothing: antialiased; }
 * { box-sizing: border-box; }
 ::selection { background: var(--ember); color: #fff; }

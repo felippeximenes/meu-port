@@ -285,7 +285,7 @@ export default function Hero() {
 
       {/* Layer 3: canvas stage + HUD + tagline + bar */}
       <div style={{ position: 'sticky', top: 0, zIndex: 30, height: '100vh', width: '100%', overflow: 'hidden' }}>
-        <div ref={stageRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <div ref={stageRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden', transform: 'translateZ(0)' }}>
           <div
             ref={plateRef}
             style={{

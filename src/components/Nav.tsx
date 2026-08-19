@@ -22,10 +22,10 @@ export default function Nav() {
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       gap: 18, padding: '22px 24px',
     }}>
-      <a href="#topo" aria-label="Felippe Ximenes" style={{
-        fontFamily: 'var(--disp)', fontSize: 30, lineHeight: 1,
-        color: '#fff', letterSpacing: '0.01em',
-      }}>FX</a>
+      <a href="#topo" style={{
+        fontFamily: 'var(--mono)', fontSize: 13, fontWeight: 500,
+        textTransform: 'uppercase', letterSpacing: '0.04em', color: '#fff',
+      }}>Felippe Ximenes</a>
 
       <div className="nav-pills" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
         {t.nav.items.map((label, i) => (
