@@ -1,106 +1,67 @@
-﻿import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { EMAIL, LINKEDIN, GITHUB, INSTAGRAM } from '../data';
-import { useReveal } from '../hooks/hooks';
 import { useT } from '../i18n';
+import { EMAIL, LINKEDIN, GITHUB, INSTAGRAM } from '../data';
 
-const GLOBE_DOTS = { color: '#ffffff', size: 5, density: 7, allDots: false };
-
-const Globe = lazy(() => import('./Globe'));
+const SECTION_HREFS = ['#trabalho', '#servicos', '#processo', '#faq'];
 
 export default function Footer() {
-  const { ref, style } = useReveal<HTMLHeadingElement>();
-  const footerRef = useRef<HTMLElement>(null);
-  const [showGlobe, setShowGlobe] = useState(false);
-  const t = useT().footer;
-
-  useEffect(() => {
-    const el = footerRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setShowGlobe(true); obs.disconnect(); } },
-      { rootMargin: '300px' }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  const t = useT();
 
   return (
-    <footer ref={footerRef} id="contato" className="noise-bg footer-root" style={{ color: '#fff', borderRadius: 0, padding: '110px 48px 0' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-        <div style={{ width: 260, height: 260, marginBottom: 8 }}>
-          {showGlobe && (
-            <Suspense fallback={null}>
-              <Globe
-                speed={2}
-                smoothing={8}
-                scale={8}
-                fill="dots"
-                dots={GLOBE_DOTS}
-                oceanColor="#0b0b0d"
-                outlineColor="rgba(255,255,255,0.25)"
-                showOutline={true}
-                showGrid={false}
-                direction="left"
-                stopOnHover={true}
-                detail={5}
-                dragSpeed={5}
-              />
-            </Suspense>
-          )}
-        </div>
-        <h2 ref={ref} style={{ ...style, margin: 0, fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(34px, 4.5vw, 60px)', lineHeight: 1.1, maxWidth: 760 }}>
-          <em style={{ color: '#8b8890', fontFamily: "'Inter', sans-serif", fontStyle: 'italic', fontWeight: 400 }}>{t.headingEm}</em> {t.headingEnd}
-        </h2>
-        <div style={{ marginTop: 32 }}>
-          <a
-            href={`mailto:${EMAIL}`}
-            style={{
-              display: 'inline-flex', alignItems: 'center',
-              background: '#ffffff', color: '#0a0a0a',
-              borderRadius: 999, padding: '14px 28px',
-              fontSize: 15, fontWeight: 500,
-              fontFamily: "'Inter', sans-serif",
-              textDecoration: 'none', letterSpacing: '-0.01em',
-              transition: 'opacity 0.18s ease',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
-            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-          >
-            {EMAIL}
-          </a>
-        </div>
+    <footer id="contato" style={{ background: '#f8f8f8', padding: '110px 24px 30px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', borderTop: '1px solid #c9c7cc', paddingTop: 32 }}>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>
+          {t.footer.label}
+        </span>
+        <a
+          href={`mailto:${EMAIL}`}
+          data-cta=""
+          style={{
+            display: 'inline-block', marginTop: 24, maxWidth: 1000,
+            fontSize: 'clamp(36px,6vw,82px)', lineHeight: 0.9, letterSpacing: '-0.06em',
+            color: '#3c3a3e', transition: 'color 200ms ease',
+          }}
+        >
+          {t.footer.cta}
+        </a>
       </div>
 
-      <div className="footer-links" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, max-content)', gap: 64, justifyContent: 'center', marginTop: 96, paddingBottom: 56 }}>
-        <div>
-          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>{t.navLabel}</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
-            <a href="#trabalhos">{t.navItems[0]}</a>
-            <a href="#servicos">{t.navItems[1]}</a>
-            <a href="#processo">{t.navItems[2]}</a>
-            <a href="#faq">{t.navItems[3]}</a>
-          </div>
+      {/* Bottom columns */}
+      <div style={{
+        maxWidth: 1200, margin: '96px auto 0',
+        display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start',
+        justifyContent: 'space-between', gap: 32,
+        borderTop: '1px solid #c9c7cc', paddingTop: 28,
+        fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500,
+        textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2',
+      }}>
+        {/* Identity */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ color: '#3c3a3e' }}>Felippe Ximenes</span>
+          <a href={`mailto:${EMAIL}`} style={{ color: '#3c3a3e' }}>{EMAIL}</a>
         </div>
-        <div>
-          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>{t.connect}</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
-            <a href={LINKEDIN} target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href={INSTAGRAM} target="_blank" rel="noreferrer">Instagram</a>
-            <a href={GITHUB} target="_blank" rel="noreferrer">GitHub</a>
-            <a href={`mailto:${EMAIL}`}>Email</a>
-          </div>
-        </div>
-        <div>
-          <div style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7a7780', marginBottom: 14 }}>{t.back}</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
-            <a href="#">{t.backToTop}</a>
-          </div>
-        </div>
-      </div>
 
-      <div className="footer-bottom" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 0', borderTop: '1px solid var(--dark-line)', fontSize: 13, color: '#7a7780' }}>
-        <span>Felippe Ximenes © 2026 · {t.copyright}</span>
-        <span>{t.madeWith}</span>
+        {/* Navigation */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {t.footer.navItems.map((item, i) => (
+            <a key={item} href={SECTION_HREFS[i]}>{item}</a>
+          ))}
+        </div>
+
+        {/* Social */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <a href={LINKEDIN} target="_blank" rel="noopener">LinkedIn</a>
+          <a href={GITHUB}   target="_blank" rel="noopener">GitHub</a>
+          <a href={INSTAGRAM} target="_blank" rel="noopener">Instagram</a>
+        </div>
+
+        {/* Location + availability */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
+          <span>{t.footer.copyright}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#3c3a3e' }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)' }} />
+            {t.services.available}
+          </span>
+        </div>
       </div>
     </footer>
   );

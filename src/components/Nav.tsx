@@ -1,62 +1,67 @@
-import SpecularButton from './SpecularButton';
-import GooeyNav from './GooeyNav';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
-import './LangToggle.css';
+import { EMAIL } from '../data';
 
-const HREFS = ['#trabalhos', '#servicos', '#processo', '#faq'];
+const HREFS = ['#trabalho', '#servicos', '#processo', '#faq'];
 
-function LangToggle() {
-  const { lang, toggle } = useLang();
-  return (
-    <div className="lang-toggle-wrap" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
-      <img className="lang-flag" src="/flag-br.png" alt="PT" style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover' }} />
-      <input
-        id="lang-toggle"
-        type="checkbox"
-        className="lang-toggle-check"
-        checked={lang === 'en'}
-        onChange={toggle}
-      />
-      <label className="lang-switch" htmlFor="lang-toggle">
-        <svg viewBox="0 0 212.4992 84.4688" overflow="visible">
-          <path
-            pathLength="360"
-            fill="none"
-            stroke="currentColor"
-            d="M 42.2496 0 A 42.24 42.24 90 0 0 0 42.2496 A 42.24 42.24 90 0 0 42.2496 84.4688 A 42.24 42.24 90 0 0 84.4992 42.2496 A 42.24 42.24 90 0 0 42.2496 0 A 42.24 42.24 90 0 0 0 42.2496 A 42.24 42.24 90 0 0 42.2496 84.4688 L 170.2496 84.4688 A 42.24 42.24 90 0 0 212.4992 42.2496 A 42.24 42.24 90 0 0 170.2496 0 A 42.24 42.24 90 0 0 128 42.2496 A 42.24 42.24 90 0 0 170.2496 84.4688 A 42.24 42.24 90 0 0 212.4992 42.2496 A 42.24 42.24 90 0 0 170.2496 0 L 42.2496 0"
-          />
-        </svg>
-      </label>
-      <img className="lang-flag" src="/flag-us.png" alt="EN" style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover' }} />
-    </div>
-  );
-}
+const pillStyle: React.CSSProperties = {
+  display: 'inline-flex', alignItems: 'center', gap: 6,
+  border: '1px solid rgba(255,255,255,0.18)', borderRadius: 9999,
+  padding: '7px 13px', fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500,
+  textTransform: 'uppercase', letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.78)',
+  transition: 'color 200ms ease, border-color 200ms ease',
+};
 
 export default function Nav() {
+  const { lang, toggle } = useLang();
   const t = useT();
-  const navItems = t.nav.items.map((label, i) => ({ label, href: HREFS[i] }));
 
   return (
-    <nav className="nav-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 48px', position: 'sticky', top: 0, zIndex: 20, background: 'rgba(248,248,248,0.92)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--line)' }}>
-      <a href="#" className="nav-logo" style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, fontWeight: 500, whiteSpace: 'nowrap' }}>Felippe Ximenes</a>
-      <div className="nav-center" style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', overflow: 'hidden' }}>
-        <div style={{ background: '#0E0D0C', borderRadius: 100, padding: '2px 6px', pointerEvents: 'auto', clipPath: 'inset(0 round 100px)' }}>
-          <GooeyNav
-            items={navItems}
-            particleCount={15}
-            particleDistances={[30, 8]}
-            particleR={60}
-            initialActiveIndex={0}
-            animationTime={600}
-            timeVariance={300}
-            colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-          />
-        </div>
+    <nav style={{
+      position: 'absolute', top: 0, left: 0, right: 0, zIndex: 60,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      gap: 18, padding: '22px 24px',
+    }}>
+      <a href="#topo" aria-label="Felippe Ximenes" style={{
+        fontFamily: 'var(--disp)', fontSize: 30, lineHeight: 1,
+        color: '#fff', letterSpacing: '0.01em',
+      }}>FX</a>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        {t.nav.items.map((label, i) => (
+          <a key={label} href={HREFS[i]} data-pill="" style={pillStyle}>{label}</a>
+        ))}
       </div>
-      <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <LangToggle />
-        <SpecularButton href="#contato" size="sm">{t.nav.cta}</SpecularButton>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label="Idioma"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 7,
+            background: 'transparent', border: '1px solid rgba(255,255,255,0.18)',
+            borderRadius: 9999, padding: '7px 12px', cursor: 'pointer',
+            fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500,
+            textTransform: 'uppercase', letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.5)',
+          }}
+        >
+          <span style={{ color: lang === 'pt' ? '#fff' : 'rgba(255,255,255,0.5)' }}>PT</span>
+          <span style={{ color: 'rgba(255,255,255,0.25)' }}>/</span>
+          <span style={{ color: lang === 'en' ? '#fff' : 'rgba(255,255,255,0.5)' }}>EN</span>
+        </button>
+        <a
+          href={`mailto:${EMAIL}`}
+          data-cta=""
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: 'rgba(22,22,22,0.72)', border: '1px solid rgba(255,255,255,0.14)',
+            borderRadius: 9999, padding: '8px 15px',
+            fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500,
+            textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#fff',
+            backdropFilter: 'blur(5px)',
+          }}
+        >{t.nav.cta}</a>
       </div>
     </nav>
   );

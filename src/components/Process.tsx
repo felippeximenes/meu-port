@@ -1,38 +1,37 @@
-﻿import { steps } from '../data';
-import { useReveal } from '../hooks/hooks';
-import type { Step } from '../data';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
-
-function StepCard({ st, i }: { st: Step; i: number }) {
-  const right = i % 2 === 1;
-  const { ref, style } = useReveal<HTMLDivElement>(0.25, i * 0.06, right ? 50 : -50);
-  return (
-    <div ref={ref} style={{ ...style, marginLeft: right ? 'auto' : 0, width: 'min(560px, 90%)' }}>
-      <div style={{ background: 'var(--dark-card)', border: '1px solid var(--dark-line)', borderRadius: 18, padding: '26px 28px' }}>
-        <span style={{ display: 'inline-flex', width: 34, height: 34, borderRadius: '50%', background: 'rgba(255,255,255,0.06)', alignItems: 'center', justifyContent: 'center', fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, letterSpacing: '0.1em', color: '#a8a6ad', marginBottom: 16 }}>{st.n}</span>
-        <h3 style={{ margin: 0, fontSize: 19, fontWeight: 600, color: '#fff' }}>{st.title}</h3>
-        <p style={{ margin: '8px 0 0', fontSize: 14, lineHeight: 1.55, color: '#a8a6ad' }}>{st.desc}</p>
-      </div>
-    </div>
-  );
-}
+import { steps } from '../data';
 
 export default function Process() {
-  const head = useReveal<HTMLDivElement>();
   const { lang } = useLang();
-  const t = useT().process;
-  const ss = steps[lang];
+  const t = useT();
+  const stps = steps[lang];
+
   return (
-    <section id="processo" className="noise-bg proc-sec" style={{ borderRadius: '32px 32px 0 0', padding: '110px 48px' }}>
-      <div ref={head.ref} style={{ ...head.style, maxWidth: 720, margin: '0 auto 56px' }}>
-        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#8b8890' }}>{t.label}</span>
-        <h2 style={{ margin: '18px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(32px, 3.4vw, 50px)', lineHeight: 1.15, color: '#fff' }}>
-          {t.headingStart} <em style={{ color: '#8b8890', fontFamily: "'Inter', sans-serif", fontStyle: 'italic', fontWeight: 400 }}>{t.headingEnd}</em>
-        </h2>
-      </div>
-      <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 22 }}>
-        {ss.map((st, i) => <StepCard key={st.n} st={st} i={i} />)}
+    <section id="processo" style={{ background: '#f8f8f8', padding: '112px 24px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingBottom: 28, borderBottom: '1px solid #c9c7cc' }}>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>{t.process.label}</span>
+          <h2 style={{ margin: 0, maxWidth: 900, fontSize: 'clamp(38px,5.2vw,72px)', lineHeight: 0.92, letterSpacing: '-0.055em', color: '#3c3a3e', textWrap: 'pretty' } as React.CSSProperties}>
+            {t.process.heading}
+          </h2>
+        </div>
+
+        {/* Grid 5 columns */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12, marginTop: 48 }}>
+          {stps.map((step) => (
+            <div
+              key={step.n}
+              data-reveal=""
+              style={{ display: 'flex', flexDirection: 'column', gap: 12, borderTop: '1px solid #c9c7cc', paddingTop: 16 }}
+            >
+              <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, color: 'var(--ember)' }}>{step.n}</span>
+              <h3 style={{ margin: 0, fontSize: 23, letterSpacing: '-0.03em', color: '#3c3a3e' }}>{step.title}</h3>
+              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.02em', color: '#7b7a7c' }}>{step.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

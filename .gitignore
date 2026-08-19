@@ -34,3 +34,6 @@ npm-debug.log*
 .agents/
 .claude/
 skills-lock.json
+
+# Reference design (usado só localmente)
+novo/

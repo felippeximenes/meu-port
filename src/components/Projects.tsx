@@ -1,145 +1,228 @@
-import { useState, useRef } from 'react';
-import { projects } from '../data';
-import { useReveal, usePinProgress, useIsMobile } from '../hooks/hooks';
-import type { Project } from '../data';
-import SpecularButton from './SpecularButton';
+﻿import { useEffect } from 'react';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
+import { projects, GITHUB } from '../data';
 
-const mediaBox = {
-  borderRadius: 0, overflow: 'hidden',
-  border: '1px solid var(--line)',
-  background: '#EEECEA',
-} as const;
+const TAG_STYLE: React.CSSProperties = {
+  background: '#fff', padding: '3px 8px',
+  fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500,
+  textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#3c3a3e',
+};
 
-function Media({ p }: { p: Project }) {
-  const [imgErr, setImgErr] = useState(false);
-  if (p.video) return <video src={p.video} muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }} />;
-  if (imgErr) return <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: 13 }}>{p.name}</div>;
-  return <img src={p.img} alt={p.name} onError={() => setImgErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }} />;
+/* Wipe + cursor-follow + grid focus via DOM (mirrors reference JS exactly) */
+function useProjectInteractions() {
+  useEffect(() => {
+    const grid = document.querySelector('[data-grid]') as HTMLElement | null;
+    if (!grid) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cards = Array.from(grid.querySelectorAll('a[data-card]')) as HTMLAnchorElement[];
+    const rafs: number[] = [];
+
+    cards.forEach(card => {
+      const media = card.querySelector('[data-media]') as HTMLElement | null;
+      const wipe  = card.querySelector('[data-wipe]')  as HTMLElement | null;
+      const label = card.querySelector('[data-cursor]') as HTMLElement | null;
+      let tx = 0, ty = 0, cx = 0, cy = 0;
+      let id: number | null = null;
+
+      const loop = () => {
+        cx += (tx - cx) * 0.06; cy += (ty - cy) * 0.06;
+        if (label) label.style.transform = `translate3d(${cx.toFixed(1)}px,${cy.toFixed(1)}px,0) translate(-50%,-50%)`;
+        if (Math.abs(tx - cx) > 0.4 || Math.abs(ty - cy) > 0.4) { id = requestAnimationFrame(loop); }
+        else { id = null; }
+      };
+
+      const onEnter = (e: PointerEvent) => {
+        grid.setAttribute('data-focus', '');
+        card.setAttribute('data-hot', '');
+        if (!media) return;
+        const r = media.getBoundingClientRect();
+        cx = tx = e.clientX - r.left; cy = ty = e.clientY - r.top;
+        if (label) label.style.transform = `translate3d(${cx}px,${cy}px,0) translate(-50%,-50%)`;
+        if (wipe && !reduce) {
+          wipe.style.transition = 'none';
+          wipe.style.clipPath = 'inset(0 0 0 0)';
+          void wipe.offsetWidth;
+          wipe.style.transition = 'clip-path 1150ms var(--ease-out)';
+          wipe.style.clipPath = cx < r.width / 2 ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)';
+        }
+        // Load video on first hover
+        const video = card.querySelector('video[data-hover-video]') as HTMLVideoElement | null;
+        if (video && !video.src && video.dataset.src) {
+          video.src = video.dataset.src;
+          video.load();
+        }
+        if (video) video.play().catch(() => {});
+      };
+      const onMove = (e: PointerEvent) => {
+        if (!media) return;
+        const r = media.getBoundingClientRect();
+        tx = e.clientX - r.left; ty = e.clientY - r.top;
+        if (!id) id = requestAnimationFrame(loop);
+      };
+      const onLeave = () => {
+        grid.removeAttribute('data-focus');
+        card.removeAttribute('data-hot');
+        if (id) { cancelAnimationFrame(id); id = null; }
+        if (wipe && !reduce) {
+          wipe.style.transition = 'clip-path 950ms var(--ease-out)';
+          wipe.style.clipPath = 'inset(0 100% 0 100%)';
+        }
+        const video = card.querySelector('video[data-hover-video]') as HTMLVideoElement | null;
+        if (video) video.pause();
+      };
+
+      if (wipe) wipe.style.clipPath = 'inset(0 100% 0 100%)';
+      card.addEventListener('pointerenter', onEnter);
+      card.addEventListener('pointermove', onMove);
+      card.addEventListener('pointerleave', onLeave);
+      rafs.push(id ?? 0);
+    });
+
+    return () => {
+      rafs.forEach(r => { if (r) cancelAnimationFrame(r); });
+    };
+  }, []);
 }
 
-function ProjectCard({ p, isMobile, total, viewLabel }: { p: Project; isMobile: boolean; total: number; viewLabel: string }) {
-  const counter = `${p.n} · ${String(total).padStart(2, '0')}`;
-  if (isMobile) {
-    return (
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--bg)', overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px 0', flexShrink: 0 }}>
-          <div style={{ ...mediaBox, aspectRatio: '16/9' }}><Media p={p} /></div>
-        </div>
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', padding: '14px 20px 20px', gap: 10, overflow: 'hidden' }}>
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)' }}>{counter}</span>
-          <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(22px, 6vw, 32px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.08, letterSpacing: '-0.02em' }}>{p.name}</h3>
-          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: 'var(--muted)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{p.desc}</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-            {p.tags.map((t, i) => <span key={t}>{i > 0 && <span style={{ margin: '0 7px', opacity: 0.4 }}>·</span>}{t}</span>)}
-          </div>
-          <div style={{ marginTop: 'auto' }}><SpecularButton href={p.href} target="_blank" rel="noreferrer" size="sm">{viewLabel}</SpecularButton></div>
-        </div>
-      </div>
-    );
-  }
+interface CardMediaProps {
+  poster: string;
+  videoSrc: string;
+  cursorLabel: string;
+}
 
+function CardMedia({ poster, videoSrc, cursorLabel }: CardMediaProps) {
   return (
-    <div style={{ height: '100%', display: 'grid', gridTemplateColumns: '1fr 1.2fr', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}>
-      <span aria-hidden style={{ position: 'absolute', left: '-10px', bottom: '-24px', fontFamily: "'Bebas Neue', sans-serif", fontWeight: 400, fontSize: 'clamp(160px, 18vw, 240px)', lineHeight: 1, letterSpacing: '-0.02em', color: 'var(--fg)', opacity: 0.045, pointerEvents: 'none', userSelect: 'none', zIndex: 0 }}>
-        {p.n}
-      </span>
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 3vw 0 5vw' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)' }}>{counter}</span>
-          <h3 style={{ margin: 0, fontFamily: "'Inter', sans-serif", fontSize: 'clamp(26px, 3vw, 44px)', fontWeight: 600, color: 'var(--fg)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>{p.name}</h3>
-          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: 'var(--muted)', maxWidth: 320 }}>{p.desc}</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 4 }}>
-            {p.tags.map((t, i) => <span key={t}>{i > 0 && <span style={{ margin: '0 7px', opacity: 0.4 }}>·</span>}{t}</span>)}
-          </div>
-          <div style={{ marginTop: 8 }}><SpecularButton href={p.href} target="_blank" rel="noreferrer" size="sm">{viewLabel}</SpecularButton></div>
-        </div>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '36px 36px 36px 0', gap: 10 }}>
-        <div style={{ ...mediaBox, aspectRatio: '16 / 9' }}><Media p={p} /></div>
-        <span style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '0.04em' }}>{p.site}</span>
-      </div>
+    // @ts-ignore data-media is valid
+    <div data-media="" style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', background: '#161616' }}>
+      {/* @ts-ignore */}
+      <div data-wipe="" />
+      {/* @ts-ignore */}
+      <span data-cursor="">{cursorLabel}</span>
+      <video
+        // @ts-ignore
+        data-hover-video=""
+        data-src={videoSrc}
+        muted
+        loop
+        playsInline
+        preload="none"
+        poster={poster}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+      />
     </div>
   );
 }
 
 export default function Projects() {
-  const isMobile = useIsMobile();
   const { lang } = useLang();
-  const t = useT().projects;
-  const ps = projects[lang];
-  const NUM = ps.length;
+  const t = useT();
+  const projs = projects[lang];
+  useProjectInteractions();
 
-  const head = useReveal<HTMLDivElement>();
-  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const activeVideo = useRef(-1);
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const wrapRef = usePinProgress<HTMLElement>((p) => {
-    const seg = 1 / NUM;
-    ps.forEach((_, i) => {
-      const el = stepRefs.current[i];
-      if (!el) return;
-      const local = (p - i * seg) / seg;
-      let o = 0, ty = 40;
-      if (local >= 0 && local < 1) {
-        const fadeIn = i === 0 ? 1 : Math.min(1, local / 0.25);
-        const fadeOut = i === NUM - 1 ? 1 : Math.min(1, (1 - local) / 0.25);
-        o = Math.min(fadeIn, fadeOut);
-        ty = (1 - fadeIn) * 40 - (1 - fadeOut) * 40;
-      } else if (i === 0 && p <= 0) { o = 1; ty = 0; }
-        else if (i === NUM - 1 && p >= 1) { o = 1; ty = 0; }
-      el.style.opacity = String(o);
-      el.style.transform = `translateY(${ty}px)`;
-      el.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
-      const fill = fillRefs.current[i];
-      if (fill) fill.style.transform = `scaleX(${Math.min(1, Math.max(0, local))})`;
-
-      // Só o card ativo (>50% visível) reproduz vídeo — evita 5 vídeos tocando ao mesmo tempo
-      if (!reduceMotion && o > 0.5 && activeVideo.current !== i) {
-        if (activeVideo.current >= 0) stepRefs.current[activeVideo.current]?.querySelector('video')?.pause();
-        activeVideo.current = i;
-        el.querySelector('video')?.play().catch(() => {});
-      }
-    });
-  });
-
-  const headerPad = isMobile ? '32px 20px 20px' : '48px 48px 28px';
-  const barPad    = isMobile ? '12px 20px 16px' : '16px 48px 24px';
+  const [first, ...rest] = projs;
 
   return (
-    <section id="trabalhos" ref={wrapRef} style={{ background: 'var(--bg)', height: `${NUM * 100}vh`, position: 'relative' }}>
-      <div style={{ position: 'sticky', top: isMobile ? 68 : 0, height: isMobile ? 'calc(100vh - 68px)' : '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-
-        <div ref={head.ref} style={{ ...head.style, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', padding: headerPad, flexShrink: 0 }}>
-          <div>
-            <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block' }}>{t.label}</span>
-            <h2 style={{ margin: '12px 0 0', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(24px, 3.4vw, 46px)' }}>{t.heading}</h2>
+    <section id="trabalho" style={{ position: 'relative', overflow: 'hidden', background: '#f1f1f1', padding: '112px 24px 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>{t.projects.label}</span>
+            <h2 style={{ margin: 0, fontSize: 'clamp(42px,6vw,82px)', lineHeight: 0.88, letterSpacing: '-0.055em', color: '#3c3a3e' }}>{t.projects.heading}</h2>
           </div>
-          <a href="https://github.com/felippeximenes" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1px solid var(--line)', borderRadius: 999, padding: isMobile ? '8px 14px' : '10px 18px', fontSize: isMobile ? 13 : 14, fontWeight: 500, flexShrink: 0 }}>
-            {isMobile ? t.viewAllMobile : t.viewAll}
-          </a>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#7b7a7c' }}>05 / 05</span>
         </div>
 
-        <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
-          {ps.map((p, i) => (
-            <div key={p.name} ref={(el) => { stepRefs.current[i] = el; }} style={{ position: 'absolute', inset: 0, opacity: i === 0 ? 1 : 0 }}>
-              <ProjectCard p={p} isMobile={isMobile} total={NUM} viewLabel={t.viewProject} />
+        {/* Grid */}
+        {/* @ts-ignore */}
+        <div data-grid="" style={{ display: 'grid', gap: 12, marginTop: 48, borderTop: '1px solid #c9c7cc', paddingTop: 48 }}>
+          {/* Card 1 â€” full width */}
+          <a
+            data-reveal=""
+            href={first.href}
+            // @ts-ignore
+            data-card=""
+            target="_blank"
+            rel="noopener"
+            style={{ display: 'flex', flexDirection: 'column', gap: 16, color: 'inherit' }}
+          >
+            <div style={{ aspectRatio: '16/8' }}>
+              <CardMedia
+                poster={first.img}
+                videoSrc="/video-case.mp4"
+                cursorLabel={t.projects.viewCase}
+              />
             </div>
-          ))}
-        </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr minmax(280px,0.9fr)', gap: 24, alignItems: 'start' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, color: '#a2a2a2' }}>{first.n}</span>
+                  <h3 style={{ margin: 0, fontSize: 36, letterSpacing: '-0.03em', color: '#3c3a3e' }}>{first.name}</h3>
+                  <span style={{ background: '#161616', color: '#f1f1f1', padding: '2px 7px', fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>{first.site}</span>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {first.tags.map(tag => <span key={tag} style={TAG_STYLE}>{tag}</span>)}
+                </div>
+              </div>
+              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.015em', color: '#7b7a7c' }}>{first.desc}</p>
+            </div>
+          </a>
 
-        <div style={{ display: 'flex', gap: 8, padding: barPad, flexShrink: 0 }}>
-          {ps.map((p, i) => (
-            <span key={p.name} style={{ height: 2, flex: 1, background: 'rgba(0,0,0,0.08)', position: 'relative', overflow: 'hidden', display: 'block', borderRadius: 999 }}>
-              <span ref={(el) => { fillRefs.current[i] = el; }} style={{ position: 'absolute', inset: 0, background: 'var(--fg)', transform: 'scaleX(0)', transformOrigin: '0 50%', display: 'block' }} />
-            </span>
-          ))}
-        </div>
+          {/* Cards 2â€“5: 2Ã—2 grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 36 }}>
+            {rest.map(p => (
+              <a
+                key={p.n}
+                data-reveal=""
+                href={p.href}
+                // @ts-ignore
+                data-card=""
+                target="_blank"
+                rel="noopener"
+                style={{ display: 'flex', flexDirection: 'column', gap: 14, color: 'inherit' }}
+              >
+                <div style={{ aspectRatio: '4/3' }}>
+                  <CardMedia
+                    poster={p.img}
+                    videoSrc={p.video ?? ''}
+                    cursorLabel={t.projects.viewCase}
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, color: '#a2a2a2' }}>{p.n}</span>
+                    <h3 style={{ margin: 0, fontSize: 23, letterSpacing: '-0.03em', color: '#3c3a3e' }}>{p.name}</h3>
+                    {p.site && p.site !== 'certara-agent' && (
+                      <span style={{ background: '#161616', color: '#f1f1f1', padding: '2px 7px', fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>{p.site}</span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {p.tags.slice(0, 2).map(tag => <span key={tag} style={TAG_STYLE}>{tag}</span>)}
+                  </div>
+                  <p style={{ margin: 0, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.015em', color: '#7b7a7c' }}>{p.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
 
+          <a
+            href={GITHUB}
+            target="_blank"
+            rel="noopener"
+            style={{ marginTop: 40, width: 'fit-content', paddingBottom: 4, borderBottom: '1px solid currentColor', fontSize: 15, letterSpacing: '-0.01em', color: '#3c3a3e', transition: 'color 200ms ease' }}
+          >{t.projects.viewAll}</a>
+        </div>
       </div>
+
+      {/* Ghost word */}
+      <p aria-hidden="true" style={{
+        margin: '64px 0 -12px', textAlign: 'center', color: '#fff',
+        WebkitTextStroke: '1.5px #dedce1', fontFamily: 'var(--disp)',
+        fontSize: 'clamp(108px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',
+        whiteSpace: 'nowrap', textTransform: 'uppercase', userSelect: 'none',
+      }}>Projetos</p>
     </section>
   );
 }

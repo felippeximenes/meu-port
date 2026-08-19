@@ -1,44 +1,50 @@
-﻿import { useState } from 'react';
-import { faqs, EMAIL } from '../data';
-import { useReveal } from '../hooks/hooks';
-import SpecularButton from './SpecularButton';
-import { useLang } from '../contexts/LanguageContext';
+﻿import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
+import { faqs } from '../data';
 
 export default function FaqSection() {
-  const [open, setOpen] = useState(0);
-  const left = useReveal<HTMLDivElement>();
-  const right = useReveal<HTMLDivElement>(0.12, 0.1);
   const { lang } = useLang();
-  const t = useT().faq;
-  const fs = faqs[lang];
+  const t = useT();
+  const items = faqs[lang];
+
   return (
-    <section id="faq" className="faq-sec faq-grid" style={{ maxWidth: 1280, margin: '0 auto', padding: '120px 48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
-      <div ref={left.ref} style={left.style}>
-        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--muted)' }}>{t.label}</span>
-        <h2 style={{ margin: '18px 0 28px', fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(30px, 3vw, 44px)', lineHeight: 1.15 }}>
-          {t.heading} <em style={{ color: 'var(--muted)', fontStyle: 'normal' }}>{t.headingEm}</em>
-        </h2>
-        <SpecularButton href={`mailto:${EMAIL}`} size="md">{t.cta}</SpecularButton>
-      </div>
-      <div ref={right.ref} style={{ ...right.style, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <span style={{ background: 'var(--fg)', color: '#fff', borderRadius: 999, padding: '9px 18px', fontSize: 13, fontWeight: 500, width: 'fit-content', marginBottom: 4 }}>{t.badge}</span>
-        {fs.map((f, i) => (
-          <div key={f.q} style={{ background: open === i ? '#fff' : 'var(--bg-soft)', border: '1px solid var(--line)', borderRadius: 0, overflow: 'hidden', transition: 'background 0.2s ease' }}>
-            <button
-              onClick={() => setOpen(open === i ? -1 : i)}
-              aria-expanded={open === i}
-              aria-controls={`faq-answer-${i}`}
-              style={{ all: 'unset', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '18px 22px', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontSize: 15, fontWeight: 600 }}
-            >
-              {f.q}
-              <span aria-hidden="true" style={{ fontSize: 22, color: 'var(--muted)' }}>{open === i ? '×' : '+'}</span>
-            </button>
-            {open === i && (
-              <p id={`faq-answer-${i}`} style={{ margin: 0, padding: '0 22px 20px', fontSize: 14, lineHeight: 1.6, color: 'var(--muted)' }}>{f.a}</p>
-            )}
+    <section id="faq" style={{ background: '#f8f8f8', padding: '112px 24px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        {/* Header */}
+        <div style={{
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
+          gap: 24, paddingBottom: 28, borderBottom: '1px solid #c9c7cc',
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>FAQ</span>
+            <h2 style={{ margin: 0, maxWidth: 820, fontSize: 'clamp(38px,5.2vw,72px)', lineHeight: 0.92, letterSpacing: '-0.055em', color: '#3c3a3e', textWrap: 'pretty' } as React.CSSProperties}>
+              {t.faq.heading}
+            </h2>
           </div>
-        ))}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#7b7a7c', whiteSpace: 'nowrap' }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)' }} />
+            {t.faq.badge}
+          </span>
+        </div>
+
+        {/* Items */}
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 24 }}>
+          {items.map((item, i) => (
+            <details key={i} style={{ borderBottom: '1px solid #c9c7cc', padding: '20px 0' }}>
+              <summary style={{
+                display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+                gap: 28, cursor: 'pointer', fontSize: 23, letterSpacing: '-0.03em', color: '#3c3a3e',
+              }}>
+                <span>{item.q}</span>
+                {/* @ts-ignore */}
+                <span data-chevron="" aria-hidden="true" style={{ flex: 'none', fontFamily: 'var(--mono)', fontWeight: 500, fontSize: 22, lineHeight: 1, color: '#a2a2a2' }}>+</span>
+              </summary>
+              <p style={{ margin: '14px 0 0', maxWidth: 760, fontSize: 17, lineHeight: 1.35, letterSpacing: '-0.02em', color: '#7b7a7c' }}>
+                {item.a}
+              </p>
+            </details>
+          ))}
+        </div>
       </div>
     </section>
   );
