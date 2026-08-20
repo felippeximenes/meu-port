@@ -175,7 +175,7 @@ export default function Hero() {
       return from.map((pt, i) => [pt[0] + (to[i][0] - pt[0]) * a, pt[1] + (to[i][1] - pt[1]) * a] as [number,number]);
     };
 
-    const draw = (rect: DOMRect, img: HTMLImageElement, zoom: number) => {
+    const draw = (rect: DOMRect, img: HTMLImageElement, zoom: number, mz: number) => {
       const dpr = window.devicePixelRatio || 1;
       const w = Math.round(rect.width * dpr);
       const h = Math.round(rect.height * dpr);
@@ -188,7 +188,7 @@ export default function Hero() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, rect.width, rect.height);
       ctx.translate(rect.width / 2, rect.height / 2);
-      ctx.scale(zoom, zoom);
+      ctx.scale(zoom * mz, zoom * mz);
       ctx.drawImage(img, -dw/2, -dh/2, dw, dh);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
@@ -208,12 +208,14 @@ export default function Hero() {
       const progress = height <= 0 ? 0 : Math.min(Math.max(-track.getBoundingClientRect().top / height, 0), 1);
       const cam = camera(progress);
       const rect = stage.getBoundingClientRect();
-      draw(rect, frames[cam.frame], cam.zoom);
+      const isMobile = window.innerWidth <= 768;
+      const mz = isMobile ? 1.4 : 1;
+      draw(rect, frames[cam.frame], cam.zoom, mz);
       if (bar) bar.style.width = progress * 100 + '%';
 
       if (plate) {
         const rise = easeInOutCubic(Math.min(progress / RISE_END, 1));
-        const riseFrom = window.innerWidth <= 768 ? 0.22 : RISE_FROM;
+        const riseFrom = isMobile ? 0.05 : RISE_FROM;
         const offset = (riseFrom + (RISE_TO - riseFrom) * rise) * window.innerHeight;
         plate.style.transform = 'translate3d(0,' + offset.toFixed(1) + 'px,0)';
       }
@@ -221,7 +223,7 @@ export default function Hero() {
       const fade = 1 - Math.min(Math.max((progress - FADE_START) / (FADE_END - FADE_START), 0), 1);
       if (headline) {
         headline.style.opacity = String(fade);
-        const headlineSpeed = window.innerWidth <= 768 ? 0.28 : 0.42;
+        const headlineSpeed = isMobile ? 0.2 : 0.42;
         headline.style.transform = 'translateY(-' + (progress * window.innerHeight * headlineSpeed).toFixed(1) + 'px)';
       }
       if (hud) hud.style.opacity = String(fade);
@@ -241,7 +243,7 @@ export default function Hero() {
       const dst = corners.map(([x, y]) => {
         const bx = x * fit + ox;
         const by = y * fit + oy;
-        return [(bx - rect.width/2) * cam.zoom + rect.width/2, (by - rect.height/2) * cam.zoom + rect.height/2] as [number,number];
+        return [(bx - rect.width/2) * cam.zoom * mz + rect.width/2, (by - rect.height/2) * cam.zoom * mz + rect.height/2] as [number,number];
       });
       pin.style.transform = cornerPin(1920, 1080, dst);
     };
@@ -263,6 +265,7 @@ export default function Hero() {
       {/* Layer 2: headline */}
       <div
         ref={headlineRef}
+        className="hero-headline"
         style={{
           position: 'sticky', top: 0, zIndex: 20, height: '100vh', width: '100%', marginBottom: '-100vh',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
@@ -290,6 +293,7 @@ export default function Hero() {
         <div ref={stageRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden', transform: 'translateZ(0)' }}>
           <div
             ref={plateRef}
+            className="hero-plate"
             style={{
               position: 'absolute', inset: 0, willChange: 'transform',
               WebkitMaskImage: 'linear-gradient(180deg,rgba(0,0,0,0) 0%,#000 11%)',
