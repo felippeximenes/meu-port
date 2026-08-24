@@ -16,6 +16,8 @@ const RISE_TO = -0.04;
 const FADE_START = 0.82;
 const FADE_END = 0.98;
 const FRAME_COUNT = 89;
+const RAW_FRAME_COUNT = 145;
+const RAW_FPS = 24;
 
 /* ── Calibrated corrections (do NOT alter) ────────────────────────────────── */
 const FIX0 = [[0, 0], [-8, 27], [-4, 0], [7, 0]] as [number, number][];
@@ -137,11 +139,11 @@ export default function Hero() {
     const bar     = barRef.current;
     if (!track || !stage || !canvas) return;
 
-    /* Pre-load frames */
+    /* Pre-load frames (isolated monitor cutout, transparent background) */
     const frames: HTMLImageElement[] = [];
-    for (let i = 0; i < FRAME_COUNT; i++) {
+    for (let i = 0; i < RAW_FRAME_COUNT; i++) {
       const img = new Image();
-      img.src = '/hero-frames/monitor_' + String(i).padStart(5, '0') + '.jpg';
+      img.src = '/hero-frames/monitor_' + String(i).padStart(5, '0') + '.webp';
       frames[i] = img;
     }
 
@@ -175,14 +177,16 @@ export default function Hero() {
       return from.map((pt, i) => [pt[0] + (to[i][0] - pt[0]) * a, pt[1] + (to[i][1] - pt[1]) * a] as [number,number]);
     };
 
-    const draw = (rect: DOMRect, img: HTMLImageElement, zoom: number, mz: number) => {
+    const draw = (rect: DOMRect, img: HTMLImageElement, zoom: number, mz: number, contain: boolean) => {
       const dpr = window.devicePixelRatio || 1;
       const w = Math.round(rect.width * dpr);
       const h = Math.round(rect.height * dpr);
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       const ctx = canvas.getContext('2d');
       if (!ctx || !img || !img.naturalWidth) return;
-      const fit = Math.max(rect.width / img.naturalWidth, rect.height / img.naturalHeight);
+      // Portrait screens keep the complete 16:9 composition visible. Covering a
+      // tall viewport here turns the sequence into an excessively cropped close-up.
+      const fit = (contain ? Math.min : Math.max)(rect.width / img.naturalWidth, rect.height / img.naturalHeight);
       const dw = img.naturalWidth * fit;
       const dh = img.naturalHeight * fit;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -207,15 +211,20 @@ export default function Hero() {
       const height = track.offsetHeight - window.innerHeight;
       const progress = height <= 0 ? 0 : Math.min(Math.max(-track.getBoundingClientRect().top / height, 0), 1);
       const cam = camera(progress);
+      const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
+      const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
       const rect = stage.getBoundingClientRect();
-      const isMobile = window.innerWidth <= 768;
-      const mz = isMobile ? 1.4 : 1;
-      draw(rect, frames[cam.frame], cam.zoom, mz);
+      const isCompact = window.matchMedia('(max-width: 900px)').matches;
+      const isPortrait = isCompact && rect.height > rect.width * 1.1;
+      // Desktop deliberately stays on the original, immersive cover treatment.
+      // Compact landscape keeps a light crop; portrait uses the full wide frame.
+      const mz = isPortrait ? 1.15 : isCompact ? 1.06 : 1;
+      draw(rect, frames[rawIndex], cam.zoom, mz, isPortrait);
       if (bar) bar.style.width = progress * 100 + '%';
 
       if (plate) {
         const rise = easeInOutCubic(Math.min(progress / RISE_END, 1));
-        const riseFrom = isMobile ? 0.05 : RISE_FROM;
+        const riseFrom = isCompact ? 0.05 : RISE_FROM;
         const offset = (riseFrom + (RISE_TO - riseFrom) * rise) * window.innerHeight;
         plate.style.transform = 'translate3d(0,' + offset.toFixed(1) + 'px,0)';
       }
@@ -223,21 +232,21 @@ export default function Hero() {
       const fade = 1 - Math.min(Math.max((progress - FADE_START) / (FADE_END - FADE_START), 0), 1);
       if (headline) {
         headline.style.opacity = String(fade);
-        const headlineSpeed = isMobile ? 0.2 : 0.42;
+        const headlineSpeed = isCompact ? 0.2 : 0.42;
         headline.style.transform = 'translateY(-' + (progress * window.innerHeight * headlineSpeed).toFixed(1) + 'px)';
       }
       if (hud) hud.style.opacity = String(fade);
       if (tagline) tagline.style.opacity = String(fade);
 
       if (!tracking || !pin) return;
-      let corners = cornersAt((cam.frame / (FRAME_COUNT - 1)) * BG_DURATION);
+      let corners = cornersAt(camTime);
       if (!corners) return;
       const cx = corners.reduce((s, p) => s + p[0], 0) / 4;
       const cy = corners.reduce((s, p) => s + p[1], 0) / 4;
       corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + QUAD_EXPAND), cy + (y - cy) * (1 + QUAD_EXPAND)] as [number,number]);
       const kx = curve(TAPER_X, cam.frame), ky = curve(TAPER_Y, cam.frame);
       if (kx > 0 || ky > 0) corners = corners.map(([x, y], i) => [x + FIX0[i][0] * kx, y + FIX0[i][1] * ky] as [number,number]);
-      const fit = Math.max(rect.width / tracking.width, rect.height / tracking.height);
+      const fit = (isPortrait ? Math.min : Math.max)(rect.width / tracking.width, rect.height / tracking.height);
       const ox = (rect.width - tracking.width * fit) / 2;
       const oy = (rect.height - tracking.height * fit) / 2;
       const dst = corners.map(([x, y]) => {

@@ -37,3 +37,6 @@ skills-lock.json
 
 # Reference design (usado só localmente)
 novo/
+
+# Source footage (não versionado, só material de origem local)
+public/monitor-greenscreen.mp4
