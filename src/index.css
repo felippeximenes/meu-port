@@ -202,18 +202,12 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  #hero-track { height: 210vh !important; }
-  .hero-stage { height: 100svh !important; }
-  .hero-hud { bottom: 20px !important; left: 16px !important; font-size: 11px !important; }
-  .hero-headline { padding-top: clamp(72px, 9vh, 100px) !important; }
-}
-@media (max-width: 640px) {
-  .hero-tagline { display: none !important; }
-  #hero-track { height: 185vh !important; }
-}
+/* Above 768px: scroll-jacked hero (see Hero.tsx #hero-track). At or below it,
+   Hero.tsx renders a static, non-scroll-driven layout instead — the pin
+   mechanism needs the full 100vh per layer, which only makes sense once
+   there's enough width for the monitor to fill it without leaving a gap. */
 @media (max-width: 380px) {
-  #hero-track h1 { font-size: 42px !important; letter-spacing: -0.01em !important; }
+  .hero-static-headline h1 { font-size: 42px !important; letter-spacing: -0.01em !important; }
 }
 
 /* ── Sobre ───────────────────────────────────────────────────────────────── */

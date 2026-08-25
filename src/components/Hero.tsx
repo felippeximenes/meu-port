@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 
@@ -18,6 +18,11 @@ const FADE_END = 0.98;
 const FRAME_COUNT = 89;
 const RAW_FRAME_COUNT = 145;
 const RAW_FPS = 24;
+
+/* ── No-scroll mobile hero (≤768px): fixed framing, no scroll-jack ──────────── */
+const STATIC_BREAKPOINT = 768;
+const STATIC_PROGRESS = 0.56;
+const STATIC_MZ = 1.15;
 
 /* ── Calibrated corrections (do NOT alter) ────────────────────────────────── */
 const FIX0 = [[0, 0], [-8, 27], [-4, 0], [7, 0]] as [number, number][];
@@ -64,8 +69,13 @@ export default function Hero() {
   const { lang } = useLang();
   const t = useT();
 
+  const [isStatic, setIsStatic] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(`(max-width: ${STATIC_BREAKPOINT}px)`).matches
+  );
+
   const trackRef     = useRef<HTMLDivElement>(null);
   const stageRef     = useRef<HTMLDivElement>(null);
+  const staticStageRef = useRef<HTMLDivElement>(null);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const pinRef       = useRef<HTMLDivElement>(null);
   const plateRef     = useRef<HTMLDivElement>(null);
@@ -77,6 +87,14 @@ export default function Hero() {
   const videoRef     = useRef<HTMLVideoElement>(null);
   const fallbackRef  = useRef<HTMLDivElement>(null);
 
+  /* ── Track the static/scroll-jack breakpoint ───────────────────────────── */
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${STATIC_BREAKPOINT}px)`);
+    const handler = () => setIsStatic(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   /* ── Clock ──────────────────────────────────────────────────────────────── */
   useEffect(() => {
     const el = clockRef.current;
@@ -87,7 +105,7 @@ export default function Hero() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [isStatic]);
 
   /* ── Hero video ─────────────────────────────────────────────────────────── */
   useEffect(() => {
@@ -124,20 +142,13 @@ export default function Hero() {
       video.removeEventListener('error', showFallback);
       videoIO?.disconnect();
     };
-  }, []);
+  }, [isStatic]);
 
-  /* ── Main scroll scene ──────────────────────────────────────────────────── */
+  /* ── Monitor scene: scroll-jacked (desktop/tablet) or fixed framing (mobile) ── */
   useEffect(() => {
-    const track   = trackRef.current;
-    const stage   = stageRef.current;
-    const canvas  = canvasRef.current;
-    const pin     = pinRef.current;
-    const plate   = plateRef.current;
-    const headline = headlineRef.current;
-    const hud     = hudRef.current;
-    const tagline = taglineRef.current;
-    const bar     = barRef.current;
-    if (!track || !stage || !canvas) return;
+    const canvas = canvasRef.current;
+    const pin = pinRef.current;
+    if (!canvas) return;
 
     /* Pre-load frames (isolated monitor cutout, transparent background) */
     const frames: HTMLImageElement[] = [];
@@ -148,7 +159,6 @@ export default function Hero() {
     }
 
     let tracking: { fps: number; width: number; height: number; frames: { corners: [number,number][] }[] } | null = null;
-    fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; }).catch(() => {});
 
     const easeInOutCubic = (t: number) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
 
@@ -205,6 +215,66 @@ export default function Hero() {
       return 0;
     };
 
+    const applyCornerPin = (rect: DOMRect, camTime: number, camFrame: number, zoom: number, mz: number, isPortraitLocal: boolean) => {
+      if (!tracking || !pin) return;
+      let corners = cornersAt(camTime);
+      if (!corners) return;
+      const cx = corners.reduce((s, p) => s + p[0], 0) / 4;
+      const cy = corners.reduce((s, p) => s + p[1], 0) / 4;
+      corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + QUAD_EXPAND), cy + (y - cy) * (1 + QUAD_EXPAND)] as [number,number]);
+      const kx = curve(TAPER_X, camFrame), ky = curve(TAPER_Y, camFrame);
+      if (kx > 0 || ky > 0) corners = corners.map(([x, y], i) => [x + FIX0[i][0] * kx, y + FIX0[i][1] * ky] as [number,number]);
+      const fit = (isPortraitLocal ? Math.min : Math.max)(rect.width / tracking.width, rect.height / tracking.height);
+      const ox = (rect.width - tracking.width * fit) / 2;
+      const oy = (rect.height - tracking.height * fit) / 2;
+      const dst = corners.map(([x, y]) => {
+        const bx = x * fit + ox;
+        const by = y * fit + oy;
+        return [(bx - rect.width/2) * zoom * mz + rect.width/2, (by - rect.height/2) * zoom * mz + rect.height/2] as [number,number];
+      });
+      pin.style.transform = cornerPin(1920, 1080, dst);
+    };
+
+    if (isStatic) {
+      const stageEl = staticStageRef.current;
+      if (!stageEl) return;
+
+      const drawOnce = () => {
+        const rect = stageEl.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const cam = camera(STATIC_PROGRESS);
+        const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
+        const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
+        draw(rect, frames[rawIndex], cam.zoom, STATIC_MZ, true);
+        applyCornerPin(rect, camTime, cam.frame, cam.zoom, STATIC_MZ, true);
+      };
+
+      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; drawOnce(); }).catch(() => {});
+
+      const cam0 = camera(STATIC_PROGRESS);
+      const camTime0 = (cam0.frame / (FRAME_COUNT - 1)) * BG_DURATION;
+      const keyImg = frames[Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime0 * RAW_FPS))];
+      keyImg.addEventListener('load', drawOnce);
+      window.addEventListener('resize', drawOnce);
+      const t = setTimeout(drawOnce, 120);
+      return () => {
+        keyImg.removeEventListener('load', drawOnce);
+        window.removeEventListener('resize', drawOnce);
+        clearTimeout(t);
+      };
+    }
+
+    const track   = trackRef.current;
+    const stage   = stageRef.current;
+    const plate   = plateRef.current;
+    const headline = headlineRef.current;
+    const hud     = hudRef.current;
+    const tagline = taglineRef.current;
+    const bar     = barRef.current;
+    if (!track || !stage) return;
+
+    fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; }).catch(() => {});
+
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
@@ -238,30 +308,83 @@ export default function Hero() {
       if (hud) hud.style.opacity = String(fade);
       if (tagline) tagline.style.opacity = String(fade);
 
-      if (!tracking || !pin) return;
-      let corners = cornersAt(camTime);
-      if (!corners) return;
-      const cx = corners.reduce((s, p) => s + p[0], 0) / 4;
-      const cy = corners.reduce((s, p) => s + p[1], 0) / 4;
-      corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + QUAD_EXPAND), cy + (y - cy) * (1 + QUAD_EXPAND)] as [number,number]);
-      const kx = curve(TAPER_X, cam.frame), ky = curve(TAPER_Y, cam.frame);
-      if (kx > 0 || ky > 0) corners = corners.map(([x, y], i) => [x + FIX0[i][0] * kx, y + FIX0[i][1] * ky] as [number,number]);
-      const fit = (isPortrait ? Math.min : Math.max)(rect.width / tracking.width, rect.height / tracking.height);
-      const ox = (rect.width - tracking.width * fit) / 2;
-      const oy = (rect.height - tracking.height * fit) / 2;
-      const dst = corners.map(([x, y]) => {
-        const bx = x * fit + ox;
-        const by = y * fit + oy;
-        return [(bx - rect.width/2) * cam.zoom * mz + rect.width/2, (by - rect.height/2) * cam.zoom * mz + rect.height/2] as [number,number];
-      });
-      pin.style.transform = cornerPin(1920, 1080, dst);
+      applyCornerPin(rect, camTime, cam.frame, cam.zoom, mz, isPortrait);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [isStatic]);
 
   const t_badge = t.hero.badge;
   const t_sub   = t.hero.sub;
+
+  const headline = (
+    <h1 style={{
+      display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'baseline',
+      columnGap: '0.22em', rowGap: '0.1em', margin: 0, padding: 0, maxWidth: '100%',
+      fontFamily: 'var(--hero-font)', fontWeight: 400, textTransform: 'uppercase',
+      fontSize: 'clamp(48px,15.2vw,272px)', lineHeight: 0.74, letterSpacing: '-0.02em',
+      textAlign: 'center', color: 'rgb(201,199,204)',
+    }}>
+      <span style={{ flexBasis: '100%', fontSize: '0.66em', whiteSpace: 'nowrap' }}>
+        {lang === 'pt' ? 'Sistemas que' : 'Systems that'}
+      </span>
+      <span style={{ flexBasis: '100%' }}>
+        {lang === 'pt' ? 'se resolvem' : 'run themselves'}
+      </span>
+    </h1>
+  );
+
+  const monitorLayer = (
+    <>
+      <canvas
+        ref={canvasRef}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+      />
+      <div
+        ref={pinRef}
+        style={{
+          position: 'absolute', top: 0, left: 0, width: 1920, height: 1080,
+          transformOrigin: '0 0', zIndex: 2, overflow: 'hidden', willChange: 'transform',
+        }}
+      >
+        <video
+          ref={videoRef}
+          preload="auto"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'none' }}
+        />
+        <div ref={fallbackRef} style={{ position: 'absolute', inset: 0, background: '#0e1113' }} />
+      </div>
+    </>
+  );
+
+  if (isStatic) {
+    return (
+      <section style={{ position: 'relative', background: '#161616', paddingBottom: 40 }}>
+        <div className="hero-static-headline" style={{ padding: 'clamp(96px,14vh,130px) 24px 28px', textAlign: 'center' }}>
+          {headline}
+        </div>
+
+        <div ref={staticStageRef} style={{ position: 'relative', width: '100%', aspectRatio: '16 / 11', overflow: 'hidden' }}>
+          {monitorLayer}
+        </div>
+
+        <div style={{
+          padding: '24px 24px 0', display: 'flex', flexDirection: 'column', gap: 14,
+          fontFamily: 'var(--mono)', color: 'rgba(255,255,255,0.62)',
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
+            <span>Felippe Ximenes</span>
+            <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 6, color: '#fff' }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)', flexShrink: 0 }} />
+              {t_badge}
+            </span>
+          </div>
+          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.75)' }}>{t_sub}</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <div ref={trackRef} id="hero-track" style={{ position: 'relative', height: '260vh', background: '#161616' }}>
@@ -281,20 +404,7 @@ export default function Hero() {
           padding: 'clamp(120px,19vh,210px) 24px 0', textAlign: 'center', pointerEvents: 'none',
         }}
       >
-        <h1 style={{
-          display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'baseline',
-          columnGap: '0.22em', rowGap: '0.1em', margin: 0, padding: 0, maxWidth: '100%',
-          fontFamily: 'var(--hero-font)', fontWeight: 400, textTransform: 'uppercase',
-          fontSize: 'clamp(48px,15.2vw,272px)', lineHeight: 0.74, letterSpacing: '-0.02em',
-          textAlign: 'center', color: 'rgb(201,199,204)',
-        }}>
-          <span style={{ flexBasis: '100%', fontSize: '0.66em', whiteSpace: 'nowrap' }}>
-            {lang === 'pt' ? 'Sistemas que' : 'Systems that'}
-          </span>
-          <span style={{ flexBasis: '100%' }}>
-            {lang === 'pt' ? 'se resolvem' : 'run themselves'}
-          </span>
-        </h1>
+        {headline}
       </div>
 
       {/* Layer 3: canvas stage + HUD + tagline + bar */}
@@ -309,24 +419,7 @@ export default function Hero() {
               maskImage: 'linear-gradient(180deg,rgba(0,0,0,0) 0%,#000 11%)',
             }}
           >
-            <canvas
-              ref={canvasRef}
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-            />
-            <div
-              ref={pinRef}
-              style={{
-                position: 'absolute', top: 0, left: 0, width: 1920, height: 1080,
-                transformOrigin: '0 0', zIndex: 2, overflow: 'hidden', willChange: 'transform',
-              }}
-            >
-              <video
-                ref={videoRef}
-                preload="auto"
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'none' }}
-              />
-              <div ref={fallbackRef} style={{ position: 'absolute', inset: 0, background: '#0e1113' }} />
-            </div>
+            {monitorLayer}
           </div>
         </div>
 
