@@ -1,44 +1,9 @@
-﻿import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef } from 'react';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { RESUME } from '../data';
-
-/* â”€â”€ Split text h2 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function SplitH2({ text }: { text: string }) {
-  const [animated, setAnimated] = useState(false);
-  const ref = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !window.IntersectionObserver) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { setAnimated(true); return; }
-    const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setAnimated(true); io.disconnect(); }
-    }, { threshold: 0.3 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  const words = text.split(/\s+/).filter(Boolean);
-
-  return (
-    <h2
-      ref={ref}
-      style={{ margin: 0, maxWidth: 820, fontSize: 'clamp(38px,5vw,72px)', lineHeight: 0.94, letterSpacing: '-0.055em', color: '#3c3a3e', textWrap: 'pretty' } as React.CSSProperties}
-    >
-      {words.map((word, i) => (
-        <span key={i} style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top', marginRight: '0.22em' }}>
-          <span style={{
-            display: 'inline-block',
-            transform: animated ? 'translateY(0)' : 'translateY(105%)',
-            transition: animated ? `transform 620ms var(--ease-out) ${Math.min(i * 38, 380)}ms` : 'none',
-          }}>{word}</span>
-        </span>
-      ))}
-    </h2>
-  );
-}
+import { useReveal } from '../hooks/useReveal';
+import SplitHeading from './SplitHeading';
 
 /* â”€â”€ Profile tilt card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function ProfileCard() {
@@ -179,17 +144,22 @@ export default function SobreSection() {
   const { lang } = useLang();
   const t = useT();
   usePortraitReveal();
+  const revealRef = useReveal<HTMLDivElement>();
 
   return (
     <section id="sobre" style={{ position: 'relative', overflow: 'hidden', background: '#f8f8f8', padding: '130px 24px 0' }}>
-      <div className="sobre-grid" style={{
+      <div ref={revealRef} className="sobre-grid" style={{
         maxWidth: 1200, margin: '0 auto',
         display: 'grid', gap: '22px 56px',
         gridTemplateColumns: '1fr 0.85fr', gridTemplateRows: 'auto auto', alignItems: 'stretch',
       }}>
         {/* Col 1 / Row 1: headline + availability */}
         <div style={{ gridColumn: 1, gridRow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 38 }}>
-          <SplitH2 key={lang} text={t.hero.heading} />
+          <SplitHeading
+            key={lang}
+            text={t.hero.heading}
+            style={{ margin: 0, maxWidth: 820, fontSize: 'clamp(38px,5vw,72px)', lineHeight: 0.94, letterSpacing: '-0.055em', color: '#3c3a3e', textWrap: 'pretty' } as React.CSSProperties}
+          />
           <div data-reveal="" style={{ display: 'flex', alignItems: 'center', gap: 12, fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>
             <span style={{ width: 36, height: 1, background: '#c9c7cc' }} />
             <span>{t.sobre.availability}</span>

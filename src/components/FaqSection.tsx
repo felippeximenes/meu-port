@@ -1,6 +1,7 @@
 ﻿import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { faqs } from '../data';
+import SplitHeading from './SplitHeading';
 
 export default function FaqSection() {
   const { lang } = useLang();
@@ -17,9 +18,11 @@ export default function FaqSection() {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>FAQ</span>
-            <h2 style={{ margin: 0, maxWidth: 820, fontSize: 'clamp(38px,5.2vw,72px)', lineHeight: 0.92, letterSpacing: '-0.055em', color: '#3c3a3e', textWrap: 'pretty' } as React.CSSProperties}>
-              {t.faq.heading}
-            </h2>
+            <SplitHeading
+              key={lang}
+              text={t.faq.heading}
+              style={{ margin: 0, maxWidth: 820, fontSize: 'clamp(38px,5.2vw,72px)', lineHeight: 0.92, letterSpacing: '-0.055em', color: '#3c3a3e', textWrap: 'pretty' } as React.CSSProperties}
+            />
           </div>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#7b7a7c', whiteSpace: 'nowrap' }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)' }} />

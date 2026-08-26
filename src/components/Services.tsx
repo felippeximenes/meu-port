@@ -1,6 +1,8 @@
 ﻿import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { services } from '../data';
+import { useReveal } from '../hooks/useReveal';
+import SplitHeading from './SplitHeading';
 
 const LOOP_ITEMS = [
   'AWS Lambda','NestJS','Angular 17','PostgreSQL','PGVector','Playwright','n8n','Make.com',
@@ -34,6 +36,7 @@ export default function Services() {
   const { lang } = useLang();
   const t = useT();
   const svcs = services[lang];
+  const rowsRef = useReveal<HTMLDivElement>();
 
   return (
     <section id="servicos" style={{ background: '#161616', color: '#fff', padding: '120px 24px 0' }}>
@@ -45,9 +48,11 @@ export default function Services() {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.45)' }}>{t.services.label}</span>
-            <h2 style={{ margin: 0, maxWidth: 900, fontSize: 'clamp(38px,5.2vw,72px)', lineHeight: 0.92, letterSpacing: '-0.055em', textWrap: 'pretty' } as React.CSSProperties}>
-              {t.services.headingNormal}
-            </h2>
+            <SplitHeading
+              key={lang}
+              text={t.services.headingNormal}
+              style={{ margin: 0, maxWidth: 900, fontSize: 'clamp(38px,5.2vw,72px)', lineHeight: 0.92, letterSpacing: '-0.055em', textWrap: 'pretty' } as React.CSSProperties}
+            />
           </div>
           <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: 'var(--ember)', whiteSpace: 'nowrap' }}>
             {t.services.available}
@@ -55,12 +60,13 @@ export default function Services() {
         </div>
 
         {/* Service rows */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div ref={rowsRef} style={{ display: 'flex', flexDirection: 'column' }}>
           {svcs.map((svc, i) => (
             <article
               key={svc.title}
               // @ts-ignore
               data-service=""
+              data-reveal=""
               style={{
                 display: 'grid', gridTemplateColumns: '60px 1fr minmax(360px,0.9fr)',
                 alignItems: 'start', gap: 24, padding: '40px 0',

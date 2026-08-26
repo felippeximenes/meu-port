@@ -46,9 +46,9 @@ export default function Nav() {
             textTransform: 'uppercase', letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.5)',
           }}
         >
-          <span style={{ color: lang === 'pt' ? '#fff' : 'rgba(255,255,255,0.5)' }}>PT</span>
+          <span style={{ color: lang === 'pt' ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'color 180ms ease' }}>PT</span>
           <span style={{ color: 'rgba(255,255,255,0.25)' }}>/</span>
-          <span style={{ color: lang === 'en' ? '#fff' : 'rgba(255,255,255,0.5)' }}>EN</span>
+          <span style={{ color: lang === 'en' ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'color 180ms ease' }}>EN</span>
         </button>
         <a
           href={`mailto:${EMAIL}`}

@@ -2,6 +2,8 @@
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { projects, GITHUB } from '../data';
+import { useReveal } from '../hooks/useReveal';
+import SplitHeading from './SplitHeading';
 
 const TAG_STYLE: React.CSSProperties = {
   background: '#fff', padding: '3px 8px',
@@ -120,6 +122,7 @@ export default function Projects() {
   const t = useT();
   const projs = projects[lang];
   useProjectInteractions();
+  const gridRef = useReveal<HTMLDivElement>();
 
   const [first, ...rest] = projs;
 
@@ -130,14 +133,14 @@ export default function Projects() {
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>{t.projects.label}</span>
-            <h2 style={{ margin: 0, fontSize: 'clamp(42px,6vw,82px)', lineHeight: 0.88, letterSpacing: '-0.055em', color: '#3c3a3e' }}>{t.projects.heading}</h2>
+            <SplitHeading key={lang} text={t.projects.heading} style={{ margin: 0, fontSize: 'clamp(42px,6vw,82px)', lineHeight: 0.88, letterSpacing: '-0.055em', color: '#3c3a3e' }} />
           </div>
           <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#7b7a7c' }}>05 / 05</span>
         </div>
 
         {/* Grid */}
         {/* @ts-ignore */}
-        <div data-grid="" style={{ display: 'grid', gap: 12, marginTop: 48, borderTop: '1px solid #c9c7cc', paddingTop: 48 }}>
+        <div ref={gridRef} data-grid="" style={{ display: 'grid', gap: 12, marginTop: 48, borderTop: '1px solid #c9c7cc', paddingTop: 48 }}>
           {/* Card 1 â€” full width */}
           <a
             data-reveal=""
