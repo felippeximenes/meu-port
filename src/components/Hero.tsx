@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 
@@ -86,6 +87,21 @@ export default function Hero() {
   const clockRef     = useRef<HTMLSpanElement>(null);
   const videoRef     = useRef<HTMLVideoElement>(null);
   const fallbackRef  = useRef<HTMLDivElement>(null);
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  /* ── Full-video lightbox: Esc to close, lock background scroll ────────── */
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxOpen(false); };
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightboxOpen]);
 
   /* ── Track the static/scroll-jack breakpoint ───────────────────────────── */
   useEffect(() => {
@@ -342,6 +358,12 @@ export default function Hero() {
       />
       <div
         ref={pinRef}
+        className="hero-video-trigger"
+        role="button"
+        tabIndex={0}
+        aria-label={lang === 'pt' ? 'Assistir ao vídeo completo' : 'Watch the full video'}
+        onClick={() => setLightboxOpen(true)}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightboxOpen(true); } }}
         style={{
           position: 'absolute', top: 0, left: 0, width: 1920, height: 1080,
           transformOrigin: '0 0', zIndex: 2, overflow: 'hidden', willChange: 'transform',
@@ -353,12 +375,40 @@ export default function Hero() {
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'none' }}
         />
         <div ref={fallbackRef} style={{ position: 'absolute', inset: 0, background: '#0e1113' }} />
+        <span className="hero-play-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+        </span>
       </div>
     </>
   );
 
+  const lightbox = lightboxOpen ? createPortal(
+    <div className="hero-lightbox-backdrop" onClick={() => setLightboxOpen(false)}>
+      <button
+        type="button"
+        className="hero-lightbox-close"
+        onClick={() => setLightboxOpen(false)}
+        aria-label={lang === 'pt' ? 'Fechar vídeo' : 'Close video'}
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+        </svg>
+      </button>
+      <video
+        className="hero-lightbox-video"
+        src="/video-case.mp4"
+        controls
+        autoPlay
+        playsInline
+        onClick={e => e.stopPropagation()}
+      />
+    </div>,
+    document.body
+  ) : null;
+
   if (isStatic) {
     return (
+      <>
       <section style={{ position: 'relative', background: '#161616', paddingBottom: 40 }}>
         <div className="hero-static-headline" style={{ padding: 'clamp(96px,14vh,130px) 24px 28px', textAlign: 'center' }}>
           {headline}
@@ -383,10 +433,13 @@ export default function Hero() {
           <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.75)' }}>{t_sub}</p>
         </div>
       </section>
+      {lightbox}
+      </>
     );
   }
 
   return (
+    <>
     <div ref={trackRef} id="hero-track" style={{ position: 'relative', height: '260vh', background: '#161616' }}>
       {/* Layer 1: gradient background */}
       <div style={{
@@ -454,5 +507,7 @@ export default function Hero() {
         }} />
       </div>
     </div>
+    {lightbox}
+    </>
   );
 }
