@@ -254,14 +254,15 @@ export default function Hero() {
       const stageEl = staticStageRef.current;
       if (!stageEl) return;
 
-      // Same camera sweep as desktop, but auto-played once the stage enters
-      // the viewport — no scroll-jack, no added page height, no dependency
-      // on how the visitor scrolls.
-      const AUTOPLAY_MS = 3200;
-
-      const paint = (progress: number) => {
+      // Same camera sweep as desktop, but driven by the element's natural
+      // position in the viewport instead of a pinned/extra-tall track — no
+      // scroll-jack, no added page height. Progress 0→1 spans from the stage
+      // entering the bottom of the viewport to it leaving the top.
+      const paint = () => {
         const rect = stageEl.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
+        const total = rect.height + window.innerHeight;
+        const progress = total <= 0 ? 0 : Math.min(Math.max((window.innerHeight - rect.top) / total, 0), 1);
         const cam = camera(progress);
         const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
         const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
@@ -269,25 +270,21 @@ export default function Hero() {
         applyCornerPin(rect, camTime, cam.frame, cam.zoom, STATIC_MZ, true);
       };
 
-      paint(0);
-      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; }).catch(() => {});
+      paint();
+      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; paint(); }).catch(() => {});
 
+      // Only run the rAF loop while the stage is (near) the viewport, so it
+      // doesn't keep repainting a section the visitor has scrolled well past.
       let raf = 0;
-      let startTime = 0;
-      const loop = (now: number) => {
-        if (!startTime) startTime = now;
-        const t = Math.min((now - startTime) / AUTOPLAY_MS, 1);
-        paint(easeInOutCubic(t));
-        raf = t < 1 ? requestAnimationFrame(loop) : 0;
-      };
-
+      const loop = () => { paint(); raf = requestAnimationFrame(loop); };
       let io: IntersectionObserver | null = null;
       if (window.IntersectionObserver) {
         io = new IntersectionObserver(entries => {
           entries.forEach(entry => {
-            if (entry.isIntersecting && !raf) { startTime = 0; raf = requestAnimationFrame(loop); }
+            if (entry.isIntersecting) { if (!raf) raf = requestAnimationFrame(loop); }
+            else if (raf) { cancelAnimationFrame(raf); raf = 0; }
           });
-        }, { threshold: 0.35 });
+        }, { rootMargin: '150px 0px' });
         io.observe(stageEl);
       } else {
         raf = requestAnimationFrame(loop);
