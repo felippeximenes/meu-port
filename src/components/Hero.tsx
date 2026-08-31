@@ -22,7 +22,6 @@ const RAW_FPS = 24;
 
 /* ── No-scroll mobile hero (≤768px): fixed framing, no scroll-jack ──────────── */
 const STATIC_BREAKPOINT = 768;
-const STATIC_PROGRESS = 0.56;
 const STATIC_MZ = 1.15;
 
 /* ── Calibrated corrections (do NOT alter) ────────────────────────────────── */
@@ -255,28 +254,48 @@ export default function Hero() {
       const stageEl = staticStageRef.current;
       if (!stageEl) return;
 
-      const drawOnce = () => {
+      // Same camera sweep as desktop, but auto-played once the stage enters
+      // the viewport — no scroll-jack, no added page height, no dependency
+      // on how the visitor scrolls.
+      const AUTOPLAY_MS = 3200;
+
+      const paint = (progress: number) => {
         const rect = stageEl.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
-        const cam = camera(STATIC_PROGRESS);
+        const cam = camera(progress);
         const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
         const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
         draw(rect, frames[rawIndex], cam.zoom, STATIC_MZ, true);
         applyCornerPin(rect, camTime, cam.frame, cam.zoom, STATIC_MZ, true);
       };
 
-      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; drawOnce(); }).catch(() => {});
+      paint(0);
+      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; }).catch(() => {});
 
-      const cam0 = camera(STATIC_PROGRESS);
-      const camTime0 = (cam0.frame / (FRAME_COUNT - 1)) * BG_DURATION;
-      const keyImg = frames[Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime0 * RAW_FPS))];
-      keyImg.addEventListener('load', drawOnce);
-      window.addEventListener('resize', drawOnce);
-      const t = setTimeout(drawOnce, 120);
+      let raf = 0;
+      let startTime = 0;
+      const loop = (now: number) => {
+        if (!startTime) startTime = now;
+        const t = Math.min((now - startTime) / AUTOPLAY_MS, 1);
+        paint(easeInOutCubic(t));
+        raf = t < 1 ? requestAnimationFrame(loop) : 0;
+      };
+
+      let io: IntersectionObserver | null = null;
+      if (window.IntersectionObserver) {
+        io = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !raf) { startTime = 0; raf = requestAnimationFrame(loop); }
+          });
+        }, { threshold: 0.35 });
+        io.observe(stageEl);
+      } else {
+        raf = requestAnimationFrame(loop);
+      }
+
       return () => {
-        keyImg.removeEventListener('load', drawOnce);
-        window.removeEventListener('resize', drawOnce);
-        clearTimeout(t);
+        if (raf) cancelAnimationFrame(raf);
+        io?.disconnect();
       };
     }
 
