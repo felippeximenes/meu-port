@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 
@@ -15,13 +16,17 @@ const RISE_FROM = 0.45;
 const RISE_TO = -0.04;
 const FADE_START = 0.82;
 const FADE_END = 0.98;
+// Headline: rises out of the way of the monitor early in the scroll, then
+// holds in place — capped, so it always stays fully visible (see Hero(),
+// "Rises just enough to clear room...").
+const HEADLINE_RISE_END = 0.45;
+const HEADLINE_MAX_RISE = 64;
 const FRAME_COUNT = 89;
 const RAW_FRAME_COUNT = 145;
 const RAW_FPS = 24;
 
 /* ── No-scroll mobile hero (≤768px): fixed framing, no scroll-jack ──────────── */
 const STATIC_BREAKPOINT = 768;
-const STATIC_PROGRESS = 0.56;
 const STATIC_MZ = 1.15;
 
 /* ── Calibrated corrections (do NOT alter) ────────────────────────────────── */
@@ -86,6 +91,21 @@ export default function Hero() {
   const clockRef     = useRef<HTMLSpanElement>(null);
   const videoRef     = useRef<HTMLVideoElement>(null);
   const fallbackRef  = useRef<HTMLDivElement>(null);
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  /* ── Full-video lightbox: Esc to close, lock background scroll ────────── */
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxOpen(false); };
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightboxOpen]);
 
   /* ── Track the static/scroll-jack breakpoint ───────────────────────────── */
   useEffect(() => {
@@ -201,6 +221,21 @@ export default function Hero() {
       const dh = img.naturalHeight * fit;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, rect.width, rect.height);
+      // In "contain" mode (portrait/tablet) the frame doesn't reach the
+      // canvas edges. The seam this used to cause was specifically below
+      // the frame — its own dark desk meeting the Layer 1 gradient once
+      // that's already turned much lighter — so only that strip gets a
+      // solid fill (#0c0c0d: the desk's own pixel color, also the
+      // gradient's top stop). Above the frame is left transparent, same as
+      // always, since that's also where the headline composes through at
+      // low scroll progress. In "cover" mode the frame already reaches the
+      // bottom edge, so this is a no-op and nothing changes from before.
+      const bh = dh * zoom * mz;
+      const gapBottom = (rect.height - bh) / 2 + bh;
+      if (gapBottom < rect.height) {
+        ctx.fillStyle = '#0c0c0d';
+        ctx.fillRect(0, gapBottom, rect.width, rect.height - gapBottom);
+      }
       ctx.translate(rect.width / 2, rect.height / 2);
       ctx.scale(zoom * mz, zoom * mz);
       ctx.drawImage(img, -dw/2, -dh/2, dw, dh);
@@ -239,28 +274,45 @@ export default function Hero() {
       const stageEl = staticStageRef.current;
       if (!stageEl) return;
 
-      const drawOnce = () => {
+      // Same camera sweep as desktop, but driven by the element's natural
+      // position in the viewport instead of a pinned/extra-tall track — no
+      // scroll-jack, no added page height. Progress 0→1 spans from the stage
+      // entering the bottom of the viewport to it leaving the top.
+      const paint = () => {
         const rect = stageEl.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
-        const cam = camera(STATIC_PROGRESS);
+        const total = rect.height + window.innerHeight;
+        const progress = total <= 0 ? 0 : Math.min(Math.max((window.innerHeight - rect.top) / total, 0), 1);
+        const cam = camera(progress);
         const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
         const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
         draw(rect, frames[rawIndex], cam.zoom, STATIC_MZ, true);
         applyCornerPin(rect, camTime, cam.frame, cam.zoom, STATIC_MZ, true);
       };
 
-      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; drawOnce(); }).catch(() => {});
+      paint();
+      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; paint(); }).catch(() => {});
 
-      const cam0 = camera(STATIC_PROGRESS);
-      const camTime0 = (cam0.frame / (FRAME_COUNT - 1)) * BG_DURATION;
-      const keyImg = frames[Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime0 * RAW_FPS))];
-      keyImg.addEventListener('load', drawOnce);
-      window.addEventListener('resize', drawOnce);
-      const t = setTimeout(drawOnce, 120);
+      // Only run the rAF loop while the stage is (near) the viewport, so it
+      // doesn't keep repainting a section the visitor has scrolled well past.
+      let raf = 0;
+      const loop = () => { paint(); raf = requestAnimationFrame(loop); };
+      let io: IntersectionObserver | null = null;
+      if (window.IntersectionObserver) {
+        io = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) { if (!raf) raf = requestAnimationFrame(loop); }
+            else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+          });
+        }, { rootMargin: '150px 0px' });
+        io.observe(stageEl);
+      } else {
+        raf = requestAnimationFrame(loop);
+      }
+
       return () => {
-        keyImg.removeEventListener('load', drawOnce);
-        window.removeEventListener('resize', drawOnce);
-        clearTimeout(t);
+        if (raf) cancelAnimationFrame(raf);
+        io?.disconnect();
       };
     }
 
@@ -301,9 +353,18 @@ export default function Hero() {
 
       const fade = 1 - Math.min(Math.max((progress - FADE_START) / (FADE_END - FADE_START), 0), 1);
       if (headline) {
+        // Rises just enough to clear room for the monitor, then holds — it
+        // no longer keeps climbing all the way to progress 1, which used to
+        // carry it off the top of the viewport entirely. It still fades out
+        // with the same `fade` curve as the HUD/tagline (finishing by
+        // progress 0.98): without that, the headline stays at opacity 1
+        // through the very end of the scroll-jacked track, including the
+        // brief tail past where the sticky layers let go, so it would
+        // still be painted — now static-positioned, so no longer confined
+        // to the viewport — over whatever section comes next.
+        const headlineRise = easeInOutCubic(Math.min(progress / HEADLINE_RISE_END, 1));
         headline.style.opacity = String(fade);
-        const headlineSpeed = isCompact ? 0.2 : 0.42;
-        headline.style.transform = 'translateY(-' + (progress * window.innerHeight * headlineSpeed).toFixed(1) + 'px)';
+        headline.style.transform = 'translateY(-' + (headlineRise * HEADLINE_MAX_RISE).toFixed(1) + 'px)';
       }
       if (hud) hud.style.opacity = String(fade);
       if (tagline) tagline.style.opacity = String(fade);
@@ -342,6 +403,12 @@ export default function Hero() {
       />
       <div
         ref={pinRef}
+        className="hero-video-trigger"
+        role="button"
+        tabIndex={0}
+        aria-label={lang === 'pt' ? 'Assistir ao vídeo completo' : 'Watch the full video'}
+        onClick={() => setLightboxOpen(true)}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightboxOpen(true); } }}
         style={{
           position: 'absolute', top: 0, left: 0, width: 1920, height: 1080,
           transformOrigin: '0 0', zIndex: 2, overflow: 'hidden', willChange: 'transform',
@@ -353,12 +420,40 @@ export default function Hero() {
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'none' }}
         />
         <div ref={fallbackRef} style={{ position: 'absolute', inset: 0, background: '#0e1113' }} />
+        <span className="hero-play-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+        </span>
       </div>
     </>
   );
 
+  const lightbox = lightboxOpen ? createPortal(
+    <div className="hero-lightbox-backdrop" onClick={() => setLightboxOpen(false)}>
+      <button
+        type="button"
+        className="hero-lightbox-close"
+        onClick={() => setLightboxOpen(false)}
+        aria-label={lang === 'pt' ? 'Fechar vídeo' : 'Close video'}
+      >
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+        </svg>
+      </button>
+      <video
+        className="hero-lightbox-video"
+        src="/video-case.mp4"
+        controls
+        autoPlay
+        playsInline
+        onClick={e => e.stopPropagation()}
+      />
+    </div>,
+    document.body
+  ) : null;
+
   if (isStatic) {
     return (
+      <>
       <section style={{ position: 'relative', background: '#161616', paddingBottom: 40 }}>
         <div className="hero-static-headline" style={{ padding: 'clamp(96px,14vh,130px) 24px 28px', textAlign: 'center' }}>
           {headline}
@@ -383,10 +478,13 @@ export default function Hero() {
           <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.75)' }}>{t_sub}</p>
         </div>
       </section>
+      {lightbox}
+      </>
     );
   }
 
   return (
+    <>
     <div ref={trackRef} id="hero-track" style={{ position: 'relative', height: '260vh', background: '#161616' }}>
       {/* Layer 1: gradient background */}
       <div style={{
@@ -454,5 +552,7 @@ export default function Hero() {
         }} />
       </div>
     </div>
+    {lightbox}
+    </>
   );
 }
