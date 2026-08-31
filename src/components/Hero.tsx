@@ -215,7 +215,14 @@ export default function Hero() {
       const dw = img.naturalWidth * fit;
       const dh = img.naturalHeight * fit;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, rect.width, rect.height);
+      // Solid fill instead of clearRect: in "contain" mode (portrait/tablet)
+      // the frame doesn't reach the canvas edges, and the gap used to show
+      // whatever sits behind the canvas — the Layer 1 gradient, at a tone
+      // that rarely matches the frame's own dark desk — as a hard seam.
+      // #0c0c0d matches both the desk's actual pixel color and the
+      // gradient's own top stop, so the gap stays invisible at any zoom/crop.
+      ctx.fillStyle = '#0c0c0d';
+      ctx.fillRect(0, 0, rect.width, rect.height);
       ctx.translate(rect.width / 2, rect.height / 2);
       ctx.scale(zoom * mz, zoom * mz);
       ctx.drawImage(img, -dw/2, -dh/2, dw, dh);
