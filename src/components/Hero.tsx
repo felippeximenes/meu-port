@@ -354,10 +354,16 @@ export default function Hero() {
       const fade = 1 - Math.min(Math.max((progress - FADE_START) / (FADE_END - FADE_START), 0), 1);
       if (headline) {
         // Rises just enough to clear room for the monitor, then holds — it
-        // no longer keeps climbing (and fading out) all the way to progress
-        // 1, which used to carry it off the top of the viewport entirely.
+        // no longer keeps climbing all the way to progress 1, which used to
+        // carry it off the top of the viewport entirely. It still fades out
+        // with the same `fade` curve as the HUD/tagline (finishing by
+        // progress 0.98): without that, the headline stays at opacity 1
+        // through the very end of the scroll-jacked track, including the
+        // brief tail past where the sticky layers let go, so it would
+        // still be painted — now static-positioned, so no longer confined
+        // to the viewport — over whatever section comes next.
         const headlineRise = easeInOutCubic(Math.min(progress / HEADLINE_RISE_END, 1));
-        headline.style.opacity = '1';
+        headline.style.opacity = String(fade);
         headline.style.transform = 'translateY(-' + (headlineRise * HEADLINE_MAX_RISE).toFixed(1) + 'px)';
       }
       if (hud) hud.style.opacity = String(fade);
