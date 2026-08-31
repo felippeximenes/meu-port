@@ -16,6 +16,11 @@ const RISE_FROM = 0.45;
 const RISE_TO = -0.04;
 const FADE_START = 0.82;
 const FADE_END = 0.98;
+// Headline: rises out of the way of the monitor early in the scroll, then
+// holds in place — capped, so it always stays fully visible (see Hero(),
+// "Rises just enough to clear room...").
+const HEADLINE_RISE_END = 0.45;
+const HEADLINE_MAX_RISE = 64;
 const FRAME_COUNT = 89;
 const RAW_FRAME_COUNT = 145;
 const RAW_FPS = 24;
@@ -215,14 +220,22 @@ export default function Hero() {
       const dw = img.naturalWidth * fit;
       const dh = img.naturalHeight * fit;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // Solid fill instead of clearRect: in "contain" mode (portrait/tablet)
-      // the frame doesn't reach the canvas edges, and the gap used to show
-      // whatever sits behind the canvas — the Layer 1 gradient, at a tone
-      // that rarely matches the frame's own dark desk — as a hard seam.
-      // #0c0c0d matches both the desk's actual pixel color and the
-      // gradient's own top stop, so the gap stays invisible at any zoom/crop.
-      ctx.fillStyle = '#0c0c0d';
-      ctx.fillRect(0, 0, rect.width, rect.height);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      // In "contain" mode (portrait/tablet) the frame doesn't reach the
+      // canvas edges. The seam this used to cause was specifically below
+      // the frame — its own dark desk meeting the Layer 1 gradient once
+      // that's already turned much lighter — so only that strip gets a
+      // solid fill (#0c0c0d: the desk's own pixel color, also the
+      // gradient's top stop). Above the frame is left transparent, same as
+      // always, since that's also where the headline composes through at
+      // low scroll progress. In "cover" mode the frame already reaches the
+      // bottom edge, so this is a no-op and nothing changes from before.
+      const bh = dh * zoom * mz;
+      const gapBottom = (rect.height - bh) / 2 + bh;
+      if (gapBottom < rect.height) {
+        ctx.fillStyle = '#0c0c0d';
+        ctx.fillRect(0, gapBottom, rect.width, rect.height - gapBottom);
+      }
       ctx.translate(rect.width / 2, rect.height / 2);
       ctx.scale(zoom * mz, zoom * mz);
       ctx.drawImage(img, -dw/2, -dh/2, dw, dh);
@@ -340,9 +353,12 @@ export default function Hero() {
 
       const fade = 1 - Math.min(Math.max((progress - FADE_START) / (FADE_END - FADE_START), 0), 1);
       if (headline) {
-        headline.style.opacity = String(fade);
-        const headlineSpeed = isCompact ? 0.2 : 0.42;
-        headline.style.transform = 'translateY(-' + (progress * window.innerHeight * headlineSpeed).toFixed(1) + 'px)';
+        // Rises just enough to clear room for the monitor, then holds — it
+        // no longer keeps climbing (and fading out) all the way to progress
+        // 1, which used to carry it off the top of the viewport entirely.
+        const headlineRise = easeInOutCubic(Math.min(progress / HEADLINE_RISE_END, 1));
+        headline.style.opacity = '1';
+        headline.style.transform = 'translateY(-' + (headlineRise * HEADLINE_MAX_RISE).toFixed(1) + 'px)';
       }
       if (hud) hud.style.opacity = String(fade);
       if (tagline) tagline.style.opacity = String(fade);
