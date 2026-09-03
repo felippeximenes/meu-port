@@ -284,7 +284,7 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
     grid-column: auto !important;
     grid-row: auto !important;
   }
-  .sobre-card-col { max-width: 280px; }
+  .sobre-card-col { width: 100%; max-width: 340px; margin: 0 auto; }
 }
 
 /* ── Projects ────────────────────────────────────────────────────────────── */
