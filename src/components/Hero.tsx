@@ -29,11 +29,6 @@ const RAW_FPS = 24;
 const STATIC_BREAKPOINT = 768;
 const STATIC_MZ = 1.15;
 
-/* ── Calibrated corrections (do NOT alter) ────────────────────────────────── */
-const FIX0 = [[0, 0], [-8, 27], [-4, 0], [7, 0]] as [number, number][];
-const TAPER_X = [[0, 1], [13, 0.93], [29, 0.67], [48, 0.26], [66, 0.07], [88, 0]] as [number, number][];
-const TAPER_Y = [[0, 1], [13, 0.56], [29, 0.22], [48, 0.04], [66, 0], [88, 0]] as [number, number][];
-
 /* ── Corner-pin math (ported literally from reference) ────────────────────── */
 function adj(m: number[]): number[] {
   return [
@@ -242,23 +237,13 @@ export default function Hero() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const curve = (table: [number,number][], frame: number) => {
-      for (let i = 0; i < table.length - 1; i++) {
-        const a = table[i], b = table[i+1];
-        if (frame <= b[0]) return a[1] + (b[1] - a[1]) * ((frame - a[0]) / (b[0] - a[0]));
-      }
-      return 0;
-    };
-
-    const applyCornerPin = (rect: DOMRect, camTime: number, camFrame: number, zoom: number, mz: number, isPortraitLocal: boolean) => {
+    const applyCornerPin = (rect: DOMRect, camTime: number, zoom: number, mz: number, isPortraitLocal: boolean) => {
       if (!tracking || !pin) return;
       let corners = cornersAt(camTime);
       if (!corners) return;
       const cx = corners.reduce((s, p) => s + p[0], 0) / 4;
       const cy = corners.reduce((s, p) => s + p[1], 0) / 4;
       corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + QUAD_EXPAND), cy + (y - cy) * (1 + QUAD_EXPAND)] as [number,number]);
-      const kx = curve(TAPER_X, camFrame), ky = curve(TAPER_Y, camFrame);
-      if (kx > 0 || ky > 0) corners = corners.map(([x, y], i) => [x + FIX0[i][0] * kx, y + FIX0[i][1] * ky] as [number,number]);
       const fit = (isPortraitLocal ? Math.min : Math.max)(rect.width / tracking.width, rect.height / tracking.height);
       const ox = (rect.width - tracking.width * fit) / 2;
       const oy = (rect.height - tracking.height * fit) / 2;
@@ -287,7 +272,7 @@ export default function Hero() {
         const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
         const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
         draw(rect, frames[rawIndex], cam.zoom, STATIC_MZ, true);
-        applyCornerPin(rect, camTime, cam.frame, cam.zoom, STATIC_MZ, true);
+        applyCornerPin(rect, camTime, cam.zoom, STATIC_MZ, true);
       };
 
       paint();
@@ -369,7 +354,7 @@ export default function Hero() {
       if (hud) hud.style.opacity = String(fade);
       if (tagline) tagline.style.opacity = String(fade);
 
-      applyCornerPin(rect, camTime, cam.frame, cam.zoom, mz, isPortrait);
+      applyCornerPin(rect, camTime, cam.zoom, mz, isPortrait);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
