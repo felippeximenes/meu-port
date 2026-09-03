@@ -4,7 +4,17 @@ import { useT } from '../i18n';
 import { RESUME } from '../data';
 import { useReveal } from '../hooks/useReveal';
 import { useGhostParallax } from '../hooks/useGhostParallax';
+import { useMagnetic } from '../hooks/useMagnetic';
 import SplitHeading from './SplitHeading';
+
+function DownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ flexShrink: 0 }}>
+      <path d="M12 4v11m0 0 4-4m-4 4-4-4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 18v1.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V18" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 /* â”€â”€ Profile tilt card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function ProfileCard() {
@@ -147,6 +157,7 @@ export default function SobreSection() {
   usePortraitReveal();
   const revealRef = useReveal<HTMLDivElement>();
   const ghostRef = useGhostParallax<HTMLParagraphElement>('left');
+  const { ref: cvRef, onMouseMove: handleCvMove, onMouseLeave: handleCvLeave } = useMagnetic<HTMLAnchorElement>();
 
   return (
     <section id="sobre" style={{ position: 'relative', overflow: 'hidden', background: '#f8f8f8', padding: '130px 24px 0' }}>
@@ -179,15 +190,24 @@ export default function SobreSection() {
             {t.sobre.bio}
           </p>
           <a
+            ref={cvRef}
             href={RESUME[lang]}
             target="_blank"
             rel="noopener"
+            data-cta=""
+            className="magnetic-cta"
+            onMouseMove={handleCvMove}
+            onMouseLeave={handleCvLeave}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 10, width: 'fit-content',
-              paddingBottom: 4, borderBottom: '1px solid currentColor',
-              fontSize: 15, letterSpacing: '-0.01em', color: '#3c3a3e', transition: 'color 200ms ease',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+              width: 'fit-content', background: '#161616', color: '#fff', borderRadius: 10,
+              padding: '13px 22px', fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 600,
+              textTransform: 'uppercase', letterSpacing: '-0.01em', textDecoration: 'none',
             }}
-          >{t.sobre.downloadCV}</a>
+          >
+            <DownloadIcon />
+            {t.sobre.downloadCV}
+          </a>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 6, fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>
             <span>Felippe Ximenes</span>
             <span>{t.sobre.city}</span>

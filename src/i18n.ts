@@ -25,7 +25,7 @@ const T = {
       en: 'Full-stack developer focused on AI engineering: from serverless APIs on AWS to RAG pipelines running in real production. I work with TypeScript, Python, React and AWS infrastructure, delivering complete products from the back-end to the pixel.',
     },
     availability: { pt: 'Desde 2022', en: 'Since 2022' },
-    downloadCV:   { pt: 'Baixar currículo ↗', en: 'Download resume ↗' },
+    downloadCV:   { pt: 'Baixar currículo', en: 'Download resume' },
     city:         { pt: 'Rio de Janeiro, Brasil', en: 'Rio de Janeiro, Brazil' },
   },
   projects: {

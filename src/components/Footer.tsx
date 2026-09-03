@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { useT } from '../i18n';
 import { EMAIL, LINKEDIN, GITHUB, INSTAGRAM } from '../data';
 import { useReveal } from '../hooks/useReveal';
+import { useMagnetic } from '../hooks/useMagnetic';
 import TextType from './TextType';
 
 const SECTION_HREFS = ['#trabalho', '#servicos', '#processo', '#faq'];
@@ -127,25 +128,7 @@ function ContactForm() {
   const t = useT();
   const [values, setValues] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<Status>('idle');
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const magneticEnabled = useRef(false);
-
-  useEffect(() => {
-    magneticEnabled.current =
-      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }, []);
-
-  const handleBtnMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!magneticEnabled.current || !btnRef.current) return;
-    const rect = btnRef.current.getBoundingClientRect();
-    const dx = (e.clientX - rect.left - rect.width / 2) * 0.22;
-    const dy = (e.clientY - rect.top - rect.height / 2) * 0.4;
-    btnRef.current.style.transform = `translate(${dx}px, ${dy}px)`;
-  };
-  const handleBtnLeave = () => {
-    if (btnRef.current) btnRef.current.style.transform = '';
-  };
+  const { ref: btnRef, onMouseMove: handleBtnMove, onMouseLeave: handleBtnLeave } = useMagnetic<HTMLButtonElement>();
 
   const set = (k: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setValues(v => ({ ...v, [k]: e.target.value }));
@@ -230,7 +213,7 @@ function ContactForm() {
         ref={btnRef}
         type="submit"
         data-cta=""
-        className="contact-submit-btn"
+        className="magnetic-cta"
         disabled={status === 'sending'}
         onMouseMove={handleBtnMove}
         onMouseLeave={handleBtnLeave}
