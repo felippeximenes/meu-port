@@ -55,7 +55,20 @@ const T = {
   },
   footer: {
     label:    { pt: 'Tem um projeto em movimento?',           en: 'Got a project in motion?' },
-    cta:      { pt: 'Vamos conversar, e eu cuido do resto.',  en: "Let's talk, I'll handle the rest." },
+    ctaLine1: { pt: 'Vamos conversar,',       en: "Let's talk," },
+    ctaLine2: { pt: 'e eu cuido do resto.',   en: "I'll handle the rest." },
+    contactStart: { pt: 'Comece uma conversa', en: 'Start a conversation' },
+    contactBased: { pt: 'Onde estou',          en: 'Based in' },
+    formName:        { pt: 'Nome completo', en: 'Full name' },
+    formNamePh:      { pt: 'Seu nome',      en: 'Your name' },
+    formEmail:       { pt: 'E-mail',        en: 'Email address' },
+    formEmailPh:     { pt: 'voce@email.com', en: 'you@email.com' },
+    formMessage:     { pt: 'Como posso ajudar?', en: 'How can I help?' },
+    formMessagePh:   { pt: 'Conte um pouco sobre o projeto…', en: 'Tell me about your project…' },
+    formSubmit:      { pt: 'Enviar mensagem', en: 'Send message' },
+    formSending:     { pt: 'Enviando…',      en: 'Sending…' },
+    formSuccess:     { pt: 'Mensagem enviada. Respondo em breve!', en: 'Message sent. I’ll get back to you soon!' },
+    formError:       { pt: 'Não consegui enviar. Tente de novo ou use o e-mail direto.', en: 'Couldn’t send it. Please try again or use the direct email.' },
     navItems: {
       pt: ['Trabalhos', 'Serviços', 'Processo', 'FAQ'],
       en: ['Work', 'Services', 'Process', 'FAQ'],
@@ -76,6 +89,14 @@ export function useT() {
     process:    { label: p(T.process.label), heading: p(T.process.heading) },
     faq:        { label: p(T.faq.label), heading: p(T.faq.heading), badge: p(T.faq.badge) },
     experience: { label: p(T.experience.label), heading: p(T.experience.heading), current: p(T.experience.current) },
-    footer:     { label: p(T.footer.label), cta: p(T.footer.cta), navItems: T.footer.navItems[lang], copyright: p(T.footer.copyright) },
+    footer:     {
+      label: p(T.footer.label), ctaLine1: p(T.footer.ctaLine1), ctaLine2: p(T.footer.ctaLine2),
+      navItems: T.footer.navItems[lang], copyright: p(T.footer.copyright),
+      contactStart: p(T.footer.contactStart), contactBased: p(T.footer.contactBased),
+      formName: p(T.footer.formName), formNamePh: p(T.footer.formNamePh),
+      formEmail: p(T.footer.formEmail), formEmailPh: p(T.footer.formEmailPh), formMessage: p(T.footer.formMessage),
+      formMessagePh: p(T.footer.formMessagePh), formSubmit: p(T.footer.formSubmit), formSending: p(T.footer.formSending),
+      formSuccess: p(T.footer.formSuccess), formError: p(T.footer.formError),
+    },
   };
 }

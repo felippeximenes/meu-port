@@ -75,6 +75,9 @@ a[data-card] { transition: transform 160ms var(--ease-out); }
 button:active, a[data-cta]:active { transform: scale(0.97); }
 button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms ease, border-color 200ms ease; }
 
+.contact-input:focus { border-color: var(--ember) !important; background: #fff !important; }
+.contact-input::placeholder { color: #a2a2a2; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   [data-reveal] { opacity: 1 !important; }
@@ -82,6 +85,8 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
   article[data-service]:hover { transform: none; }
   #faq details summary ~ p { transform: none; }
   details[open] summary [data-chevron] { transform: rotate(45deg); }
+  .nav-indicator { transition: opacity 200ms ease !important; }
+  .lang-thumb { transition: none !important; }
 }
 
 /* Profile / tilt card */
@@ -337,10 +342,21 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
+.footer-dark-band { margin: 96px -24px -30px; }
+@media (hover: hover) and (pointer: fine) {
+  .footer-dark-band nav a:hover { color: #fff; }
+  .footer-dark-band a[aria-label]:hover { color: #fff; }
+}
+@media (max-width: 900px) {
+  .contact-columns { grid-template-columns: 1fr !important; gap: 32px !important; }
+}
+@media (max-width: 480px) {
+  .contact-form-row { grid-template-columns: 1fr !important; }
+  .contact-form { padding: 20px !important; }
+  .footer-dark-band { margin-left: -16px !important; margin-right: -16px !important; }
+}
 @media (max-width: 640px) {
   #contato { padding-top: 72px !important; }
-  .footer-bottom { flex-direction: column !important; align-items: flex-start !important; }
-  .footer-last-col { align-items: flex-start !important; }
 }
 
 /* ── Global side padding em telas muito pequenas ─────────────────────────── */
