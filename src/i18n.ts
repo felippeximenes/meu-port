@@ -11,8 +11,8 @@ const T = {
   hero: {
     badge: { pt: 'Disponível para projetos', en: 'Available for projects' },
     heading: {
-      pt: 'Produto completo, do backend ao pixel. Com IA que funciona em produção.',
-      en: 'Full product, from backend to pixel. With AI that works in production.',
+      pt: 'Produto completo, do backend aos agentes de IA. Rodando de verdade em produção.',
+      en: 'Full product, from backend to AI agents. Running for real in production.',
     },
     sub: {
       pt: 'Desenvolvimento full-stack e engenharia de IA: de APIs na AWS a pipelines RAG rodando em produção real.',
@@ -21,8 +21,8 @@ const T = {
   },
   sobre: {
     bio: {
-      pt: 'Desenvolvedor full-stack com foco em engenharia de IA: de APIs serverless na AWS a pipelines RAG rodando em produção real. Atuo com TypeScript, Python, React e infraestrutura AWS, entregando produtos completos do back-end ao pixel.',
-      en: 'Full-stack developer focused on AI engineering: from serverless APIs on AWS to RAG pipelines running in real production. I work with TypeScript, Python, React and AWS infrastructure, delivering complete products from the back-end to the pixel.',
+      pt: 'Desenvolvedor full-stack com foco em engenharia de IA: de APIs serverless na AWS a pipelines RAG rodando em produção real. Atuo com TypeScript, Python, React e infraestrutura AWS, entregando produtos completos do back-end aos agentes de IA.',
+      en: 'Full-stack developer focused on AI engineering: from serverless APIs on AWS to RAG pipelines running in real production. I work with TypeScript, Python, React and AWS infrastructure, delivering complete products from the back-end to AI agents.',
     },
     availability: { pt: 'Desde 2022', en: 'Since 2022' },
     downloadCV:   { pt: 'Baixar currículo', en: 'Download resume' },
@@ -36,7 +36,7 @@ const T = {
   },
   services: {
     label:         { pt: 'O que faço', en: 'What I do' },
-    headingNormal: { pt: 'Construo o produto inteiro. Do back-end ao pixel, com IA generativa onde ela faz diferença de verdade.', en: 'I build the whole product. From back-end to pixel, with generative AI where it truly makes a difference.' },
+    headingNormal: { pt: 'Construo o produto inteiro: do back-end aos agentes de IA que fazem a diferença de verdade.', en: 'I build the whole product: from back-end to the AI agents that make the real difference.' },
     available:     { pt: 'Disponível para projetos', en: 'Available for projects' },
   },
   process: {
