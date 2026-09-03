@@ -224,7 +224,7 @@ export default function Projects() {
       {/* Ghost word: centered, drifts gently with scroll */}
       <p ref={ghostRef} aria-hidden="true" style={{
         margin: '64px 0 -12px', textAlign: 'center', color: '#fff',
-        WebkitTextStroke: '2px #3c3a3e', fontFamily: 'var(--disp)',
+        WebkitTextStroke: '3px #3c3a3e', fontFamily: 'var(--disp)',
         fontSize: 'clamp(108px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',
         whiteSpace: 'nowrap', textTransform: 'uppercase', userSelect: 'none',
         willChange: 'transform',

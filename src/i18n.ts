@@ -20,13 +20,23 @@ const T = {
     },
   },
   sobre: {
+    lede: {
+      pt: 'Não me interessa parecer sofisticado. Me interessa que o produto funcione, do back-end aos agentes de IA.',
+      en: "I'm not interested in looking sophisticated. I'm interested in the product actually working, from the back-end to the AI agents.",
+    },
     bio: {
       pt: 'Desenvolvedor full-stack com foco em engenharia de IA: de APIs serverless na AWS a pipelines RAG rodando em produção real. Atuo com TypeScript, Python, React e infraestrutura AWS, entregando produtos completos do back-end aos agentes de IA.',
       en: 'Full-stack developer focused on AI engineering: from serverless APIs on AWS to RAG pipelines running in real production. I work with TypeScript, Python, React and AWS infrastructure, delivering complete products from the back-end to AI agents.',
     },
-    availability: { pt: 'Desde 2022', en: 'Since 2022' },
-    downloadCV:   { pt: 'Baixar currículo', en: 'Download resume' },
-    city:         { pt: 'Rio de Janeiro, Brasil', en: 'Rio de Janeiro, Brazil' },
+    yearsSuffix:    { pt: 'anos de experiência', en: 'years of experience' },
+    languages:      { pt: 'Português · Inglês · Espanhol', en: 'Portuguese · English · Spanish' },
+    factRole:       { pt: 'Papel', en: 'Role' },
+    factFocus:      { pt: 'Foco', en: 'Focus' },
+    factExperience: { pt: 'Experiência', en: 'Experience' },
+    factLanguages:  { pt: 'Idiomas', en: 'Languages' },
+    factBase:       { pt: 'Base', en: 'Based in' },
+    downloadCV:    { pt: 'Baixar currículo', en: 'Download resume' },
+    city:          { pt: 'Rio de Janeiro, Brasil', en: 'Rio de Janeiro, Brazil' },
   },
   projects: {
     label:    { pt: 'O que já construí',    en: "What I've built" },
@@ -85,7 +95,13 @@ export function useT() {
   return {
     nav:        { items: T.nav.items[lang], cta: p(T.nav.cta) },
     hero:       { badge: p(T.hero.badge), heading: p(T.hero.heading), sub: p(T.hero.sub) },
-    sobre:      { bio: p(T.sobre.bio), availability: p(T.sobre.availability), downloadCV: p(T.sobre.downloadCV), city: p(T.sobre.city) },
+    sobre:      {
+      lede: p(T.sobre.lede), bio: p(T.sobre.bio), yearsSuffix: p(T.sobre.yearsSuffix),
+      languages: p(T.sobre.languages),
+      factRole: p(T.sobre.factRole), factFocus: p(T.sobre.factFocus), factExperience: p(T.sobre.factExperience),
+      factLanguages: p(T.sobre.factLanguages), factBase: p(T.sobre.factBase),
+      downloadCV: p(T.sobre.downloadCV), city: p(T.sobre.city),
+    },
     projects:   { label: p(T.projects.label), heading: p(T.projects.heading), viewCase: p(T.projects.viewCase), viewAll: p(T.projects.viewAll) },
     services:   { label: p(T.services.label), headingNormal: p(T.services.headingNormal), available: p(T.services.available) },
     process:    { label: p(T.process.label), heading: p(T.process.heading) },

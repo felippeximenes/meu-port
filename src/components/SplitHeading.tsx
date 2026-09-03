@@ -4,7 +4,7 @@ interface SplitHeadingProps {
   text: string;
   style?: React.CSSProperties;
   className?: string;
-  as?: 'h2' | 'h3';
+  as?: 'h2' | 'h3' | 'p';
 }
 
 /** Word-by-word clip reveal, triggered once the heading enters the viewport. */
@@ -30,7 +30,7 @@ export default function SplitHeading({ text, style, className, as = 'h2' }: Spli
   return (
     <Tag ref={ref} className={className} style={style}>
       {words.map((word, i) => (
-        <span key={i} style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top', marginRight: '0.22em' }}>
+        <span key={i} style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top', marginRight: '0.22em', paddingBottom: '0.22em', marginBottom: '-0.22em' }}>
           <span style={{
             display: 'inline-block',
             transform: animated ? 'translateY(0)' : 'translateY(105%)',

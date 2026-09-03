@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
  * tying decorative display type to scroll instead of leaving it static.
  * `direction` sets which edge it leans toward as it passes through.
  */
-export function useGhostParallax<T extends HTMLElement>(direction: 'left' | 'right', strength = 26) {
+export function useGhostParallax<T extends HTMLElement>(direction: 'left' | 'right', strength = 110) {
   const ref = useRef<T>(null);
 
   useEffect(() => {

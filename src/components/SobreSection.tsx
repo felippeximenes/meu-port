@@ -1,7 +1,7 @@
 ﻿import { useEffect, useRef } from 'react';
 import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
-import { RESUME } from '../data';
+import { RESUME, experiences, services } from '../data';
 import { useReveal } from '../hooks/useReveal';
 import { useGhostParallax } from '../hooks/useGhostParallax';
 import { useMagnetic } from '../hooks/useMagnetic';
@@ -159,23 +159,43 @@ export default function SobreSection() {
   const ghostRef = useGhostParallax<HTMLParagraphElement>('left');
   const { ref: cvRef, onMouseMove: handleCvMove, onMouseLeave: handleCvLeave } = useMagnetic<HTMLAnchorElement>();
 
+  const expList = experiences[lang];
+  const startYear = Number(expList[expList.length - 1].year);
+  const yearsActive = new Date().getFullYear() - startYear;
+  const currentCompany = expList[0].company;
+  const focusAreas = services[lang].map(s => s.title).join(' · ');
+  const roleConnector = lang === 'pt' ? 'na' : 'at';
+
+  const facts = [
+    { label: t.sobre.factRole, value: `Full-Stack & AI Engineer ${roleConnector} ${currentCompany}` },
+    { label: t.sobre.factFocus, value: focusAreas },
+    { label: t.sobre.factExperience, value: `${yearsActive}+ ${t.sobre.yearsSuffix}` },
+    { label: t.sobre.factLanguages, value: t.sobre.languages },
+    { label: t.sobre.factBase, value: t.sobre.city },
+  ];
+
   return (
     <section id="sobre" style={{ position: 'relative', overflow: 'hidden', background: '#f8f8f8', padding: '130px 24px 0' }}>
       <div ref={revealRef} className="sobre-grid" style={{
         maxWidth: 1200, margin: '0 auto',
-        display: 'grid', gap: '22px 56px',
+        display: 'grid', gap: '56px 56px',
         gridTemplateColumns: '1fr 0.85fr', gridTemplateRows: 'auto auto', alignItems: 'stretch',
       }}>
-        {/* Col 1 / Row 1: headline + availability */}
-        <div style={{ gridColumn: 1, gridRow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 38 }}>
+        {/* Col 1 / Row 1: headline + editorial lede */}
+        <div style={{ gridColumn: 1, gridRow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 40 }}>
           <SplitHeading
             key={lang}
             text={t.hero.heading}
             style={{ margin: 0, maxWidth: 820, fontSize: 'clamp(38px,5vw,72px)', lineHeight: 0.94, letterSpacing: '-0.055em', color: '#3c3a3e', textWrap: 'pretty' } as React.CSSProperties}
           />
-          <div data-reveal="" style={{ display: 'flex', alignItems: 'center', gap: 12, fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>
-            <span style={{ width: 36, height: 1, background: '#c9c7cc' }} />
-            <span>{t.sobre.availability}</span>
+          <div data-reveal="" style={{ display: 'flex', gap: 18, alignItems: 'flex-start' }}>
+            <span style={{ width: 3, alignSelf: 'stretch', background: 'var(--ember)', flexShrink: 0, borderRadius: 2 }} />
+            <SplitHeading
+              key={lang + '-lede'}
+              as="p"
+              text={t.sobre.lede}
+              style={{ margin: 0, maxWidth: 460, fontFamily: 'var(--grot)', fontWeight: 600, fontSize: 'clamp(19px,2.1vw,24px)', lineHeight: 1.4, letterSpacing: '-0.02em', color: '#3c3a3e' } as React.CSSProperties}
+            />
           </div>
         </div>
 
@@ -184,9 +204,25 @@ export default function SobreSection() {
           <ProfileCard />
         </div>
 
-        {/* Col 2 / Row 2: bio + cv + identity */}
-        <div style={{ gridColumn: 2, gridRow: 2, display: 'flex', flexDirection: 'column', gap: 22 }}>
-          <p style={{ margin: 0, fontSize: 17, lineHeight: 1.3, letterSpacing: '-0.02em', color: '#7b7a7c' }}>
+        {/* Col 1 / Row 2: editorial fact sheet, real values pulled from data.ts, not invented */}
+        <div data-reveal="" style={{ gridColumn: 1, gridRow: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid #dedce1' }}>
+            {facts.map(f => (
+              <div key={f.label} style={{ display: 'flex', gap: 20, padding: '18px 0', borderBottom: '1px solid #dedce1' }}>
+                <span style={{ flex: '0 0 92px', fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#a2a2a2' }}>
+                  {f.label}
+                </span>
+                <span style={{ fontFamily: 'var(--grot)', fontSize: 15, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.3, color: '#161616' }}>
+                  {f.value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Col 2 / Row 2: bio (with editorial drop cap) + cv + identity */}
+        <div style={{ gridColumn: 2, gridRow: 2, display: 'flex', flexDirection: 'column', gap: 28 }}>
+          <p className="sobre-dropcap" style={{ margin: 0, fontSize: 17, lineHeight: 1.3, letterSpacing: '-0.02em', color: '#7b7a7c' }}>
             {t.sobre.bio}
           </p>
           <a
@@ -217,8 +253,8 @@ export default function SobreSection() {
 
       {/* Ghost word: centered, drifts gently with scroll */}
       <p ref={ghostRef} aria-hidden="true" style={{
-        margin: '34px 0 -14px', textAlign: 'center', color: '#fff',
-        WebkitTextStroke: '2px #3c3a3e', fontFamily: 'var(--disp)',
+        margin: '68px 0 -14px', textAlign: 'center', color: '#fff',
+        WebkitTextStroke: '3px #3c3a3e', fontFamily: 'var(--disp)',
         fontSize: 'clamp(72px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',
         whiteSpace: 'nowrap', textTransform: 'uppercase', userSelect: 'none',
         willChange: 'transform',
