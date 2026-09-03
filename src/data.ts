@@ -28,9 +28,9 @@ export const projects: Record<Lang, Project[]> = {
     {
       n: '01', name: 'Certara',
       tags: ['React · TypeScript', 'AWS Lambda · SAM', 'Stripe · RAG'],
-      href: 'https://github.com/felippeximenes/certara-app',
+      href: 'https://www.certara.com.br/',
       desc: 'Plataforma SaaS para quem prepara as certificações AWS (CLF-C02, SAA-C03 e DVA-C02). As questões são geradas em tempo real por um pipeline RAG: a resposta sempre vem da documentação oficial mais recente, nunca de dados estáticos. Inclui simulado de 65 questões, flashcards que se adaptam ao histórico do usuário, plano de estudos por IA e compartilhamento de resultado. Back-end em 13 Lambdas Python (AWS SAM), Cognito + Google OAuth, assinaturas via Stripe e proteção anti-abuso com FingerprintJS.',
-      img: '/projects/certara.png', site: 'certara.app', video: '/video/certara.mp4',
+      img: '/projects/certara.png', site: 'certara.com.br', video: '/video/certara.mp4',
     },
     {
       n: '02', name: 'Certara Agent',
@@ -65,9 +65,9 @@ export const projects: Record<Lang, Project[]> = {
     {
       n: '01', name: 'Certara',
       tags: ['React · TypeScript', 'AWS Lambda · SAM', 'Stripe · RAG'],
-      href: 'https://github.com/felippeximenes/certara-app',
+      href: 'https://www.certara.com.br/',
       desc: 'SaaS platform for engineers preparing for AWS certifications (CLF-C02, SAA-C03, DVA-C02). Questions are generated in real time through a RAG pipeline: answers always come from the latest official documentation, never from static data. Features a full 65-question exam, user-history-adaptive flashcards, an AI-generated study plan, and shareable results. Back-end on 13 Python Lambdas (AWS SAM), Cognito + Google OAuth auth, Stripe subscriptions, and FingerprintJS anti-abuse protection.',
-      img: '/projects/certara.png', site: 'certara.app', video: '/video/certara.mp4',
+      img: '/projects/certara.png', site: 'certara.com.br', video: '/video/certara.mp4',
     },
     {
       n: '02', name: 'Certara Agent',

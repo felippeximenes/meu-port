@@ -3,6 +3,7 @@ import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { RESUME } from '../data';
 import { useReveal } from '../hooks/useReveal';
+import { useGhostParallax } from '../hooks/useGhostParallax';
 import SplitHeading from './SplitHeading';
 
 /* â”€â”€ Profile tilt card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -145,6 +146,7 @@ export default function SobreSection() {
   const t = useT();
   usePortraitReveal();
   const revealRef = useReveal<HTMLDivElement>();
+  const ghostRef = useGhostParallax<HTMLParagraphElement>('left');
 
   return (
     <section id="sobre" style={{ position: 'relative', overflow: 'hidden', background: '#f8f8f8', padding: '130px 24px 0' }}>
@@ -193,12 +195,13 @@ export default function SobreSection() {
         </div>
       </div>
 
-      {/* Ghost word */}
-      <p aria-hidden="true" style={{
+      {/* Ghost word: centered, drifts gently with scroll */}
+      <p ref={ghostRef} aria-hidden="true" style={{
         margin: '34px 0 -14px', textAlign: 'center', color: '#fff',
-        WebkitTextStroke: '1.5px #dedce1', fontFamily: 'var(--disp)',
+        WebkitTextStroke: '2px #3c3a3e', fontFamily: 'var(--disp)',
         fontSize: 'clamp(72px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',
         whiteSpace: 'nowrap', textTransform: 'uppercase', userSelect: 'none',
+        willChange: 'transform',
       }}>Sobre</p>
     </section>
   );

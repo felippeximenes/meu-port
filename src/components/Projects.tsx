@@ -3,6 +3,7 @@ import { useLang } from '../contexts/LanguageContext';
 import { useT } from '../i18n';
 import { projects, GITHUB } from '../data';
 import { useReveal } from '../hooks/useReveal';
+import { useGhostParallax } from '../hooks/useGhostParallax';
 import SplitHeading from './SplitHeading';
 
 const TAG_STYLE: React.CSSProperties = {
@@ -123,6 +124,7 @@ export default function Projects() {
   const projs = projects[lang];
   useProjectInteractions();
   const gridRef = useReveal<HTMLDivElement>();
+  const ghostRef = useGhostParallax<HTMLParagraphElement>('right');
 
   const [first, ...rest] = projs;
 
@@ -154,7 +156,7 @@ export default function Projects() {
             <div style={{ aspectRatio: '16/8' }}>
               <CardMedia
                 poster={first.img}
-                videoSrc="/video-case.mp4"
+                videoSrc={first.video ?? ''}
                 cursorLabel={t.projects.viewCase}
               />
             </div>
@@ -219,12 +221,13 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Ghost word */}
-      <p aria-hidden="true" style={{
+      {/* Ghost word: centered, drifts gently with scroll */}
+      <p ref={ghostRef} aria-hidden="true" style={{
         margin: '64px 0 -12px', textAlign: 'center', color: '#fff',
-        WebkitTextStroke: '1.5px #dedce1', fontFamily: 'var(--disp)',
+        WebkitTextStroke: '2px #3c3a3e', fontFamily: 'var(--disp)',
         fontSize: 'clamp(108px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',
         whiteSpace: 'nowrap', textTransform: 'uppercase', userSelect: 'none',
+        willChange: 'transform',
       }}>Projetos</p>
     </section>
   );
