@@ -94,7 +94,7 @@ export default function Experience() {
                   )}
                 </div>
                 <span style={{ fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em', color: '#7b7a7c' }}>
-                  {exp.role} Â· {exp.period}
+                  {exp.role} · {exp.period}
                 </span>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
                   {exp.chips.map(chip => <span key={chip} style={chipStyle}>{chip}</span>)}

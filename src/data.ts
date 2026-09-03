@@ -208,12 +208,12 @@ export const experiences: Record<Lang, Experience[]> = {
       ],
     },
     {
-      company: 'Trem do Corcovado', role: 'Agente de Bilheteria Bilíngue',
+      company: 'Trem do Corcovado', role: 'Agente de Bilheteria e Pagamentos',
       period: 'Dez 2022 – Jul 2024', year: '2022',
-      chips: ['Trilíngue', 'Alto volume'],
+      chips: ['Trilíngue', 'Banco de Dados', 'Pagamentos'],
       highlights: [
-        'Atendimento trilíngue a visitantes internacionais (português, inglês e espanhol)',
-        'Operação de sistemas de bilheteria e pagamentos em ambiente de alto fluxo no Corcovado',
+        'Operação do sistema de bilheteria e banco de dados de pagamentos, garantindo a integridade das transações em ambiente de alto fluxo no Corcovado',
+        'Comunicação trilíngue (português, inglês e espanhol) e boa relação em equipe em um ambiente internacional de alto volume',
       ],
     },
   ],
@@ -249,12 +249,12 @@ export const experiences: Record<Lang, Experience[]> = {
       ],
     },
     {
-      company: 'Trem do Corcovado', role: 'Bilingual Box Office Agent',
+      company: 'Trem do Corcovado', role: 'Box Office & Payments Agent',
       period: 'Dec 2022 – Jul 2024', year: '2022',
-      chips: ['Trilingual', 'High volume'],
+      chips: ['Trilingual', 'Database', 'Payments'],
       highlights: [
-        'Trilingual customer service for international visitors (Portuguese, English, and Spanish)',
-        'Ticketing and payment system operations in a high-volume environment at Corcovado',
+        'Operated the box office system and payments database, ensuring transaction integrity in a high-volume environment at Corcovado',
+        'Trilingual communication (Portuguese, English, and Spanish) and strong teamwork in a high-volume international environment',
       ],
     },
   ],
