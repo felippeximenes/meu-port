@@ -69,6 +69,8 @@ const T = {
     formSending:     { pt: 'Enviando…',      en: 'Sending…' },
     formSuccess:     { pt: 'Mensagem enviada. Respondo em breve!', en: 'Message sent. I’ll get back to you soon!' },
     formError:       { pt: 'Não consegui enviar. Tente de novo ou use o e-mail direto.', en: 'Couldn’t send it. Please try again or use the direct email.' },
+    formThanks:      { pt: 'Obrigado pelo contato!', en: 'Thanks for reaching out!' },
+    formSendAnother: { pt: 'Enviar outra mensagem', en: 'Send another message' },
     navItems: {
       pt: ['Trabalhos', 'Serviços', 'Processo', 'FAQ'],
       en: ['Work', 'Services', 'Process', 'FAQ'],
@@ -97,6 +99,7 @@ export function useT() {
       formEmail: p(T.footer.formEmail), formEmailPh: p(T.footer.formEmailPh), formMessage: p(T.footer.formMessage),
       formMessagePh: p(T.footer.formMessagePh), formSubmit: p(T.footer.formSubmit), formSending: p(T.footer.formSending),
       formSuccess: p(T.footer.formSuccess), formError: p(T.footer.formError),
+      formThanks: p(T.footer.formThanks), formSendAnother: p(T.footer.formSendAnother),
     },
   };
 }

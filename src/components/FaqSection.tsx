@@ -9,7 +9,7 @@ export default function FaqSection() {
   const items = faqs[lang];
 
   return (
-    <section id="faq" style={{ background: '#f8f8f8', padding: '112px 24px' }}>
+    <section id="faq" style={{ background: '#f8f8f8', padding: '112px 24px 0' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Header */}
         <div className="faq-header" style={{

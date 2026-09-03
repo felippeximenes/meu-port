@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
 import { useT } from '../i18n';
 import { EMAIL, LINKEDIN, GITHUB, INSTAGRAM } from '../data';
 import { useReveal } from '../hooks/useReveal';
+import TextType from './TextType';
 
 const SECTION_HREFS = ['#trabalho', '#servicos', '#processo', '#faq'];
 
@@ -41,6 +43,14 @@ function GithubIcon() {
   );
 }
 
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ flexShrink: 0 }}>
+      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function InstagramIcon() {
   return (
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -66,10 +76,76 @@ const fieldStyle: React.CSSProperties = {
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
+function SuccessPanel({ onReset }: { onReset: () => void }) {
+  const t = useT();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const checkRef = useRef<SVGPathElement>(null);
+
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (panelRef.current) {
+      gsap.fromTo(panelRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: reduced ? 0 : 0.45, ease: 'power2.out' });
+    }
+    if (checkRef.current && !reduced) {
+      const len = checkRef.current.getTotalLength();
+      gsap.set(checkRef.current, { strokeDasharray: len, strokeDashoffset: len });
+      gsap.to(checkRef.current, { strokeDashoffset: 0, duration: 0.5, delay: 0.15, ease: 'power2.out' });
+    }
+  }, []);
+
+  return (
+    <div ref={panelRef} style={{
+      background: '#fff', border: '1px solid #e4e2e6', borderRadius: 20, padding: '48px 28px',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12,
+    }}>
+      <span style={{
+        width: 56, height: 56, borderRadius: '50%', background: '#f1f1f1',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+          <path ref={checkRef} d="M5 12.5l4.5 4.5L19 7" stroke="var(--ember)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+      <h3 style={{ margin: 0, fontFamily: 'var(--grot)', fontWeight: 600, fontSize: 22, color: '#161616' }}>{t.footer.formThanks}</h3>
+      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#7b7a7c', maxWidth: 280 }}>{t.footer.formSuccess}</p>
+      <button
+        type="button"
+        onClick={onReset}
+        style={{
+          marginTop: 10, background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+          fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 600, textTransform: 'uppercase',
+          letterSpacing: '0.02em', color: '#161616', borderBottom: '1px solid #c9c7cc',
+        }}
+      >
+        {t.footer.formSendAnother}
+      </button>
+    </div>
+  );
+}
+
 function ContactForm() {
   const t = useT();
   const [values, setValues] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<Status>('idle');
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const magneticEnabled = useRef(false);
+
+  useEffect(() => {
+    magneticEnabled.current =
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
+  const handleBtnMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!magneticEnabled.current || !btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    const dx = (e.clientX - rect.left - rect.width / 2) * 0.22;
+    const dy = (e.clientY - rect.top - rect.height / 2) * 0.4;
+    btnRef.current.style.transform = `translate(${dx}px, ${dy}px)`;
+  };
+  const handleBtnLeave = () => {
+    if (btnRef.current) btnRef.current.style.transform = '';
+  };
 
   const set = (k: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setValues(v => ({ ...v, [k]: e.target.value }));
@@ -101,6 +177,10 @@ function ContactForm() {
       setStatus('error');
     }
   };
+
+  if (status === 'success') {
+    return <SuccessPanel onReset={() => setStatus('idle')} />;
+  }
 
   return (
     <form
@@ -147,22 +227,25 @@ function ContactForm() {
       </div>
 
       <button
+        ref={btnRef}
         type="submit"
         data-cta=""
+        className="contact-submit-btn"
         disabled={status === 'sending'}
+        onMouseMove={handleBtnMove}
+        onMouseLeave={handleBtnLeave}
         style={{
           background: '#161616', color: '#fff', border: 'none', borderRadius: 10,
           padding: '13px 20px', fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 600,
           textTransform: 'uppercase', letterSpacing: '-0.01em', cursor: status === 'sending' ? 'default' : 'pointer',
           opacity: status === 'sending' ? 0.6 : 1,
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}
       >
         {status === 'sending' ? t.footer.formSending : t.footer.formSubmit}
+        {status !== 'sending' && <ArrowIcon />}
       </button>
 
-      {status === 'success' && (
-        <p role="status" style={{ margin: 0, fontSize: 13, color: '#1a7a4c' }}>{t.footer.formSuccess}</p>
-      )}
       {status === 'error' && (
         <p role="alert" style={{ margin: 0, fontSize: 13, color: 'var(--ember)' }}>{t.footer.formError}</p>
       )}
@@ -173,6 +256,7 @@ function ContactForm() {
 export default function Footer() {
   const t = useT();
   const revealRef = useReveal<HTMLDivElement>();
+  const [line1Done, setLine1Done] = useState(false);
 
   return (
     <footer id="contato" style={{ background: '#f8f8f8', padding: '110px 24px 30px' }}>
@@ -195,8 +279,18 @@ export default function Footer() {
               margin: 0, fontFamily: 'var(--grot)', fontWeight: 600,
               fontSize: 'clamp(30px,3.6vw,50px)', lineHeight: 1.04, letterSpacing: '-0.03em',
             }}>
-              <span style={{ color: '#161616' }}>{t.footer.ctaLine1}</span>{' '}
-              <span style={{ color: '#c9c7cc' }}>{t.footer.ctaLine2}</span>
+              <TextType
+                text={t.footer.ctaLine1}
+                startOnVisible
+                showCursor={!line1Done}
+                cursorCharacter="_"
+                typingSpeed={45}
+                color="#161616"
+                onSentenceComplete={() => setLine1Done(true)}
+              />
+              {line1Done && (
+                <TextType text={` ${t.footer.ctaLine2}`} typingSpeed={45} color="#c9c7cc" cursorCharacter="_" />
+              )}
             </h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
