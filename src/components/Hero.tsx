@@ -25,9 +25,11 @@ const FRAME_COUNT = 89;
 const RAW_FRAME_COUNT = 145;
 const RAW_FPS = 24;
 
-/* ── No-scroll mobile hero (≤768px): fixed framing, no scroll-jack ──────────── */
+/* ── Mobile hero (≤768px): shorter sticky scroll-jack, tuned for phones ─────── */
 const STATIC_BREAKPOINT = 768;
 const STATIC_MZ = 1.15;
+const STATIC_TRACK_EXTRA_VH = 55;
+const STATIC_STAGE_VH = 74;
 
 /* ── Corner-pin math (ported literally from reference) ────────────────────── */
 function adj(m: number[]): number[] {
@@ -75,6 +77,7 @@ export default function Hero() {
 
   const trackRef     = useRef<HTMLDivElement>(null);
   const stageRef     = useRef<HTMLDivElement>(null);
+  const staticTrackRef = useRef<HTMLDivElement>(null);
   const staticStageRef = useRef<HTMLDivElement>(null);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const pinRef       = useRef<HTMLDivElement>(null);
@@ -257,17 +260,25 @@ export default function Hero() {
 
     if (isStatic) {
       const stageEl = staticStageRef.current;
-      if (!stageEl) return;
+      const trackEl = staticTrackRef.current;
+      if (!stageEl || !trackEl) return;
 
-      // Same camera sweep as desktop, but driven by the element's natural
-      // position in the viewport instead of a pinned/extra-tall track — no
-      // scroll-jack, no added page height. Progress 0→1 spans from the stage
-      // entering the bottom of the viewport to it leaving the top.
+      // Mobile-tuned scroll-jack: the stage is CSS-sticky inside a track
+      // that's taller than the viewport by STATIC_TRACK_EXTRA_VH, so it
+      // pins in place and holds the full camera sweep before releasing —
+      // same held-until-complete feel as desktop/tablet, just with a much
+      // shorter added-scroll budget (desktop adds 160vh; this adds far
+      // less), since asking a phone for 160vh of extra scroll to sit
+      // through one animation is not a reasonable responsive trade.
       const paint = () => {
         const rect = stageEl.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
-        const total = rect.height + window.innerHeight;
-        const progress = total <= 0 ? 0 : Math.min(Math.max((window.innerHeight - rect.top) / total, 0), 1);
+        // Divide by the stage's own (measured) height, not window.innerHeight —
+        // that's what actually determines when CSS position:sticky releases,
+        // so progress now reaches 1 exactly as the pin lets go instead of
+        // finishing early and leaving a dead, nothing-happening pinned stretch.
+        const trackHeight = trackEl.offsetHeight - rect.height;
+        const progress = trackHeight <= 0 ? 0 : Math.min(Math.max(-trackEl.getBoundingClientRect().top / trackHeight, 0), 1);
         const cam = camera(progress);
         const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
         const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
@@ -278,7 +289,7 @@ export default function Hero() {
       paint();
       fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; paint(); }).catch(() => {});
 
-      // Only run the rAF loop while the stage is (near) the viewport, so it
+      // Only run the rAF loop while the track is (near) the viewport, so it
       // doesn't keep repainting a section the visitor has scrolled well past.
       let raf = 0;
       const loop = () => { paint(); raf = requestAnimationFrame(loop); };
@@ -290,7 +301,7 @@ export default function Hero() {
             else if (raf) { cancelAnimationFrame(raf); raf = 0; }
           });
         }, { rootMargin: '150px 0px' });
-        io.observe(stageEl);
+        io.observe(trackEl);
       } else {
         raf = requestAnimationFrame(loop);
       }
@@ -444,23 +455,40 @@ export default function Hero() {
           {headline}
         </div>
 
-        <div ref={staticStageRef} style={{ position: 'relative', width: '100%', aspectRatio: '16 / 11', overflow: 'hidden' }}>
-          {monitorLayer}
-        </div>
+        {/* Track adds a modest scroll budget so the stage below can pin and
+            hold through the full camera sweep, then release — the same
+            held-until-complete feel as desktop/tablet, just shorter. The
+            stage itself is full-viewport height (not a small boxed
+            thumbnail), so the identity/tagline overlay has room to sit
+            fixed on top of the scene the whole time it's pinned, instead
+            of only appearing once the pin lets go. */}
+        <div ref={staticTrackRef} style={{ position: 'relative', height: `calc(${STATIC_STAGE_VH}dvh + ${STATIC_TRACK_EXTRA_VH}dvh)` }}>
+          <div ref={staticStageRef} style={{
+            position: 'sticky', top: 0, width: '100%', height: `${STATIC_STAGE_VH}dvh`, overflow: 'hidden',
+            background: 'linear-gradient(180deg,#0c0c0d 0%,#151517 26%,#2e2e31 58%,#54525a 82%,#7d7c80 100%)',
+          }}>
+            {monitorLayer}
 
-        <div style={{
-          padding: '24px 24px 0', display: 'flex', flexDirection: 'column', gap: 14,
-          fontFamily: 'var(--mono)', color: 'rgba(255,255,255,0.62)',
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
-            <span>Felippe Ximenes</span>
-            <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 6, color: '#fff' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)', flexShrink: 0 }} />
-              {t_badge}
-            </span>
+            {/* Identity + tagline: pinned to the bottom of the scene, stays
+                fixed on screen for as long as the stage is pinned. */}
+            <div style={{
+              position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 30,
+              padding: '54px 24px 28px',
+              background: 'linear-gradient(180deg,rgba(12,12,13,0) 0%,rgba(12,12,13,0.6) 46%,rgba(12,12,13,0.9) 100%)',
+              display: 'flex', flexDirection: 'column', gap: 14,
+              fontFamily: 'var(--mono)', color: 'rgba(255,255,255,0.62)',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
+                <span>Felippe Ximenes</span>
+                <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 6, color: '#fff' }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)', flexShrink: 0 }} />
+                  {t_badge}
+                </span>
+              </div>
+              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.8)' }}>{t_sub}</p>
+            </div>
           </div>
-          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.75)' }}>{t_sub}</p>
         </div>
       </section>
       {lightbox}
