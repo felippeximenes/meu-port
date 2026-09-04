@@ -27,9 +27,37 @@ const RAW_FPS = 24;
 
 /* ── Mobile hero (≤768px): shorter sticky scroll-jack, tuned for phones ─────── */
 const STATIC_BREAKPOINT = 768;
-const STATIC_MZ = 1.15;
 const STATIC_TRACK_EXTRA_VH = 55;
-const STATIC_STAGE_VH = 74;
+// A CONSTANT multiplier, deliberately not a start->end curve. The mobile
+// clip's own tracked corners already grow smoothly and monotonically on
+// their own (verified against the tracking data directly — zero
+// frame-to-frame shrinks across all 192 frames); an *extra* multiplier
+// that itself changes with scroll progress fights that growth at a
+// different rate than the (eased) frame selection advances, and the two
+// mismatched rates are exactly what made the rendered size shrink, grow,
+// then shrink again while scrolling instead of just growing. A flat
+// constant can only ever scale the already-monotonic curve uniformly, so
+// it can't reintroduce that — tune this single number, not a range.
+const STATIC_MZ = 1.0;
+// A separate portrait-shot source (own frame sequence + corner tracking),
+// not a reuse/crop of the desktop one — see /public/hero-mobile-raw.mp4.
+// It carries its own built-in camera push-in, so mobile drives raw frame
+// selection straight off scroll progress instead of desktop's KEYS curve.
+const MOBILE_RAW_FRAME_COUNT = 192;
+const MOBILE_RAW_FPS = 24;
+const MOBILE_BG_DURATION = MOBILE_RAW_FRAME_COUNT / MOBILE_RAW_FPS;
+// The desktop QUAD_EXPAND (0.6%) was tuned against a 1280x720 tracking
+// space; mobile's own tracking space is 360x640, so the same fractional
+// expansion is a much smaller number of actual pixels — not enough to hide
+// the green screen's edge once scaled up to fill a phone screen. Wider on
+// purpose for that smaller source.
+const MOBILE_QUAD_EXPAND = 0.03;
+// Initial CSS fallback only — sizeStage() in the effect below immediately
+// replaces this with a JS-measured height (viewport minus the overlay's
+// real text height), so the stage always ends snug against the fixed
+// overlay: no gap, no collision, and no guessed constant to keep in sync
+// with copy that can reflow by language or font load.
+const STATIC_STAGE_VH = 68;
 
 /* ── Corner-pin math (ported literally from reference) ────────────────────── */
 function adj(m: number[]): number[] {
@@ -79,6 +107,7 @@ export default function Hero() {
   const stageRef     = useRef<HTMLDivElement>(null);
   const staticTrackRef = useRef<HTMLDivElement>(null);
   const staticStageRef = useRef<HTMLDivElement>(null);
+  const staticOverlayRef = useRef<HTMLDivElement>(null);
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const pinRef       = useRef<HTMLDivElement>(null);
   const plateRef     = useRef<HTMLDivElement>(null);
@@ -168,11 +197,15 @@ export default function Hero() {
     const pin = pinRef.current;
     if (!canvas) return;
 
-    /* Pre-load frames (isolated monitor cutout, transparent background) */
+    /* Pre-load frames (isolated monitor cutout). Mobile has its own portrait
+       shot (see MOBILE_RAW_FRAME_COUNT above) — load only the set the
+       current device actually needs, not both. */
+    const frameCount = isStatic ? MOBILE_RAW_FRAME_COUNT : RAW_FRAME_COUNT;
+    const framePath = isStatic ? '/hero-frames-mobile/monitor_' : '/hero-frames/monitor_';
     const frames: HTMLImageElement[] = [];
-    for (let i = 0; i < RAW_FRAME_COUNT; i++) {
+    for (let i = 0; i < frameCount; i++) {
       const img = new Image();
-      img.src = '/hero-frames/monitor_' + String(i).padStart(5, '0') + '.webp';
+      img.src = framePath + String(i).padStart(5, '0') + '.webp';
       frames[i] = img;
     }
 
@@ -205,7 +238,13 @@ export default function Hero() {
       return from.map((pt, i) => [pt[0] + (to[i][0] - pt[0]) * a, pt[1] + (to[i][1] - pt[1]) * a] as [number,number]);
     };
 
-    const draw = (rect: DOMRect, img: HTMLImageElement, zoom: number, mz: number, contain: boolean) => {
+    // `usableHeight` lets a caller confine the drawn frame to the TOP portion
+    // of `rect` (centered within 0..usableHeight instead of 0..rect.height),
+    // reserving the strip below it for something else entirely — the mobile
+    // hero's fixed identity/tagline overlay, which must never have the
+    // zooming monitor grow into it. Desktop/tablet don't pass this, so it
+    // defaults to the full rect and behaves exactly as before.
+    const draw = (rect: DOMRect, img: HTMLImageElement, zoom: number, mz: number, contain: boolean, usableHeight: number = rect.height, gapFill: string | null = '#0c0c0d') => {
       const dpr = window.devicePixelRatio || 1;
       const w = Math.round(rect.width * dpr);
       const h = Math.round(rect.height * dpr);
@@ -214,9 +253,10 @@ export default function Hero() {
       if (!ctx || !img || !img.naturalWidth) return;
       // Portrait screens keep the complete 16:9 composition visible. Covering a
       // tall viewport here turns the sequence into an excessively cropped close-up.
-      const fit = (contain ? Math.min : Math.max)(rect.width / img.naturalWidth, rect.height / img.naturalHeight);
+      const fit = (contain ? Math.min : Math.max)(rect.width / img.naturalWidth, usableHeight / img.naturalHeight);
       const dw = img.naturalWidth * fit;
       const dh = img.naturalHeight * fit;
+      const centerY = usableHeight / 2;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, rect.width, rect.height);
       // In "contain" mode (portrait/tablet) the frame doesn't reach the
@@ -228,32 +268,38 @@ export default function Hero() {
       // always, since that's also where the headline composes through at
       // low scroll progress. In "cover" mode the frame already reaches the
       // bottom edge, so this is a no-op and nothing changes from before.
+      // `gapFill: null` (mobile) skips this: that gradient stays dark
+      // end-to-end now, so the flat-fill rectangle was itself the visible
+      // seam — better to leave it transparent and let the real CSS
+      // gradient (which is already the right, continuously-varying tone)
+      // show straight through.
       const bh = dh * zoom * mz;
-      const gapBottom = (rect.height - bh) / 2 + bh;
-      if (gapBottom < rect.height) {
-        ctx.fillStyle = '#0c0c0d';
-        ctx.fillRect(0, gapBottom, rect.width, rect.height - gapBottom);
+      const gapBottom = centerY + bh / 2;
+      if (gapFill && gapBottom < usableHeight) {
+        ctx.fillStyle = gapFill;
+        ctx.fillRect(0, gapBottom, rect.width, usableHeight - gapBottom);
       }
-      ctx.translate(rect.width / 2, rect.height / 2);
+      ctx.translate(rect.width / 2, centerY);
       ctx.scale(zoom * mz, zoom * mz);
       ctx.drawImage(img, -dw/2, -dh/2, dw, dh);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const applyCornerPin = (rect: DOMRect, camTime: number, zoom: number, mz: number, isPortraitLocal: boolean) => {
+    const applyCornerPin = (rect: DOMRect, camTime: number, zoom: number, mz: number, isPortraitLocal: boolean, usableHeight: number = rect.height, expand: number = QUAD_EXPAND) => {
       if (!tracking || !pin) return;
       let corners = cornersAt(camTime);
       if (!corners) return;
       const cx = corners.reduce((s, p) => s + p[0], 0) / 4;
       const cy = corners.reduce((s, p) => s + p[1], 0) / 4;
-      corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + QUAD_EXPAND), cy + (y - cy) * (1 + QUAD_EXPAND)] as [number,number]);
-      const fit = (isPortraitLocal ? Math.min : Math.max)(rect.width / tracking.width, rect.height / tracking.height);
+      corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + expand), cy + (y - cy) * (1 + expand)] as [number,number]);
+      const fit = (isPortraitLocal ? Math.min : Math.max)(rect.width / tracking.width, usableHeight / tracking.height);
       const ox = (rect.width - tracking.width * fit) / 2;
-      const oy = (rect.height - tracking.height * fit) / 2;
+      const oy = (usableHeight - tracking.height * fit) / 2;
+      const centerY = usableHeight / 2;
       const dst = corners.map(([x, y]) => {
         const bx = x * fit + ox;
         const by = y * fit + oy;
-        return [(bx - rect.width/2) * zoom * mz + rect.width/2, (by - rect.height/2) * zoom * mz + rect.height/2] as [number,number];
+        return [(bx - rect.width/2) * zoom * mz + rect.width/2, (by - centerY) * zoom * mz + centerY] as [number,number];
       });
       pin.style.transform = cornerPin(1920, 1080, dst);
     };
@@ -261,6 +307,7 @@ export default function Hero() {
     if (isStatic) {
       const stageEl = staticStageRef.current;
       const trackEl = staticTrackRef.current;
+      const overlayEl = staticOverlayRef.current;
       if (!stageEl || !trackEl) return;
 
       // Mobile-tuned scroll-jack: the stage is CSS-sticky inside a track
@@ -270,6 +317,34 @@ export default function Hero() {
       // shorter added-scroll budget (desktop adds 160vh; this adds far
       // less), since asking a phone for 160vh of extra scroll to sit
       // through one animation is not a reasonable responsive trade.
+      //
+      // The stage's own height is sized in JS (below), not left at a fixed
+      // dvh, specifically so it always ends BEFORE the fixed overlay's own
+      // top edge: the canvas clips to the stage's box, so a stage that
+      // simply doesn't reach as far down as the overlay can never have the
+      // zooming monitor collide with it — no separate "reserved" zone
+      // inside the box needed, and no leftover dead gap between them
+      // either, since the sizing keeps the two snug against each other.
+      const sizeStage = () => {
+        const viewportH = window.visualViewport?.height || window.innerHeight;
+        const overlayH = overlayEl?.getBoundingClientRect().height || 0;
+        const gap = 16;
+        const stagePx = Math.max(viewportH - overlayH - gap, viewportH * 0.55);
+        stageEl.style.height = stagePx + 'px';
+        trackEl.style.height = (stagePx + viewportH * (STATIC_TRACK_EXTRA_VH / 100)) + 'px';
+        // A stage shorter than the viewport (needed above, to sit snug
+        // against the overlay instead of leaving a gap) means the section
+        // it's in can end up shorter than one viewport-height once you're
+        // deep into the pinned scroll — and the fixed overlay's own top
+        // edge fades to fully transparent, so whatever's normally
+        // scrolling underneath it (the NEXT section, once the document is
+        // that short) starts showing through before the pin has actually
+        // released. Padding the section by the shortfall keeps the
+        // document long enough that this can't happen before release.
+        const section = trackEl.parentElement as HTMLElement | null;
+        if (section) section.style.paddingBottom = Math.max(40, viewportH - stagePx) + 'px';
+      };
+
       const paint = () => {
         const rect = stageEl.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
@@ -279,18 +354,39 @@ export default function Hero() {
         // finishing early and leaving a dead, nothing-happening pinned stretch.
         const trackHeight = trackEl.offsetHeight - rect.height;
         const progress = trackHeight <= 0 ? 0 : Math.min(Math.max(-trackEl.getBoundingClientRect().top / trackHeight, 0), 1);
-        const cam = camera(progress);
-        const camTime = (cam.frame / (FRAME_COUNT - 1)) * BG_DURATION;
-        const rawIndex = Math.min(RAW_FRAME_COUNT - 1, Math.round(camTime * RAW_FPS));
-        draw(rect, frames[rawIndex], cam.zoom, STATIC_MZ, true);
-        applyCornerPin(rect, camTime, cam.zoom, STATIC_MZ, true);
+        // Mobile's own portrait shot already carries the full push-in as
+        // baked-in camera motion (see MOBILE_RAW_FRAME_COUNT above), so
+        // scroll progress maps straight onto its raw frames — no separate
+        // KEYS/zoom curve to keep in sync with a different source clip.
+        const camTime = easeInOutCubic(progress) * MOBILE_BG_DURATION;
+        const rawIndex = Math.min(MOBILE_RAW_FRAME_COUNT - 1, Math.round(camTime * MOBILE_RAW_FPS));
+        draw(rect, frames[rawIndex], 1, STATIC_MZ, false, rect.height, null);
+        applyCornerPin(rect, camTime, 1, STATIC_MZ, false, rect.height, MOBILE_QUAD_EXPAND);
+        // Visible from before the pin even engages (rect.top > 0, stage
+        // still approaching) through the whole held-in-place stretch
+        // (rect.top pinned at 0). Hidden the moment release actually
+        // starts (rect.top goes negative) — sticky elements keep scrolling
+        // normally, still partly on screen, for a full extra viewport's
+        // worth of scroll after that, and the overlay has no business
+        // staying fixed over whatever's scrolling past behind it by then.
+        if (overlayEl) overlayEl.style.opacity = rect.top > -1 ? '1' : '0';
       };
 
+      sizeStage();
       paint();
-      fetch('/quad_tracking.json').then(r => r.json()).then(d => { tracking = d; paint(); }).catch(() => {});
+      fetch('/quad_tracking_mobile.json').then(r => r.json()).then(d => { tracking = d; paint(); }).catch(() => {});
+      // Re-measure once web fonts finish loading — the overlay's text can
+      // reflow to a different height than the fallback font gave it.
+      document.fonts?.ready.then(() => { sizeStage(); paint(); }).catch(() => {});
+      window.addEventListener('resize', sizeStage);
 
-      // Only run the rAF loop while the track is (near) the viewport, so it
-      // doesn't keep repainting a section the visitor has scrolled well past.
+      // Only run the rAF loop while the stage is actually on screen, so it
+      // doesn't keep repainting a section the visitor has scrolled well
+      // past. (The overlay's own visibility is driven inside paint() itself
+      // from the stage's real pinned/released state — see there — since a
+      // sticky element keeps scrolling normally, still partly on screen,
+      // for a full extra viewport's worth of scroll after it releases, so
+      // this coarse intersection signal alone would keep it on too long.)
       let raf = 0;
       const loop = () => { paint(); raf = requestAnimationFrame(loop); };
       let io: IntersectionObserver | null = null;
@@ -298,10 +394,10 @@ export default function Hero() {
         io = new IntersectionObserver(entries => {
           entries.forEach(entry => {
             if (entry.isIntersecting) { if (!raf) raf = requestAnimationFrame(loop); }
-            else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+            else if (raf) { cancelAnimationFrame(raf); raf = 0; if (overlayEl) overlayEl.style.opacity = '0'; }
           });
-        }, { rootMargin: '150px 0px' });
-        io.observe(trackEl);
+        }, { rootMargin: '0px' });
+        io.observe(stageEl);
       } else {
         raf = requestAnimationFrame(loop);
       }
@@ -309,6 +405,7 @@ export default function Hero() {
       return () => {
         if (raf) cancelAnimationFrame(raf);
         io?.disconnect();
+        window.removeEventListener('resize', sizeStage);
       };
     }
 
@@ -397,6 +494,28 @@ export default function Hero() {
         ref={canvasRef}
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
       />
+      {/* Mobile only: the "cover" fit fills the whole stage with the
+          canvas's own drawn pixels — including the clip's solid black
+          backdrop — so the section's own dark background never actually
+          shows through underneath it. This layer sits between the canvas
+          and the real corner-pinned video, and mix-blend-mode:screen tints
+          the canvas's black backdrop to the exact same flat #161616 used
+          everywhere else in the section: screen(black, #161616) is
+          #161616, so the backdrop fuses with the page instead of reading
+          as a pure-black hole, while brighter pixels (the monitor bezel)
+          only lighten slightly rather than being recolored outright.
+          Desktop never renders this (isStatic is false there), so nothing
+          here touches it. */}
+      {isStatic && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute', inset: 0, zIndex: 1,
+            background: '#161616',
+            mixBlendMode: 'screen', pointerEvents: 'none',
+          }}
+        />
+      )}
       <div
         ref={pinRef}
         className="hero-video-trigger"
@@ -450,7 +569,19 @@ export default function Hero() {
   if (isStatic) {
     return (
       <>
-      <section style={{ position: 'relative', background: '#161616', paddingBottom: 40 }}>
+      <section style={{
+        position: 'relative', paddingBottom: 40,
+        // One flat color for the whole section — headline, stage and the
+        // padding below it — instead of a dynamically sampled or gradient
+        // tint. Dynamic sampling and gradients both left a seam somewhere
+        // (a percentage-based fade needing the section's full height to
+        // reach the stage's own already-fully-tinted starting pixel, or a
+        // sampled hue drifting away from the site's own established dark
+        // tone). A single uniform #161616 — the same onyx used by the nav
+        // and footer — removes the seam by construction: there's nothing
+        // for two different values to disagree about.
+        background: '#161616',
+      }}>
         <div className="hero-static-headline" style={{ padding: 'clamp(96px,14vh,130px) 24px 28px', textAlign: 'center' }}>
           {headline}
         </div>
@@ -465,30 +596,45 @@ export default function Hero() {
         <div ref={staticTrackRef} style={{ position: 'relative', height: `calc(${STATIC_STAGE_VH}dvh + ${STATIC_TRACK_EXTRA_VH}dvh)` }}>
           <div ref={staticStageRef} style={{
             position: 'sticky', top: 0, width: '100%', height: `${STATIC_STAGE_VH}dvh`, overflow: 'hidden',
-            background: 'linear-gradient(180deg,#0c0c0d 0%,#151517 26%,#2e2e31 58%,#54525a 82%,#7d7c80 100%)',
+            // Same flat #161616 as the section around it — no gradient, no
+            // sampled color — so the stage reads as part of one continuous
+            // surface instead of a boxed-in panel with its own tone.
+            background: '#161616',
           }}>
             {monitorLayer}
-
-            {/* Identity + tagline: pinned to the bottom of the scene, stays
-                fixed on screen for as long as the stage is pinned. */}
-            <div style={{
-              position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 30,
-              padding: '54px 24px 28px',
-              background: 'linear-gradient(180deg,rgba(12,12,13,0) 0%,rgba(12,12,13,0.6) 46%,rgba(12,12,13,0.9) 100%)',
-              display: 'flex', flexDirection: 'column', gap: 14,
-              fontFamily: 'var(--mono)', color: 'rgba(255,255,255,0.62)',
-            }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
-                <span>Felippe Ximenes</span>
-                <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 6, color: '#fff' }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)', flexShrink: 0 }} />
-                  {t_badge}
-                </span>
-              </div>
-              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.8)' }}>{t_sub}</p>
-            </div>
           </div>
+        </div>
+
+        {/* Identity + tagline: fixed to the viewport, and deliberately a
+            SIBLING of the stage rather than nested inside it — a
+            position:fixed descendant still gets clipped by an ancestor's
+            overflow:hidden despite being positioned relative to the
+            viewport, so nesting it inside the (overflow:hidden) stage only
+            rendered correctly by coincidence while pinned, and vanished as
+            soon as the stage's own box scrolled away from the viewport
+            before/after the pin. Visible at rest, not just once scrolled
+            into the pin, and stays put the whole time the hero is anywhere
+            near the screen — shown/hidden by the intersection observer
+            above. The monitor's own draw area is kept clear of this
+            block's measured height (see the effect above), so it never
+            zooms into it. */}
+        <div ref={staticOverlayRef} style={{
+          position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 30,
+          opacity: 0, transition: 'opacity 200ms ease', pointerEvents: 'none',
+          padding: '54px 24px 28px',
+          background: 'linear-gradient(180deg,rgba(22,22,22,0) 0%,rgba(22,22,22,0.6) 46%,rgba(22,22,22,0.94) 100%)',
+          display: 'flex', flexDirection: 'column', gap: 14,
+          fontFamily: 'var(--mono)', color: 'rgba(255,255,255,0.62)',
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
+            <span>Felippe Ximenes</span>
+            <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 6, color: '#fff' }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)', flexShrink: 0 }} />
+              {t_badge}
+            </span>
+          </div>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.8)' }}>{t_sub}</p>
         </div>
       </section>
       {lightbox}
