@@ -51,6 +51,7 @@ export default function Services() {
             <SplitHeading
               key={lang}
               text={t.services.headingNormal}
+              className="svc-heading"
               style={{ margin: 0, maxWidth: 900, fontSize: 'clamp(38px,5.2vw,72px)', lineHeight: 0.92, letterSpacing: '-0.055em', textWrap: 'pretty' } as React.CSSProperties}
             />
           </div>

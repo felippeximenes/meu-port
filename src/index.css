@@ -327,6 +327,12 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
   #servicos { padding-top: 80px !important; }
   article[data-service] { grid-template-columns: 1fr !important; gap: 10px !important; }
   article[data-service] > span:first-child { display: none !important; }
+  /* This heading is a full sentence, not a short 2-4 word headline like
+     the other display headings on the site — the same tight tracking and
+     36px+ floor that reads fine for those wraps this one into a dozen
+     one-word lines on a narrow phone. Sized and loosened specifically for
+     running text at display scale instead of a single punchy phrase. */
+  .svc-heading { font-size: clamp(26px,7vw,38px) !important; line-height: 1.08 !important; letter-spacing: -0.03em !important; }
 }
 
 /* ── Process ─────────────────────────────────────────────────────────────── */
