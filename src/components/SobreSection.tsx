@@ -252,7 +252,7 @@ export default function SobreSection() {
       </div>
 
       {/* Ghost word: centered, drifts gently with scroll */}
-      <p ref={ghostRef} aria-hidden="true" style={{
+      <p ref={ghostRef} aria-hidden="true" className="sobre-ghost" style={{
         margin: '68px 0 -14px', textAlign: 'center', color: '#fff',
         WebkitTextStroke: '3px #3c3a3e', fontFamily: 'var(--disp)',
         fontSize: 'clamp(72px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',

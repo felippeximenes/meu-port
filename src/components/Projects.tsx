@@ -222,7 +222,7 @@ export default function Projects() {
       </div>
 
       {/* Ghost word: centered, drifts gently with scroll */}
-      <p ref={ghostRef} aria-hidden="true" style={{
+      <p ref={ghostRef} aria-hidden="true" className="trabalho-ghost" style={{
         margin: '64px 0 -12px', textAlign: 'center', color: '#fff',
         WebkitTextStroke: '3px #3c3a3e', fontFamily: 'var(--disp)',
         fontSize: 'clamp(108px,21vw,310px)', lineHeight: 0.72, letterSpacing: '-0.02em',

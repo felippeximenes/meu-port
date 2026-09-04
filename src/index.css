@@ -295,6 +295,14 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
     grid-row: auto !important;
   }
   .sobre-card-col { width: 100%; max-width: 340px; margin: 0 auto; }
+  /* The ghost word's tight line-height (0.72) plus its negative bottom
+     margin are tuned for how much room desktop's own layout leaves below
+     it — on a mobile-width section the same numbers push the glyphs past
+     the section's own (overflow:hidden) bottom edge, chopping "SOBRE"
+     mid-letter right where the next section starts. Loosening both just
+     for mobile gives the full glyph height room to render before that
+     edge, without touching the desktop-tuned values at all. */
+  .sobre-ghost { line-height: 0.85 !important; margin-bottom: -6px !important; }
 }
 
 /* ── Projects ────────────────────────────────────────────────────────────── */
@@ -304,6 +312,10 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
 @media (max-width: 640px) {
   #trabalho { padding-top: 72px !important; }
   .proj-secondary-grid { grid-template-columns: 1fr !important; }
+  /* Same fix as .sobre-ghost above: the desktop-tuned tight line-height
+     plus negative bottom margin push "PROJETOS" past the section's own
+     bottom edge on a mobile-width layout, chopping it mid-letter. */
+  .trabalho-ghost { line-height: 0.85 !important; margin-bottom: -6px !important; }
 }
 
 /* ── Services ────────────────────────────────────────────────────────────── */
