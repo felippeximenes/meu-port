@@ -308,7 +308,8 @@ export default function Hero() {
       const stageEl = staticStageRef.current;
       const trackEl = staticTrackRef.current;
       const overlayEl = staticOverlayRef.current;
-      if (!stageEl || !trackEl) return;
+      const sectionEl = trackEl?.parentElement as HTMLElement | null;
+      if (!stageEl || !trackEl || !sectionEl) return;
 
       // Mobile-tuned scroll-jack: the stage is CSS-sticky inside a track
       // that's taller than the viewport by STATIC_TRACK_EXTRA_VH, so it
@@ -325,9 +326,10 @@ export default function Hero() {
       // zooming monitor collide with it — no separate "reserved" zone
       // inside the box needed, and no leftover dead gap between them
       // either, since the sizing keeps the two snug against each other.
+      let overlayH = 0;
       const sizeStage = () => {
         const viewportH = window.visualViewport?.height || window.innerHeight;
-        const overlayH = overlayEl?.getBoundingClientRect().height || 0;
+        overlayH = overlayEl?.getBoundingClientRect().height || 0;
         const gap = 16;
         const stagePx = Math.max(viewportH - overlayH - gap, viewportH * 0.55);
         stageEl.style.height = stagePx + 'px';
@@ -341,8 +343,7 @@ export default function Hero() {
         // that short) starts showing through before the pin has actually
         // released. Padding the section by the shortfall keeps the
         // document long enough that this can't happen before release.
-        const section = trackEl.parentElement as HTMLElement | null;
-        if (section) section.style.paddingBottom = Math.max(40, viewportH - stagePx) + 'px';
+        sectionEl.style.paddingBottom = Math.max(40, viewportH - stagePx) + 'px';
       };
 
       const paint = () => {
@@ -362,14 +363,53 @@ export default function Hero() {
         const rawIndex = Math.min(MOBILE_RAW_FRAME_COUNT - 1, Math.round(camTime * MOBILE_RAW_FPS));
         draw(rect, frames[rawIndex], 1, STATIC_MZ, false, rect.height, null);
         applyCornerPin(rect, camTime, 1, STATIC_MZ, false, rect.height, MOBILE_QUAD_EXPAND);
-        // Visible from before the pin even engages (rect.top > 0, stage
-        // still approaching) through the whole held-in-place stretch
-        // (rect.top pinned at 0). Hidden the moment release actually
-        // starts (rect.top goes negative) — sticky elements keep scrolling
-        // normally, still partly on screen, for a full extra viewport's
-        // worth of scroll after that, and the overlay has no business
-        // staying fixed over whatever's scrolling past behind it by then.
-        if (overlayEl) overlayEl.style.opacity = rect.top > -1 ? '1' : '0';
+        // Visible from before the pin even engages, through the held pin,
+        // and through the ENTIRE release scroll after it — not just a
+        // fixed-height footprint near the bottom. Once the stage releases
+        // it's still a real, stageHeight-tall box that has to scroll fully
+        // off before the next section can take its place; a fixed-size
+        // overlay covering only its own small footprint at the bottom of
+        // the screen leaves most of that scroll-through, above it, showing
+        // nothing but a bare stretch of flat background — which is exactly
+        // the "black part" that stays after the text disappears too early.
+        // So instead of a fixed box, this STRETCHES: its top edge tracks
+        // the stage's own retreating bottom edge (never covering the
+        // stage's still-visible real content), and its bottom edge tracks
+        // the next section's advancing top edge (never covering ITS real
+        // content either) — so it always exactly spans whatever "nothing
+        // is happening here" gap currently exists between the two, with
+        // the text pinned to the bottom of that stretch (justifyContent:
+        // flex-end + overflow:hidden), staying on screen for the entire
+        // gap's lifetime and shrinking away only as the gap itself closes,
+        // never before. Before release (rect.bottom is still comfortably
+        // above the text's own natural height), this reduces to the exact
+        // original fixed footprint and gradient — unchanged from before.
+        const viewportH = window.visualViewport?.height || window.innerHeight;
+        const sectionBottom = sectionEl.getBoundingClientRect().bottom;
+        if (overlayEl) {
+          const stageBottom = Math.max(0, rect.bottom);
+          const nextEdge = Math.min(viewportH, sectionBottom);
+          const naturalTop = viewportH - overlayH;
+          if (stageBottom < naturalTop) {
+            // Post-release: the stage's real content has retreated above
+            // where the overlay's normal footprint would start, meaning a
+            // gap of exposed flat background now sits between them. Stretch
+            // to exactly [stageBottom, nextEdge] — never further than
+            // either real edge — solid so nothing arriving behind it can
+            // bleed through, hidden only once the gap has fully closed.
+            const height = Math.max(0, nextEdge - stageBottom);
+            overlayEl.style.top = stageBottom + 'px';
+            overlayEl.style.height = height + 'px';
+            overlayEl.style.opacity = height > 0 ? '1' : '0';
+            overlayEl.style.background = '#161616';
+          } else {
+            // Rest / pin phase: original fixed-height footprint, unchanged.
+            overlayEl.style.top = 'auto';
+            overlayEl.style.height = 'auto';
+            overlayEl.style.opacity = '1';
+            overlayEl.style.background = 'linear-gradient(180deg,rgba(22,22,22,0) 0%,rgba(22,22,22,0.6) 46%,rgba(22,22,22,0.94) 100%)';
+          }
+        }
       };
 
       sizeStage();
@@ -380,13 +420,14 @@ export default function Hero() {
       document.fonts?.ready.then(() => { sizeStage(); paint(); }).catch(() => {});
       window.addEventListener('resize', sizeStage);
 
-      // Only run the rAF loop while the stage is actually on screen, so it
-      // doesn't keep repainting a section the visitor has scrolled well
-      // past. (The overlay's own visibility is driven inside paint() itself
-      // from the stage's real pinned/released state — see there — since a
-      // sticky element keeps scrolling normally, still partly on screen,
-      // for a full extra viewport's worth of scroll after it releases, so
-      // this coarse intersection signal alone would keep it on too long.)
+      // Run the rAF loop for as long as the SECTION (not just the stage) is
+      // anywhere on screen — the overlay needs paint() to keep evaluating
+      // the section's bottom edge all the way through the release-scroll
+      // buffer, well after the stage itself has scrolled away, otherwise
+      // it'd freeze at whatever opacity it last had the instant the loop
+      // stopped. Only stop once the section isn't intersecting at all,
+      // which is true both before the hero is reached and after it's
+      // fully scrolled past — opacity 0 is correct either way.
       let raf = 0;
       const loop = () => { paint(); raf = requestAnimationFrame(loop); };
       let io: IntersectionObserver | null = null;
@@ -397,7 +438,7 @@ export default function Hero() {
             else if (raf) { cancelAnimationFrame(raf); raf = 0; if (overlayEl) overlayEl.style.opacity = '0'; }
           });
         }, { rootMargin: '0px' });
-        io.observe(stageEl);
+        io.observe(sectionEl);
       } else {
         raf = requestAnimationFrame(loop);
       }
@@ -621,20 +662,32 @@ export default function Hero() {
         <div ref={staticOverlayRef} style={{
           position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 30,
           opacity: 0, transition: 'opacity 200ms ease', pointerEvents: 'none',
-          padding: '54px 24px 28px',
+          overflow: 'hidden',
           background: 'linear-gradient(180deg,rgba(22,22,22,0) 0%,rgba(22,22,22,0.6) 46%,rgba(22,22,22,0.94) 100%)',
-          display: 'flex', flexDirection: 'column', gap: 14,
+          display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
           fontFamily: 'var(--mono)', color: 'rgba(255,255,255,0.62)',
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
-            <span>Felippe Ximenes</span>
-            <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 6, color: '#fff' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)', flexShrink: 0 }} />
-              {t_badge}
-            </span>
+          {/* Padding lives on this inner wrapper, not the sized/positioned
+              outer div above: a box's own padding is a hard floor on how
+              small it can render (border-box still can't push content
+              below zero), so padding directly on the element whose height
+              we shrink toward 0 as the gap closes would leave it stuck at
+              ~82px (its padding sum) right at the very end — a last sliver
+              of the next section's content that never quite gets covered
+              in time, then jump-covered by that leftover 82px for a beat.
+              Padding on this child instead means the wrapper is free to
+              actually reach 0 (clipped by the outer's overflow:hidden). */}
+          <div style={{ padding: '54px 24px 28px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
+              <span>Felippe Ximenes</span>
+              <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 6, color: '#fff' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ember)', flexShrink: 0 }} />
+                {t_badge}
+              </span>
+            </div>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.8)' }}>{t_sub}</p>
           </div>
-          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.8)' }}>{t_sub}</p>
         </div>
       </section>
       {lightbox}
