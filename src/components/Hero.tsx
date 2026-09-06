@@ -302,6 +302,14 @@ export default function Hero() {
         return [(bx - rect.width/2) * zoom * mz + rect.width/2, (by - centerY) * zoom * mz + centerY] as [number,number];
       });
       pin.style.transform = cornerPin(1920, 1080, dst);
+      // The tracked screen's own on-screen bounding box, in rect-relative
+      // px — the real, precise "where the monitor visually is" (unlike the
+      // outer photographed frame from draw(), which includes a good deal
+      // of background/desk above and below the monitor prop itself). Used
+      // to keep the tablet-portrait HUD/tagline tied to the actual picture
+      // instead of the frame it was shot in.
+      const ys = dst.map(p => p[1]);
+      return { top: Math.min(...ys), bottom: Math.max(...ys) };
     };
 
     if (isStatic) {
@@ -476,6 +484,7 @@ export default function Hero() {
       // Compact landscape keeps a light crop; portrait uses the full wide frame.
       const mz = isPortrait ? 1.15 : isCompact ? 1.06 : 1;
       draw(rect, frames[rawIndex], cam.zoom, mz, isPortrait);
+      const monitorBounds = applyCornerPin(rect, camTime, cam.zoom, mz, isPortrait);
       if (bar) bar.style.width = progress * 100 + '%';
 
       if (plate) {
@@ -503,7 +512,32 @@ export default function Hero() {
       if (hud) hud.style.opacity = String(fade);
       if (tagline) tagline.style.opacity = String(fade);
 
-      applyCornerPin(rect, camTime, cam.zoom, mz, isPortrait);
+      // Same portrait/contain letterboxing means the monitor prop can also
+      // end its growth well short of the stage's own bottom edge — with
+      // the HUD and tagline nailed to a fixed distance from THAT edge (as
+      // they are for desktop's cover treatment, where the picture already
+      // reaches it), this leaves them stranded far below the monitor with
+      // a dead, empty stretch between the two. Hugging the monitor's own
+      // bottom edge with a small fixed gap fixed THAT (no more dead void
+      // right under the picture) but overcorrected: the whole composition
+      // read as crammed into the top ~60% of the screen with a big unused
+      // black band still left at the very bottom, unused. Splitting the
+      // real remaining space proportionally — not a fixed px gap — instead
+      // settles the text about a third of the way down whatever room is
+      // actually left below the monitor at the current zoom level, so it
+      // reads as deliberately placed within that lower band rather than
+      // glued to either edge, at every zoom level and every tablet's
+      // aspect ratio. Zero effect on desktop/compact-landscape (reset to
+      // the original static bottom-anchoring there every frame).
+      if (isPortrait && monitorBounds) {
+        const availableBelow = rect.height - monitorBounds.bottom;
+        const top = (monitorBounds.bottom + availableBelow * 0.35) + 'px';
+        if (hud) { hud.style.top = top; hud.style.bottom = 'auto'; }
+        if (tagline) { tagline.style.top = top; tagline.style.bottom = 'auto'; }
+      } else {
+        if (hud) { hud.style.top = 'auto'; hud.style.bottom = '30px'; }
+        if (tagline) { tagline.style.top = 'auto'; tagline.style.bottom = '24px'; }
+      }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
