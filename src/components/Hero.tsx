@@ -11,6 +11,12 @@ const KEYS = [
 ];
 const BG_DURATION = 6.041667;
 const QUAD_EXPAND = 0.006;
+// True desktop only (see its call site): a constant PIXEL margin, in
+// tracking-space units, rather than a fraction of QUAD_EXPAND — see
+// applyCornerPin's expandPx for why. Tuned frame by frame against the real
+// tracking data so the green screen's edge stays hidden at every point in
+// the scroll, including the very start where the tracked quad is smallest.
+const DESKTOP_QUAD_EXPAND_PX = 8;
 const RISE_END = 0.6;
 const RISE_FROM = 0.45;
 const RISE_TO = -0.04;
@@ -285,13 +291,29 @@ export default function Hero() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const applyCornerPin = (rect: DOMRect, camTime: number, zoom: number, mz: number, isPortraitLocal: boolean, usableHeight: number = rect.height, expand: number = QUAD_EXPAND) => {
+    const applyCornerPin = (rect: DOMRect, camTime: number, zoom: number, mz: number, isPortraitLocal: boolean, usableHeight: number = rect.height, expand: number = QUAD_EXPAND, expandPx?: number) => {
       if (!tracking || !pin) return;
       let corners = cornersAt(camTime);
       if (!corners) return;
       const cx = corners.reduce((s, p) => s + p[0], 0) / 4;
       const cy = corners.reduce((s, p) => s + p[1], 0) / 4;
-      corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + expand), cy + (y - cy) * (1 + expand)] as [number,number]);
+      // expandPx (desktop only — see its call site) targets a constant
+      // number of tracking-space PIXELS of coverage past the tracked quad,
+      // not a fixed fraction of it. The source footage's own camera dolly
+      // roughly doubles the quad's size from the first frame to the last
+      // (measured directly off quad_tracking.json: ~267px avg corner-to-
+      // center distance at t=0 vs ~512px at t=6), so a flat fraction gives
+      // barely half the real pixel margin at the start that it gives at
+      // the end — exactly backwards, since a smaller on-screen quad is
+      // where a few pixels of chroma-key green are most visible, not less.
+      // Converting the target back into a fraction of THIS frame's own
+      // (measured) quad size keeps the actual pixel coverage — and hence
+      // how well it hides the green screen's edge — roughly constant
+      // across the whole scroll. Mobile's call site doesn't pass this, so
+      // it keeps using the plain fraction, completely unaffected.
+      const effectiveExpand = expandPx === undefined ? expand
+        : expandPx / (corners.reduce((s, [x, y]) => s + Math.hypot(x - cx, y - cy), 0) / corners.length);
+      corners = corners.map(([x, y]) => [cx + (x - cx) * (1 + effectiveExpand), cy + (y - cy) * (1 + effectiveExpand)] as [number,number]);
       const fit = (isPortraitLocal ? Math.min : Math.max)(rect.width / tracking.width, usableHeight / tracking.height);
       const ox = (rect.width - tracking.width * fit) / 2;
       const oy = (usableHeight - tracking.height * fit) / 2;
@@ -484,7 +506,10 @@ export default function Hero() {
       // Compact landscape keeps a light crop; portrait uses the full wide frame.
       const mz = isPortrait ? 1.15 : isCompact ? 1.06 : 1;
       draw(rect, frames[rawIndex], cam.zoom, mz, isPortrait);
-      const monitorBounds = applyCornerPin(rect, camTime, cam.zoom, mz, isPortrait);
+      // The pixel-margin mode (expandPx) is desktop-only, on purpose — the
+      // tablet-portrait treatment already got its own, separately-verified
+      // corner-pin tuning, and isn't part of this change.
+      const monitorBounds = applyCornerPin(rect, camTime, cam.zoom, mz, isPortrait, rect.height, QUAD_EXPAND, isCompact ? undefined : DESKTOP_QUAD_EXPAND_PX);
       if (bar) bar.style.width = progress * 100 + '%';
 
       if (plate) {
