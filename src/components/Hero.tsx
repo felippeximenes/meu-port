@@ -18,7 +18,7 @@ const QUAD_EXPAND = 0.006;
 // the scroll, including the very start where the tracked quad is smallest.
 const DESKTOP_QUAD_EXPAND_PX = 8;
 const RISE_END = 0.6;
-const RISE_FROM = 0.45;
+const RISE_FROM = 0.38;
 const RISE_TO = -0.04;
 const FADE_START = 0.82;
 const FADE_END = 0.98;
