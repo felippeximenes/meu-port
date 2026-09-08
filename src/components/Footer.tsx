@@ -143,8 +143,8 @@ function ContactForm() {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           access_key: import.meta.env.VITE_WEB3FORMS_KEY,
-          subject: `Novo contato pelo portfólio — ${values.name}`,
-          from_name: 'Portfólio — Felippe Ximenes',
+          subject: `Novo contato pelo portfólio: ${values.name}`,
+          from_name: 'Portfólio · Felippe Ximenes',
           name: values.name,
           email: values.email,
           message: values.message,

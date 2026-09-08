@@ -11,22 +11,22 @@ const T = {
   hero: {
     badge: { pt: 'Disponível para projetos', en: 'Available for projects' },
     heading: {
-      pt: 'Produto completo, do backend aos agentes de IA. Rodando de verdade em produção.',
-      en: 'Full product, from backend to AI agents. Running for real in production.',
+      pt: 'Cuido do produto inteiro, do back-end aos agentes de IA, e entrego funcionando em produção.',
+      en: 'I take care of the whole product, from the back-end to the AI agents, and deliver it running in production.',
     },
     sub: {
-      pt: 'Desenvolvimento full-stack e engenharia de IA: de APIs na AWS a pipelines RAG rodando em produção real.',
-      en: 'Full-stack development and AI engineering: from AWS APIs to RAG pipelines running in real production.',
+      pt: 'Full-stack e IA aplicada: construo desde APIs na AWS até pipelines de RAG que já estão rodando em produção.',
+      en: 'Full-stack and applied AI: I build everything from AWS APIs to RAG pipelines already running in production.',
     },
   },
   sobre: {
     lede: {
-      pt: 'Não me interessa parecer sofisticado. Me interessa que o produto funcione, do back-end aos agentes de IA.',
-      en: "I'm not interested in looking sophisticated. I'm interested in the product actually working, from the back-end to the AI agents.",
+      pt: 'Prefiro ver o produto funcionar de verdade a parecer sofisticado no papel. É isso que me move, do back-end aos agentes de IA.',
+      en: "I'd rather see the product actually work than look sophisticated on paper. That's what drives me, from the back-end to the AI agents.",
     },
     bio: {
-      pt: 'Desenvolvedor full-stack com foco em engenharia de IA: de APIs serverless na AWS a pipelines RAG rodando em produção real. Atuo com TypeScript, Python, React e infraestrutura AWS, entregando produtos completos do back-end aos agentes de IA.',
-      en: 'Full-stack developer focused on AI engineering: from serverless APIs on AWS to RAG pipelines running in real production. I work with TypeScript, Python, React and AWS infrastructure, delivering complete products from the back-end to AI agents.',
+      pt: 'Sou desenvolvedor full-stack com foco em engenharia de IA. Trabalho com TypeScript, Python, React e infraestrutura AWS, construindo desde APIs serverless até pipelines de RAG e agentes que realmente entram em produção.',
+      en: "I'm a full-stack developer focused on AI engineering. I work with TypeScript, Python, React and AWS infrastructure, building everything from serverless APIs to RAG pipelines and agents that actually make it into production.",
     },
     yearsSuffix:    { pt: 'anos de experiência', en: 'years of experience' },
     languages:      { pt: 'Português · Inglês · Espanhol', en: 'Portuguese · English · Spanish' },
