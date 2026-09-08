@@ -13,7 +13,7 @@ function buildGeometry(depth: number) {
     shape.holes.push(new THREE.Path(hole.points.map(([x, y]) => new THREE.Vector2(x, y))));
   }
   const geometry = new THREE.ExtrudeGeometry(shape, {
-    depth, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 2,
+    depth, bevelEnabled: true, bevelThickness: 0.024, bevelSize: 0.02, bevelSegments: 3,
   });
   geometry.center();
   return geometry;
@@ -47,10 +47,10 @@ export default function LogoGL({ src, size = 40, alt }: LogoGLProps) {
       setFallback(true);
       return;
     }
-    // The canvas is a bit bigger than the mark's own resting size (set via
-    // camera distance below) so the hover grow-up has room to fill outward
-    // without clipping against the canvas edge.
-    const canvasSize = size * 1.4;
+    // The canvas is a good deal bigger than the mark's own resting size (set
+    // via camera distance below) so the bigger hover grow-up and tilt below
+    // have room to fill outward without clipping against the canvas edge.
+    const canvasSize = size * 1.9;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(canvasSize, canvasSize);
     renderer.domElement.style.display = 'block';
@@ -60,7 +60,7 @@ export default function LogoGL({ src, size = 40, alt }: LogoGLProps) {
     const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 10);
     camera.position.set(0, 0, 3.6);
 
-    const geometry = buildGeometry(0.12);
+    const geometry = buildGeometry(0.24);
     // Flat, unlit color sampled straight from the source PNG's own pixels —
     // MeshBasicMaterial ignores lighting entirely, so this exact RGB is what
     // renders on every face at every angle, never shaded lighter or darker.
@@ -73,10 +73,12 @@ export default function LogoGL({ src, size = 40, alt }: LogoGLProps) {
     let targetRotY = 0;
     let raf = 0;
     const tick = () => {
-      const s = mesh.scale.x + (targetScale - mesh.scale.x) * 0.15;
+      // Scale eases in slower than rotation — gives the grow-up a bit of
+      // weight, while the tilt still tracks the cursor closely.
+      const s = mesh.scale.x + (targetScale - mesh.scale.x) * 0.1;
       mesh.scale.setScalar(s);
-      mesh.rotation.x += (targetRotX - mesh.rotation.x) * 0.15;
-      mesh.rotation.y += (targetRotY - mesh.rotation.y) * 0.15;
+      mesh.rotation.x += (targetRotX - mesh.rotation.x) * 0.18;
+      mesh.rotation.y += (targetRotY - mesh.rotation.y) * 0.18;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };
@@ -86,10 +88,10 @@ export default function LogoGL({ src, size = 40, alt }: LogoGLProps) {
       const rect = container.getBoundingClientRect();
       const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-      targetRotY = nx * 0.5;
-      targetRotX = ny * -0.5;
+      targetRotY = nx * 0.45;
+      targetRotX = ny * -0.45;
     };
-    const onEnter = () => { targetScale = 1.22; };
+    const onEnter = () => { targetScale = 1.55; };
     const onLeave = () => { targetScale = 1; targetRotX = 0; targetRotY = 0; };
     container.addEventListener('pointermove', onMove);
     container.addEventListener('pointerenter', onEnter);
@@ -110,7 +112,7 @@ export default function LogoGL({ src, size = 40, alt }: LogoGLProps) {
   if (fallback) {
     return <img src={src} alt={alt} width={size} height={size} style={{ display: 'block' }} />;
   }
-  const canvasSize = size * 1.4;
+  const canvasSize = size * 1.9;
   return (
     <div
       ref={containerRef}

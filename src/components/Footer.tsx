@@ -315,7 +315,7 @@ export default function Footer() {
       {/* Dark closing band: identity mark, nav, social, status — bleeds full width */}
       <div className="footer-dark-band" style={{ background: '#161616', padding: '64px 24px 30px' }}>
         <div style={{ maxWidth: 620, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, textAlign: 'center' }}>
-          <LogoGL src="/brand/fx-mono-ember.png" alt="FX" size={64} />
+          <LogoGL src="/brand/fx-mono-ember.png" alt="FX" size={78} />
           <span style={{
             fontFamily: 'var(--hero-font)', fontWeight: 400, textTransform: 'uppercase',
             fontSize: 22, letterSpacing: '0.01em', color: '#fff',
