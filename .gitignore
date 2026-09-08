@@ -38,5 +38,7 @@ skills-lock.json
 # Reference design (usado só localmente)
 novo/
 
-# Source footage (não versionado, só material de origem local)
-public/monitor-greenscreen.mp4
+# Source footage (não versionado, só material de origem local — usado
+# offline para gerar os frames extraídos em public/hero-frames* e os
+# tracking JSON; nada aqui é servido pelo site)
+source-footage/
