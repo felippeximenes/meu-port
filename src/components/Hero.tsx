@@ -14,9 +14,13 @@ const QUAD_EXPAND = 0.006;
 // True desktop only (see its call site): a constant PIXEL margin, in
 // tracking-space units, rather than a fraction of QUAD_EXPAND — see
 // applyCornerPin's expandPx for why. Tuned frame by frame against the real
-// tracking data so the green screen's edge stays hidden at every point in
-// the scroll, including the very start where the tracked quad is smallest.
-const DESKTOP_QUAD_EXPAND_PX = 8;
+// tracking data and the source frames' own bezel: large enough to hide the
+// green screen's anti-aliased edge, small enough to leave the monitor's own
+// (thin, ~10-13px at the start of the scroll) black bezel visibly on
+// screen instead of covering it with the overlaid video — 8px was hiding
+// nearly the whole bezel at the start of the scroll, where the tracked
+// quad (and so the bezel itself) is at its smallest.
+const DESKTOP_QUAD_EXPAND_PX = 4;
 const RISE_END = 0.6;
 const RISE_FROM = 0.38;
 const RISE_TO = -0.04;
