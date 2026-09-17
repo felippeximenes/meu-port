@@ -185,10 +185,11 @@ export default function Hero() {
     const video = videoRef.current;
     const fallback = fallbackRef.current;
     if (!video) return;
-    video.muted = true;
+    // muted/loop/playsInline are also set as JSX attributes below (so the
+    // element is never in an un-muted state at any point React/the browser
+    // could inspect it); defaultMuted has no JSX equivalent, so it's still
+    // set here.
     (video as HTMLVideoElement & { defaultMuted: boolean }).defaultMuted = true;
-    video.loop = true;
-    video.playsInline = true;
     const showVideo = () => {
       video.style.display = 'block';
       if (fallback) fallback.style.display = 'none';
@@ -200,9 +201,14 @@ export default function Hero() {
     };
     showFallback();
     video.addEventListener('loadeddata', showVideo);
+    // Loading the source directly and reacting to the <video>'s own error
+    // event (rather than gating it behind a HEAD request first) removes an
+    // extra round trip that had no upside: it couldn't detect anything the
+    // element's own error event doesn't already catch, and gave mobile
+    // browsers under (real or synthetic) network pressure one more request
+    // to have to succeed before the actual video was even asked for.
     video.addEventListener('error', showFallback);
-    const src = '/video-case.mp4';
-    fetch(src, { method: 'HEAD' }).then(r => { if (r.ok) video.src = src; }).catch(() => showFallback());
+    video.src = '/video-case.mp4';
     let videoIO: IntersectionObserver | null = null;
     if (window.IntersectionObserver) {
       videoIO = new IntersectionObserver(entries => {
@@ -661,6 +667,9 @@ export default function Hero() {
         <video
           ref={videoRef}
           preload="auto"
+          muted
+          loop
+          playsInline
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'none' }}
         />
         <div ref={fallbackRef} style={{ position: 'absolute', inset: 0, background: '#0e1113' }} />
