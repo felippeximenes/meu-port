@@ -128,6 +128,8 @@ export default function Hero() {
   const [isStatic, setIsStatic] = useState(
     () => typeof window !== 'undefined' && window.matchMedia(STATIC_QUERY).matches
   );
+  // eslint-disable-next-line no-console -- temporary diagnostic, remove after
+  console.log('[Hero] isStatic =', isStatic, 'innerWidth =', window.innerWidth, 'innerHeight =', window.innerHeight);
 
   const trackRef     = useRef<HTMLDivElement>(null);
   const stageRef     = useRef<HTMLDivElement>(null);
@@ -225,6 +227,7 @@ export default function Hero() {
 
   /* ── Monitor scene: scroll-jacked (desktop/tablet) or fixed framing (mobile) ── */
   useEffect(() => {
+    console.log('[Hero] effect mount, isStatic =', isStatic, 'canvas =', !!canvasRef.current);
     const canvas = canvasRef.current;
     const pin = pinRef.current;
     if (!canvas) return;
@@ -239,6 +242,11 @@ export default function Hero() {
       const img = new Image();
       img.src = framePath + String(i).padStart(5, '0') + '.webp';
       frames[i] = img;
+    }
+    if (isStatic) {
+      console.log('[Hero] mobile frames criados:', frames.length);
+      let ready = 0;
+      frames.forEach(f => f.addEventListener('load', () => { ready++; if (ready === frames.length) console.log('[Hero] todos os frames carregados'); }));
     }
 
     let tracking: { fps: number; width: number; height: number; frames: { corners: [number,number][] }[] } | null = null;
@@ -282,7 +290,8 @@ export default function Hero() {
       const h = Math.round(rect.height * dpr);
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       const ctx = canvas.getContext('2d');
-      if (!ctx || !img || !img.naturalWidth) return;
+      if (!ctx || !img) return;
+      if (!img.naturalWidth) { console.warn('[Hero] draw() pulado: naturalWidth =', img && img.naturalWidth); return; }
       // Portrait screens keep the complete 16:9 composition visible. Covering a
       // tall viewport here turns the sequence into an excessively cropped close-up.
       const fit = (contain ? Math.min : Math.max)(rect.width / img.naturalWidth, usableHeight / img.naturalHeight);
