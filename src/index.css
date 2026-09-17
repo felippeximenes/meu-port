@@ -281,6 +281,23 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
 @media (max-width: 380px) {
   .hero-static-headline h1 { font-size: 42px !important; letter-spacing: -0.01em !important; }
 }
+/* Phone LANDSCAPE (short but wide enough to still be in the "static" hero
+   below 768px width): the fixed identity/tagline overlay is anchored to the
+   viewport bottom and visible at rest, not just once scrolled into the pin
+   (see Hero.tsx). Its own text takes a roughly fixed pixel height regardless
+   of viewport height, so on a short viewport it eats a much bigger share of
+   the screen — enough, at ~375px tall, to overlap the monitor stage peeking
+   in above it. Shrinking the headline's own top padding and the overlay's
+   padding/line count claws back enough height to stop the overlap. */
+@media (max-height: 500px) and (max-width: 950px) {
+  /* Nav is position:absolute, ~78px tall (22px padding + its own button
+     height) — the padding-top has to clear that regardless of how tight
+     everything else gets, or the headline sits under the nav links. */
+  .hero-static-headline { padding-top: 88px !important; padding-bottom: 14px !important; }
+  .hero-static-headline h1 { font-size: 32px !important; }
+  .hero-static-hud { padding: 12px 24px 10px !important; gap: 6px !important; }
+  .hero-static-hud-sub { display: none !important; }
+}
 
 /* ── Sobre ───────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
@@ -327,6 +344,12 @@ button, a[data-cta] { transition: transform 160ms var(--ease-out), color 200ms e
   #servicos { padding-top: 80px !important; }
   article[data-service] { grid-template-columns: 1fr !important; gap: 10px !important; }
   article[data-service] > span:first-child { display: none !important; }
+  /* The "Disponível para projetos" badge sits beside the heading with
+     white-space:nowrap; on very narrow phones (~320-330px) the heading's
+     own shrink floor plus the badge's fixed width no longer both fit on
+     one row, pushing the badge past the viewport edge. Same fix as the
+     FAQ header (.faq-header): stack instead of forcing them side by side. */
+  .svc-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
   /* This heading is a full sentence, not a short 2-4 word headline like
      the other display headings on the site — the same tight tracking and
      36px+ floor that reads fine for those wraps this one into a dozen

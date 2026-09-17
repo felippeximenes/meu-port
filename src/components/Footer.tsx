@@ -284,6 +284,7 @@ export default function Footer() {
                   display: 'inline-flex', alignItems: 'center', gap: 9, marginTop: 6,
                   fontFamily: 'var(--grot)', fontWeight: 600, fontSize: 18, color: '#161616',
                   paddingBottom: 3, borderBottom: '1px solid #c9c7cc', transition: 'border-color 200ms ease',
+                  overflowWrap: 'anywhere',
                 }}>
                   <MailIcon />{EMAIL}
                 </a>

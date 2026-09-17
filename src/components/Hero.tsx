@@ -37,6 +37,14 @@ const RAW_FPS = 24;
 
 /* ── Mobile hero (≤768px): shorter sticky scroll-jack, tuned for phones ─────── */
 const STATIC_BREAKPOINT = 768;
+// Phones in LANDSCAPE are often wider than STATIC_BREAKPOINT (a phone
+// rotated sideways is easily 700-950px wide) but just as short as they are
+// in portrait — the desktop scroll-jack's camera curve and padding are
+// tuned against real desktop aspect ratios (wide AND tall), and cram badly
+// into that little height, overlapping the headline with the monitor. Below
+// this height, use the simpler static mobile layout regardless of width.
+const STATIC_MAX_HEIGHT = 500;
+const STATIC_QUERY = `(max-width: ${STATIC_BREAKPOINT}px), (max-height: ${STATIC_MAX_HEIGHT}px) and (max-width: 950px)`;
 const STATIC_TRACK_EXTRA_VH = 55;
 // A CONSTANT multiplier, deliberately not a start->end curve. The mobile
 // clip's own tracked corners already grow smoothly and monotonically on
@@ -56,12 +64,20 @@ const STATIC_MZ = 1.0;
 const MOBILE_RAW_FRAME_COUNT = 192;
 const MOBILE_RAW_FPS = 24;
 const MOBILE_BG_DURATION = MOBILE_RAW_FRAME_COUNT / MOBILE_RAW_FPS;
-// The desktop QUAD_EXPAND (0.6%) was tuned against a 1280x720 tracking
-// space; mobile's own tracking space is 360x640, so the same fractional
-// expansion is a much smaller number of actual pixels — not enough to hide
-// the green screen's edge once scaled up to fill a phone screen. Wider on
-// purpose for that smaller source.
-const MOBILE_QUAD_EXPAND = 0.03;
+// Same constant-PIXEL-margin approach as DESKTOP_QUAD_EXPAND_PX, and for
+// the same reason: a flat fraction gives less real pixel coverage exactly
+// when the tracked quad is smallest (early in the scroll), which is also
+// where a few pixels of chroma-key green are most visible. Checking the
+// static source stills pixel-by-pixel says 6px already has zero green
+// fringe, but the actual rendered page still showed a thin sliver at that
+// margin — the extra downscaling this source goes through (a 1920x1080
+// video corner-pinned into a quad a few hundred CSS px wide, on top of the
+// canvas's own upscale of a 360x640 still) bilinearly blends a few more
+// pixels of green in than a static per-pixel check on the source stills
+// can see. 16px is verified against the live rendered page (iOS/WebKit),
+// scanning actual screenshots for chroma-key green across the whole
+// pinned-scroll range, not just the source images.
+const MOBILE_QUAD_EXPAND_PX = 16;
 // Initial CSS fallback only — sizeStage() in the effect below immediately
 // replaces this with a JS-measured height (viewport minus the overlay's
 // real text height), so the stage always ends snug against the fixed
@@ -110,7 +126,7 @@ export default function Hero() {
   const t = useT();
 
   const [isStatic, setIsStatic] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(`(max-width: ${STATIC_BREAKPOINT}px)`).matches
+    () => typeof window !== 'undefined' && window.matchMedia(STATIC_QUERY).matches
   );
 
   const trackRef     = useRef<HTMLDivElement>(null);
@@ -146,7 +162,7 @@ export default function Hero() {
 
   /* ── Track the static/scroll-jack breakpoint ───────────────────────────── */
   useEffect(() => {
-    const mq = window.matchMedia(`(max-width: ${STATIC_BREAKPOINT}px)`);
+    const mq = window.matchMedia(STATIC_QUERY);
     const handler = () => setIsStatic(mq.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
@@ -365,7 +381,16 @@ export default function Hero() {
         const viewportH = window.visualViewport?.height || window.innerHeight;
         overlayH = overlayEl?.getBoundingClientRect().height || 0;
         const gap = 16;
-        const stagePx = Math.max(viewportH - overlayH - gap, viewportH * 0.55);
+        // A floor as a FRACTION of viewport height fights this exact
+        // computation on short (landscape-phone) viewports: overlayH is a
+        // roughly fixed pixel size regardless of viewport height, so on a
+        // short screen it can legitimately leave less than that fraction
+        // available — and a relative floor would then win over the fitted
+        // value, pushing the stage back down into the overlay it was
+        // supposed to stay clear of. A small absolute floor still guards
+        // against a collapsed/negative height (e.g. overlayH momentarily
+        // unmeasured) without ever overriding a valid smaller fit.
+        const stagePx = Math.max(viewportH - overlayH - gap, 120);
         stageEl.style.height = stagePx + 'px';
         trackEl.style.height = (stagePx + viewportH * (STATIC_TRACK_EXTRA_VH / 100)) + 'px';
         // A stage shorter than the viewport (needed above, to sit snug
@@ -396,7 +421,7 @@ export default function Hero() {
         const camTime = easeInOutCubic(progress) * MOBILE_BG_DURATION;
         const rawIndex = Math.min(MOBILE_RAW_FRAME_COUNT - 1, Math.round(camTime * MOBILE_RAW_FPS));
         draw(rect, frames[rawIndex], 1, STATIC_MZ, false, rect.height, null);
-        applyCornerPin(rect, camTime, 1, STATIC_MZ, false, rect.height, MOBILE_QUAD_EXPAND);
+        applyCornerPin(rect, camTime, 1, STATIC_MZ, false, rect.height, undefined, MOBILE_QUAD_EXPAND_PX);
         // Visible from before the pin even engages, through the held pin,
         // and through the ENTIRE release scroll after it — not just a
         // fixed-height footprint near the bottom. Once the stage releases
@@ -740,7 +765,7 @@ export default function Hero() {
               in time, then jump-covered by that leftover 82px for a beat.
               Padding on this child instead means the wrapper is free to
               actually reach 0 (clipped by the outer's overflow:hidden). */}
-          <div style={{ padding: '54px 24px 28px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div className="hero-static-hud" style={{ padding: '54px 24px 28px', display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
               <span>Felippe Ximenes</span>
               <span>Rio de Janeiro, BR · <span ref={clockRef}>--:--</span> BRT</span>
@@ -749,7 +774,7 @@ export default function Hero() {
                 {t_badge}
               </span>
             </div>
-            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.8)' }}>{t_sub}</p>
+            <p className="hero-static-hud-sub" style={{ margin: 0, fontSize: 14, lineHeight: 1.4, letterSpacing: '-0.01em', color: 'rgba(255,255,255,0.8)' }}>{t_sub}</p>
           </div>
         </div>
       </section>

@@ -42,7 +42,7 @@ export default function Services() {
     <section id="servicos" style={{ background: '#161616', color: '#fff', padding: '120px 24px 0' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Header */}
-        <div style={{
+        <div className="svc-header" style={{
           display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
           gap: 24, paddingBottom: 28, borderBottom: '1px solid rgba(255,255,255,0.15)',
         }}>
