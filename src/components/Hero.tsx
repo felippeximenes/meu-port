@@ -145,7 +145,6 @@ export default function Hero() {
   const barRef       = useRef<HTMLDivElement>(null);
   const clockRef     = useRef<HTMLSpanElement>(null);
   const videoRef     = useRef<HTMLVideoElement>(null);
-  const fallbackRef  = useRef<HTMLDivElement>(null);
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -185,42 +184,31 @@ export default function Hero() {
   /* ── Hero video ─────────────────────────────────────────────────────────── */
   useEffect(() => {
     const video = videoRef.current;
-    const fallback = fallbackRef.current;
     if (!video) return;
-    // muted/loop/playsInline are also set as JSX attributes below (so the
-    // element is never in an un-muted state at any point React/the browser
-    // could inspect it); defaultMuted has no JSX equivalent, so it's still
-    // set here.
+    // muted/loop/playsInline are also JSX attributes below; defaultMuted has
+    // no JSX equivalent, so it's still set here.
     (video as HTMLVideoElement & { defaultMuted: boolean }).defaultMuted = true;
-    const showVideo = () => {
-      video.style.display = 'block';
-      if (fallback) fallback.style.display = 'none';
-      video.play().catch(() => {});
-    };
-    const showFallback = () => {
-      video.style.display = 'none';
-      if (fallback) fallback.style.display = 'block';
-    };
-    showFallback();
-    video.addEventListener('loadeddata', showVideo);
-    // Loading the source directly and reacting to the <video>'s own error
-    // event (rather than gating it behind a HEAD request first) removes an
-    // extra round trip that had no upside: it couldn't detect anything the
-    // element's own error event doesn't already catch, and gave mobile
-    // browsers under (real or synthetic) network pressure one more request
-    // to have to succeed before the actual video was even asked for.
-    video.addEventListener('error', showFallback);
+    // The <video> stays rendered the whole time (poster + dark background
+    // stand in for the old separate fallback div). On iOS the browser loads
+    // only the metadata for an element it isn't asked to play, then goes
+    // idle: waiting for `loadeddata` before calling play() (and observing a
+    // display:none element that can never intersect) deadlocked. Calling
+    // play() up front is what makes it fetch the rest.
+    // ponytail: temporary diagnostic logs, remove once the iPhone is confirmed.
+    const names = ['loadstart', 'loadedmetadata', 'loadeddata', 'canplay', 'playing', 'pause', 'suspend', 'stalled', 'waiting', 'error'];
+    const log = (e: Event) => console.log('[Hero video]', e.type, 'rs=' + video.readyState, 'ns=' + video.networkState, 'err=' + (video.error?.code ?? '-'));
+    names.forEach(n => video.addEventListener(n, log));
     video.src = '/video-case.mp4';
+    video.play().catch(err => console.warn('[Hero video] play() rejeitado:', err?.name, err?.message));
     let videoIO: IntersectionObserver | null = null;
     if (window.IntersectionObserver) {
       videoIO = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting && video.paused) video.play().catch(() => {}); });
+        entries.forEach(e => { if (e.isIntersecting && video.paused) video.play().catch(err => console.warn('[Hero video] retry rejeitado:', err?.name)); });
       }, { threshold: 0.05 });
       videoIO.observe(video);
     }
     return () => {
-      video.removeEventListener('loadeddata', showVideo);
-      video.removeEventListener('error', showFallback);
+      names.forEach(n => video.removeEventListener(n, log));
       videoIO?.disconnect();
     };
   }, [isStatic]);
@@ -679,9 +667,9 @@ export default function Hero() {
           muted
           loop
           playsInline
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'none' }}
+          poster="/video-case-poster.jpg"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', background: '#0e1113' }}
         />
-        <div ref={fallbackRef} style={{ position: 'absolute', inset: 0, background: '#0e1113' }} />
         <span className="hero-play-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
         </span>
