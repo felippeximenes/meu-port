@@ -6,6 +6,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- TEMPORARIO: console no celular. Abra com ?debug=1. Remover depois do diagnostico. -->
+    <script>
+      if (location.search.indexOf('debug') > -1) {
+        document.write('<script src="https://cdn.jsdelivr.net/npm/eruda@3"><\/script><script>eruda.init();<\/script>');
+      }
+    </script>
     <meta name="description" content="Felippe Ximenes — Desenvolvedor Full Stack especializado em IA generativa, AWS Serverless e produtos digitais completos." />
     <title>Felippe Ximenes — Desenvolvedor Full Stack</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
