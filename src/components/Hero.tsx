@@ -64,20 +64,18 @@ const STATIC_MZ = 1.0;
 const MOBILE_RAW_FRAME_COUNT = 192;
 const MOBILE_RAW_FPS = 24;
 const MOBILE_BG_DURATION = MOBILE_RAW_FRAME_COUNT / MOBILE_RAW_FPS;
-// Same constant-PIXEL-margin approach as DESKTOP_QUAD_EXPAND_PX, and for
-// the same reason: a flat fraction gives less real pixel coverage exactly
-// when the tracked quad is smallest (early in the scroll), which is also
-// where a few pixels of chroma-key green are most visible. Checking the
-// static source stills pixel-by-pixel says 6px already has zero green
-// fringe, but the actual rendered page still showed a thin sliver at that
-// margin — the extra downscaling this source goes through (a 1920x1080
-// video corner-pinned into a quad a few hundred CSS px wide, on top of the
-// canvas's own upscale of a 360x640 still) bilinearly blends a few more
-// pixels of green in than a static per-pixel check on the source stills
-// can see. 16px is verified against the live rendered page (iOS/WebKit),
-// scanning actual screenshots for chroma-key green across the whole
-// pinned-scroll range, not just the source images.
-const MOBILE_QUAD_EXPAND_PX = 16;
+// Same constant-PIXEL-margin approach as DESKTOP_QUAD_EXPAND_PX (a flat
+// fraction gives the least real coverage when the quad is smallest, which is
+// also where a few px of chroma-key green show most). The margin is small
+// now because quad_tracking_mobile.json was regenerated from each frame's
+// actual green-screen mask (sub-pixel side lines, ~0.13px residual). The old
+// hand-tracked corners were off by a few px unevenly (worst at the top right),
+// which a uniform margin could only hide by over-covering the bezel: 16px
+// left the video ~11px past the green edge and poking outside the monitor.
+// Checked against the mask on all 192 frames: 2px already covers every
+// frame; 4px adds a little slack for the bilinear blur of the corner-pinned
+// video and still overshoots the green edge by only ~3px.
+const MOBILE_QUAD_EXPAND_PX = 4;
 // Initial CSS fallback only — sizeStage() in the effect below immediately
 // replaces this with a JS-measured height (viewport minus the overlay's
 // real text height), so the stage always ends snug against the fixed
