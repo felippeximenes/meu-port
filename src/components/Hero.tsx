@@ -126,8 +126,6 @@ export default function Hero() {
   const [isStatic, setIsStatic] = useState(
     () => typeof window !== 'undefined' && window.matchMedia(STATIC_QUERY).matches
   );
-  // eslint-disable-next-line no-console -- temporary diagnostic, remove after
-  console.log('[Hero] isStatic =', isStatic, 'innerWidth =', window.innerWidth, 'innerHeight =', window.innerHeight);
 
   const trackRef     = useRef<HTMLDivElement>(null);
   const stageRef     = useRef<HTMLDivElement>(null);
@@ -191,29 +189,23 @@ export default function Hero() {
     // only the metadata for an element it isn't asked to play, then goes
     // idle: waiting for `loadeddata` before calling play() (and observing a
     // display:none element that can never intersect) deadlocked. Calling
-    // play() up front is what makes it fetch the rest.
-    // ponytail: temporary diagnostic logs, remove once the iPhone is confirmed.
-    const names = ['loadstart', 'loadedmetadata', 'loadeddata', 'canplay', 'playing', 'pause', 'suspend', 'stalled', 'waiting', 'error'];
-    const log = (e: Event) => console.log('[Hero video]', e.type, 'rs=' + video.readyState, 'ns=' + video.networkState, 'err=' + (video.error?.code ?? '-'));
-    names.forEach(n => video.addEventListener(n, log));
+    // play() up front is what makes it fetch the rest. A rejected play()
+    // (autoplay blocked, e.g. Low Power Mode) is expected and harmless: the
+    // poster stays on screen instead.
     video.src = '/video-case.mp4';
-    video.play().catch(err => console.warn('[Hero video] play() rejeitado:', err?.name, err?.message));
+    video.play().catch(() => {});
     let videoIO: IntersectionObserver | null = null;
     if (window.IntersectionObserver) {
       videoIO = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting && video.paused) video.play().catch(err => console.warn('[Hero video] retry rejeitado:', err?.name)); });
+        entries.forEach(e => { if (e.isIntersecting && video.paused) video.play().catch(() => {}); });
       }, { threshold: 0.05 });
       videoIO.observe(video);
     }
-    return () => {
-      names.forEach(n => video.removeEventListener(n, log));
-      videoIO?.disconnect();
-    };
+    return () => { videoIO?.disconnect(); };
   }, [isStatic]);
 
   /* ── Monitor scene: scroll-jacked (desktop/tablet) or fixed framing (mobile) ── */
   useEffect(() => {
-    console.log('[Hero] effect mount, isStatic =', isStatic, 'canvas =', !!canvasRef.current);
     const canvas = canvasRef.current;
     const pin = pinRef.current;
     if (!canvas) return;
@@ -228,11 +220,6 @@ export default function Hero() {
       const img = new Image();
       img.src = framePath + String(i).padStart(5, '0') + '.webp';
       frames[i] = img;
-    }
-    if (isStatic) {
-      console.log('[Hero] mobile frames criados:', frames.length);
-      let ready = 0;
-      frames.forEach(f => f.addEventListener('load', () => { ready++; if (ready === frames.length) console.log('[Hero] todos os frames carregados'); }));
     }
 
     let tracking: { fps: number; width: number; height: number; frames: { corners: [number,number][] }[] } | null = null;
@@ -276,8 +263,7 @@ export default function Hero() {
       const h = Math.round(rect.height * dpr);
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       const ctx = canvas.getContext('2d');
-      if (!ctx || !img) return;
-      if (!img.naturalWidth) { console.warn('[Hero] draw() pulado: naturalWidth =', img && img.naturalWidth); return; }
+      if (!ctx || !img || !img.naturalWidth) return;
       // Portrait screens keep the complete 16:9 composition visible. Covering a
       // tall viewport here turns the sequence into an excessively cropped close-up.
       const fit = (contain ? Math.min : Math.max)(rect.width / img.naturalWidth, usableHeight / img.naturalHeight);
