@@ -2,7 +2,7 @@
 
 # Felippe Ximenes · Portfolio
 
-Portfolio pessoal de desenvolvedor full-stack focado em engenharia de IA. Construído do zero em React + TypeScript, sem nenhum template ou UI kit: cada seção, animação e interação foi feita à mão, incluindo um efeito de scroll no Hero com compositing de vídeo em tempo real e um logo 3D reativo ao mouse no rodapé.
+Portfolio pessoal de desenvolvedor full-stack focado em engenharia de IA. Construído do zero em React + TypeScript, sem nenhum template ou UI kit: cada seção, animação e interação foi feita à mão, incluindo um efeito de scroll no Hero com compositing de vídeo em tempo real e um logo 3D reativo ao mouse no rodapé!!
 
 **[▸ ver o site no ar](https://meu-port-sooty.vercel.app/)**
 
