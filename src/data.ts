@@ -48,10 +48,10 @@ export const projects: Record<Lang, Project[]> = {
     },
     {
       n: '04', name: 'Moldz3D',
-      tags: ['FastAPI · MongoDB', 'MercadoPago · Pix', 'React · WebGL2'],
+      tags: ['FastAPI · MongoDB', 'MercadoPago · Pix', 'React · Tailwind · Motion'],
       href: 'https://moldz3d.com.br',
-      desc: 'E-commerce para peças de impressão 3D com checkout 100% nativo (Pix, boleto e cartão com tokenização PCI) sem redirecionar o cliente para outra página. Calcula frete real por CEP (Melhor Envio), envia e-mails transacionais, processa estornos automaticamente e tem painel admin com analytics via PostHog. Proteção antibot com Cloudflare Turnstile, conformidade LGPD e shader GLSL renderizado com WebGL2 puro no hero. Stack: FastAPI + MongoDB Atlas no Railway, React no Vercel.',
-      img: '/projects/moldz3d.png', site: 'moldz3d.com.br', video: '/video/moldz3d.webm',
+      desc: 'E-commerce para peças de impressão 3D com checkout 100% nativo (Pix, boleto e cartão com tokenização PCI) sem redirecionar o cliente para outra página. Calcula frete real por CEP (Melhor Envio), envia e-mails transacionais, processa estornos automaticamente e tem painel admin com analytics via PostHog. Visual editorial "camada por camada" com as peças flutuando no hero, SEO técnico (JSON-LD de produto, pré-render das páginas e blog), proteção antibot com Cloudflare Turnstile e conformidade LGPD. Stack: FastAPI + MongoDB Atlas no Railway, React no Vercel.',
+      img: '/projects/moldz3d.png', site: 'moldz3d.com.br', video: '/video/moldz3d.mp4',
     },
     {
       n: '05', name: 'Caminhos',
@@ -85,10 +85,10 @@ export const projects: Record<Lang, Project[]> = {
     },
     {
       n: '04', name: 'Moldz3D',
-      tags: ['FastAPI · MongoDB', 'MercadoPago · Pix', 'React · WebGL2'],
+      tags: ['FastAPI · MongoDB', 'MercadoPago · Pix', 'React · Tailwind · Motion'],
       href: 'https://moldz3d.com.br',
-      desc: 'E-commerce for 3D printing parts with a fully native checkout (Pix, boleto, and PCI-compliant card tokenization) and no external redirect. Real shipping rates by ZIP code (Melhor Envio), transactional emails, automatic refund processing, and an admin panel with PostHog analytics. Cloudflare Turnstile antibot protection, data compliance, and a GLSL shader rendered with pure WebGL2 in the hero. Stack: FastAPI + MongoDB Atlas on Railway, React on Vercel.',
-      img: '/projects/moldz3d.png', site: 'moldz3d.com.br', video: '/video/moldz3d.webm',
+      desc: 'E-commerce for 3D printing parts with a fully native checkout (Pix, boleto, and PCI-compliant card tokenization) and no external redirect. Real shipping rates by ZIP code (Melhor Envio), transactional emails, automatic refund processing, and an admin panel with PostHog analytics. An editorial "layer by layer" look with floating pieces in the hero, technical SEO (product JSON-LD, prerendered pages, and a blog), Cloudflare Turnstile antibot protection, and data compliance. Stack: FastAPI + MongoDB Atlas on Railway, React on Vercel.',
+      img: '/projects/moldz3d.png', site: 'moldz3d.com.br', video: '/video/moldz3d.mp4',
     },
     {
       n: '05', name: 'Caminhos',

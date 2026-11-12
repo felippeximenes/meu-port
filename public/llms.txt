@@ -11,7 +11,7 @@ Especializado em desenvolvimento full-stack e IA generativa: de APIs serverless 
 - **Certara** (certara.app) — Plataforma SaaS de preparação para certificações AWS com pipeline RAG, 13 Lambdas Python, Stripe e Cognito.
 - **Certara Agent** — Assistente de estudos agentic com LangGraph, RAG via Qdrant e AWS SAM.
 - **EduTrack** — LMS com três perfis de acesso, emissão automática de certificados em PDF com QR code e deploy Vercel + Railway.
-- **Moldz3D** (moldz3d.com.br) — E-commerce de impressão 3D com checkout nativo Pix/boleto/cartão, MercadoPago e shader GLSL via WebGL2.
+- **Moldz3D** (moldz3d.com.br) — E-commerce de impressão 3D com checkout nativo Pix/boleto/cartão, MercadoPago, visual editorial e SEO técnico (JSON-LD, pré-render, blog).
 - **Caminhos** — Landing page com motion design avançado: carrossel 3D, tilt com springs do Framer Motion e acessibilidade completa.
 
 ## Stack
